@@ -39,8 +39,17 @@ public interface VentilationResponseOrBuilder extends
   boolean getTurnOn();
 
   /**
-   * <code>int64 timestamp = 4;</code>
+   * <code>.google.protobuf.Timestamp timestamp = 4;</code>
+   * @return Whether the timestamp field is set.
+   */
+  boolean hasTimestamp();
+  /**
+   * <code>.google.protobuf.Timestamp timestamp = 4;</code>
    * @return The timestamp.
    */
-  long getTimestamp();
+  com.google.protobuf.Timestamp getTimestamp();
+  /**
+   * <code>.google.protobuf.Timestamp timestamp = 4;</code>
+   */
+  com.google.protobuf.TimestampOrBuilder getTimestampOrBuilder();
 }

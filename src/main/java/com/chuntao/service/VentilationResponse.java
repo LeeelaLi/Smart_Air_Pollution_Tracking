@@ -43,6 +43,7 @@ private static final long serialVersionUID = 0L;
             com.chuntao.service.VentilationResponse.class, com.chuntao.service.VentilationResponse.Builder.class);
   }
 
+  private int bitField0_;
   public static final int LOCATION_FIELD_NUMBER = 1;
   @SuppressWarnings("serial")
   private volatile java.lang.Object location_ = "";
@@ -133,14 +134,29 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int TIMESTAMP_FIELD_NUMBER = 4;
-  private long timestamp_ = 0L;
+  private com.google.protobuf.Timestamp timestamp_;
   /**
-   * <code>int64 timestamp = 4;</code>
+   * <code>.google.protobuf.Timestamp timestamp = 4;</code>
+   * @return Whether the timestamp field is set.
+   */
+  @java.lang.Override
+  public boolean hasTimestamp() {
+    return ((bitField0_ & 0x00000001) != 0);
+  }
+  /**
+   * <code>.google.protobuf.Timestamp timestamp = 4;</code>
    * @return The timestamp.
    */
   @java.lang.Override
-  public long getTimestamp() {
-    return timestamp_;
+  public com.google.protobuf.Timestamp getTimestamp() {
+    return timestamp_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : timestamp_;
+  }
+  /**
+   * <code>.google.protobuf.Timestamp timestamp = 4;</code>
+   */
+  @java.lang.Override
+  public com.google.protobuf.TimestampOrBuilder getTimestampOrBuilder() {
+    return timestamp_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : timestamp_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -166,8 +182,8 @@ private static final long serialVersionUID = 0L;
     if (turnOn_ != false) {
       output.writeBool(3, turnOn_);
     }
-    if (timestamp_ != 0L) {
-      output.writeInt64(4, timestamp_);
+    if (((bitField0_ & 0x00000001) != 0)) {
+      output.writeMessage(4, getTimestamp());
     }
     getUnknownFields().writeTo(output);
   }
@@ -188,9 +204,9 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeBoolSize(3, turnOn_);
     }
-    if (timestamp_ != 0L) {
+    if (((bitField0_ & 0x00000001) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(4, timestamp_);
+        .computeMessageSize(4, getTimestamp());
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -213,8 +229,11 @@ private static final long serialVersionUID = 0L;
         .equals(other.getPollutionItem())) return false;
     if (getTurnOn()
         != other.getTurnOn()) return false;
-    if (getTimestamp()
-        != other.getTimestamp()) return false;
+    if (hasTimestamp() != other.hasTimestamp()) return false;
+    if (hasTimestamp()) {
+      if (!getTimestamp()
+          .equals(other.getTimestamp())) return false;
+    }
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -233,9 +252,10 @@ private static final long serialVersionUID = 0L;
     hash = (37 * hash) + TURN_ON_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
         getTurnOn());
-    hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getTimestamp());
+    if (hasTimestamp()) {
+      hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
+      hash = (53 * hash) + getTimestamp().hashCode();
+    }
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -355,13 +375,19 @@ private static final long serialVersionUID = 0L;
 
     // Construct using com.chuntao.service.VentilationResponse.newBuilder()
     private Builder() {
-
+      maybeForceBuilderInitialization();
     }
 
     private Builder(
         com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       super(parent);
-
+      maybeForceBuilderInitialization();
+    }
+    private void maybeForceBuilderInitialization() {
+      if (com.google.protobuf.GeneratedMessage
+              .alwaysUseFieldBuilders) {
+        getTimestampFieldBuilder();
+      }
     }
     @java.lang.Override
     public Builder clear() {
@@ -370,7 +396,11 @@ private static final long serialVersionUID = 0L;
       location_ = "";
       pollutionItem_ = "";
       turnOn_ = false;
-      timestamp_ = 0L;
+      timestamp_ = null;
+      if (timestampBuilder_ != null) {
+        timestampBuilder_.dispose();
+        timestampBuilder_ = null;
+      }
       return this;
     }
 
@@ -413,9 +443,14 @@ private static final long serialVersionUID = 0L;
       if (((from_bitField0_ & 0x00000004) != 0)) {
         result.turnOn_ = turnOn_;
       }
+      int to_bitField0_ = 0;
       if (((from_bitField0_ & 0x00000008) != 0)) {
-        result.timestamp_ = timestamp_;
+        result.timestamp_ = timestampBuilder_ == null
+            ? timestamp_
+            : timestampBuilder_.build();
+        to_bitField0_ |= 0x00000001;
       }
+      result.bitField0_ |= to_bitField0_;
     }
 
     @java.lang.Override
@@ -443,8 +478,8 @@ private static final long serialVersionUID = 0L;
       if (other.getTurnOn() != false) {
         setTurnOn(other.getTurnOn());
       }
-      if (other.getTimestamp() != 0L) {
-        setTimestamp(other.getTimestamp());
+      if (other.hasTimestamp()) {
+        mergeTimestamp(other.getTimestamp());
       }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
@@ -487,11 +522,13 @@ private static final long serialVersionUID = 0L;
               bitField0_ |= 0x00000004;
               break;
             } // case 24
-            case 32: {
-              timestamp_ = input.readInt64();
+            case 34: {
+              input.readMessage(
+                  getTimestampFieldBuilder().getBuilder(),
+                  extensionRegistry);
               bitField0_ |= 0x00000008;
               break;
-            } // case 32
+            } // case 34
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -685,36 +722,125 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private long timestamp_ ;
+    private com.google.protobuf.Timestamp timestamp_;
+    private com.google.protobuf.SingleFieldBuilder<
+        com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> timestampBuilder_;
     /**
-     * <code>int64 timestamp = 4;</code>
-     * @return The timestamp.
+     * <code>.google.protobuf.Timestamp timestamp = 4;</code>
+     * @return Whether the timestamp field is set.
      */
-    @java.lang.Override
-    public long getTimestamp() {
-      return timestamp_;
+    public boolean hasTimestamp() {
+      return ((bitField0_ & 0x00000008) != 0);
     }
     /**
-     * <code>int64 timestamp = 4;</code>
-     * @param value The timestamp to set.
-     * @return This builder for chaining.
+     * <code>.google.protobuf.Timestamp timestamp = 4;</code>
+     * @return The timestamp.
      */
-    public Builder setTimestamp(long value) {
-
-      timestamp_ = value;
+    public com.google.protobuf.Timestamp getTimestamp() {
+      if (timestampBuilder_ == null) {
+        return timestamp_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : timestamp_;
+      } else {
+        return timestampBuilder_.getMessage();
+      }
+    }
+    /**
+     * <code>.google.protobuf.Timestamp timestamp = 4;</code>
+     */
+    public Builder setTimestamp(com.google.protobuf.Timestamp value) {
+      if (timestampBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        timestamp_ = value;
+      } else {
+        timestampBuilder_.setMessage(value);
+      }
       bitField0_ |= 0x00000008;
       onChanged();
       return this;
     }
     /**
-     * <code>int64 timestamp = 4;</code>
-     * @return This builder for chaining.
+     * <code>.google.protobuf.Timestamp timestamp = 4;</code>
+     */
+    public Builder setTimestamp(
+        com.google.protobuf.Timestamp.Builder builderForValue) {
+      if (timestampBuilder_ == null) {
+        timestamp_ = builderForValue.build();
+      } else {
+        timestampBuilder_.setMessage(builderForValue.build());
+      }
+      bitField0_ |= 0x00000008;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>.google.protobuf.Timestamp timestamp = 4;</code>
+     */
+    public Builder mergeTimestamp(com.google.protobuf.Timestamp value) {
+      if (timestampBuilder_ == null) {
+        if (((bitField0_ & 0x00000008) != 0) &&
+          timestamp_ != null &&
+          timestamp_ != com.google.protobuf.Timestamp.getDefaultInstance()) {
+          getTimestampBuilder().mergeFrom(value);
+        } else {
+          timestamp_ = value;
+        }
+      } else {
+        timestampBuilder_.mergeFrom(value);
+      }
+      if (timestamp_ != null) {
+        bitField0_ |= 0x00000008;
+        onChanged();
+      }
+      return this;
+    }
+    /**
+     * <code>.google.protobuf.Timestamp timestamp = 4;</code>
      */
     public Builder clearTimestamp() {
       bitField0_ = (bitField0_ & ~0x00000008);
-      timestamp_ = 0L;
+      timestamp_ = null;
+      if (timestampBuilder_ != null) {
+        timestampBuilder_.dispose();
+        timestampBuilder_ = null;
+      }
       onChanged();
       return this;
+    }
+    /**
+     * <code>.google.protobuf.Timestamp timestamp = 4;</code>
+     */
+    public com.google.protobuf.Timestamp.Builder getTimestampBuilder() {
+      bitField0_ |= 0x00000008;
+      onChanged();
+      return getTimestampFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.google.protobuf.Timestamp timestamp = 4;</code>
+     */
+    public com.google.protobuf.TimestampOrBuilder getTimestampOrBuilder() {
+      if (timestampBuilder_ != null) {
+        return timestampBuilder_.getMessageOrBuilder();
+      } else {
+        return timestamp_ == null ?
+            com.google.protobuf.Timestamp.getDefaultInstance() : timestamp_;
+      }
+    }
+    /**
+     * <code>.google.protobuf.Timestamp timestamp = 4;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilder<
+        com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> 
+        getTimestampFieldBuilder() {
+      if (timestampBuilder_ == null) {
+        timestampBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+            com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder>(
+                getTimestamp(),
+                getParentForChildren(),
+                isClean());
+        timestamp_ = null;
+      }
+      return timestampBuilder_;
     }
 
     // @@protoc_insertion_point(builder_scope:com.chuntao.VentilationResponse)

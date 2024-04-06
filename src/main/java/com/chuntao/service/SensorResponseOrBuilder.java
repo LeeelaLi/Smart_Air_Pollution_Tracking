@@ -77,8 +77,17 @@ public interface SensorResponseOrBuilder extends
   int getPollutionLevel();
 
   /**
-   * <code>int64 timestamp = 8;</code>
+   * <code>.google.protobuf.Timestamp timestamp = 8;</code>
+   * @return Whether the timestamp field is set.
+   */
+  boolean hasTimestamp();
+  /**
+   * <code>.google.protobuf.Timestamp timestamp = 8;</code>
    * @return The timestamp.
    */
-  long getTimestamp();
+  com.google.protobuf.Timestamp getTimestamp();
+  /**
+   * <code>.google.protobuf.Timestamp timestamp = 8;</code>
+   */
+  com.google.protobuf.TimestampOrBuilder getTimestampOrBuilder();
 }

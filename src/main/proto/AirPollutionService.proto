@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package com.chuntao;
 
+import "google/protobuf/timestamp.proto";
+
 option java_multiple_files = true;
 option java_package = "com.chuntao.service";
 option java_outer_classname = "AirPollutionService";
@@ -26,7 +28,7 @@ message SensorResponse {
   float humidity = 5; // Humidity in Percentage
   float CO = 6; // CO in ppm
   int32 pollution_level = 7;
-  int64 timestamp = 8;
+  google.protobuf.Timestamp timestamp = 8;
 }
 
 // Ventilation Service: automatically turn on ventilation based on air quality
@@ -39,7 +41,7 @@ message VentilationResponse {
   string location = 1;
   string pollution_item = 2;
   bool turn_on = 3;
-  int64 timestamp = 4;
+  google.protobuf.Timestamp timestamp = 4;
 }
 
 // Notification Service:

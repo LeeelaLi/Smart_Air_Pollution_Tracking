@@ -54,31 +54,34 @@ public final class AirPollutionService {
   static {
     java.lang.String[] descriptorData = {
       "\n\031AirPollutionService.proto\022\013com.chuntao" +
-      "\"\"\n\rSensorRequest\022\021\n\tsensor_id\030\001 \001(\005\"\232\001\n" +
-      "\016SensorResponse\022\020\n\010location\030\001 \001(\t\022\n\n\002PM\030" +
-      "\002 \001(\002\022\023\n\013temperature\030\003 \001(\002\022\013\n\003VOC\030\004 \001(\002\022" +
-      "\020\n\010humidity\030\005 \001(\002\022\n\n\002CO\030\006 \001(\002\022\027\n\017polluti" +
-      "on_level\030\007 \001(\005\022\021\n\ttimestamp\030\010 \001(\003\"c\n\023Ven" +
-      "tilationResponse\022\020\n\010location\030\001 \001(\t\022\026\n\016po" +
-      "llution_item\030\002 \001(\t\022\017\n\007turn_on\030\003 \001(\010\022\021\n\tt" +
-      "imestamp\030\004 \001(\003\"R\n\023NotificationMessage\022\020\n" +
-      "\010location\030\001 \001(\t\022\023\n\013air_quality\030\002 \001(\t\022\024\n\014" +
-      "vent_control\030\003 \001(\t2\253\001\n\006Sensor\022M\n\020GetAllS" +
-      "ensorData\022\032.com.chuntao.SensorRequest\032\033." +
-      "com.chuntao.SensorResponse\"\000\022R\n\023GetSingl" +
-      "eSensorData\022\032.com.chuntao.SensorRequest\032" +
-      "\033.com.chuntao.SensorResponse\"\0000\0012h\n\013Vent" +
-      "ilation\022Y\n\022VentilationControl\022\033.com.chun" +
-      "tao.SensorResponse\032 .com.chuntao.Ventila" +
-      "tionResponse\"\000(\0010\0012n\n\014Notification\022^\n\024Re" +
-      "ceiveNotifications\022 .com.chuntao.Ventila" +
-      "tionResponse\032 .com.chuntao.NotificationM" +
-      "essage\"\000(\001B,\n\023com.chuntao.serviceB\023AirPo" +
-      "llutionServiceP\001b\006proto3"
+      "\032\037google/protobuf/timestamp.proto\"\"\n\rSen" +
+      "sorRequest\022\021\n\tsensor_id\030\001 \001(\005\"\266\001\n\016Sensor" +
+      "Response\022\020\n\010location\030\001 \001(\t\022\n\n\002PM\030\002 \001(\002\022\023" +
+      "\n\013temperature\030\003 \001(\002\022\013\n\003VOC\030\004 \001(\002\022\020\n\010humi" +
+      "dity\030\005 \001(\002\022\n\n\002CO\030\006 \001(\002\022\027\n\017pollution_leve" +
+      "l\030\007 \001(\005\022-\n\ttimestamp\030\010 \001(\0132\032.google.prot" +
+      "obuf.Timestamp\"\177\n\023VentilationResponse\022\020\n" +
+      "\010location\030\001 \001(\t\022\026\n\016pollution_item\030\002 \001(\t\022" +
+      "\017\n\007turn_on\030\003 \001(\010\022-\n\ttimestamp\030\004 \001(\0132\032.go" +
+      "ogle.protobuf.Timestamp\"R\n\023NotificationM" +
+      "essage\022\020\n\010location\030\001 \001(\t\022\023\n\013air_quality\030" +
+      "\002 \001(\t\022\024\n\014vent_control\030\003 \001(\t2\253\001\n\006Sensor\022M" +
+      "\n\020GetAllSensorData\022\032.com.chuntao.SensorR" +
+      "equest\032\033.com.chuntao.SensorResponse\"\000\022R\n" +
+      "\023GetSingleSensorData\022\032.com.chuntao.Senso" +
+      "rRequest\032\033.com.chuntao.SensorResponse\"\0000" +
+      "\0012h\n\013Ventilation\022Y\n\022VentilationControl\022\033" +
+      ".com.chuntao.SensorResponse\032 .com.chunta" +
+      "o.VentilationResponse\"\000(\0010\0012n\n\014Notificat" +
+      "ion\022^\n\024ReceiveNotifications\022 .com.chunta" +
+      "o.VentilationResponse\032 .com.chuntao.Noti" +
+      "ficationMessage\"\000(\001B,\n\023com.chuntao.servi" +
+      "ceB\023AirPollutionServiceP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
+          com.google.protobuf.TimestampProto.getDescriptor(),
         });
     internal_static_com_chuntao_SensorRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -105,6 +108,7 @@ public final class AirPollutionService {
         internal_static_com_chuntao_NotificationMessage_descriptor,
         new java.lang.String[] { "Location", "AirQuality", "VentControl", });
     descriptor.resolveAllFeaturesImmutable();
+    com.google.protobuf.TimestampProto.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)
