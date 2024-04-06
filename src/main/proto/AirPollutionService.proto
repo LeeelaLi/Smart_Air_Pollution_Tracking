@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package com.chuntao;
+
+option java_multiple_files = true;
+option java_package = "com.chuntao.service";
+option java_outer_classname = "AirPollutionService";
+
+// Sensor Service: monitor air index and analyse data
+service Sensor {
+  // Simple RPC for collecting sensor data
+  rpc GetAllSensorData(SensorRequest) returns (SensorResponse) {}
+  // Server-side streaming for updated sensor data
+  rpc GetSingleSensorData(SensorRequest) returns (stream SensorResponse) {}
+}
+
+message SensorRequest {
+  int32 sensor_id = 1;
+}
+
+message SensorResponse {
+  string location = 1;
+  float PM = 2; // PM2.5 density in μg/m3 of the air
+  float temperature = 3; // Air temperature in Celsius
+  float VOC = 4; // VOC level in mg/m3
+  float humidity = 5; // Humidity in Percentage
+  float CO = 6; // CO in ppm
+  int32 pollution_level = 7;
+  int64 timestamp = 8;
+}
+
+// Ventilation Service: automatically turn on ventilation based on air quality
+service Ventilation {
+  // Bidirectional streaming RPC for controlling ventilation based on sensor data
+  rpc VentilationControl(stream SensorResponse) returns (stream VentilationResponse) {}
+}
+
+message VentilationResponse {
+  string location = 1;
+  string pollution_item = 2;
+  bool turn_on = 3;
+  int64 timestamp = 4;
+}
+
+// Notification Service:
+service Notification {
+  // Client-side streaming RPC for receiving notifications
+  rpc ReceiveNotifications(stream VentilationResponse) returns (NotificationMessage) {}
+}
+
+message NotificationMessage {
+  string location = 1;
+  string air_quality = 2;
+  string vent_control = 3;
+}
