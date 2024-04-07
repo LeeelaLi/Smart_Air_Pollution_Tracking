@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package com.chuntao;
+
+import "google/protobuf/timestamp.proto";
+import "Sensor.proto";
+import "HVAC.proto";
+
+option java_multiple_files = true;
+option java_package = "com.chuntao.service";
+option java_outer_classname = "NotificationService";
+
+// Notification Service: monitor air index and analyse data
+service Notification {
+  // Server-side streaming RPC for receiving notifications based on analyze response
+  rpc SensorNotifications(AnalyseResponse) returns (stream NotificationMessage) {}
+  // Server-side streaming RPC for receiving notifications based on HVAC response
+  rpc VentNotifications(HVACResponse) returns (stream NotificationMessage) {}
+}
+
+message NotificationMessage {
+  string location = 1;
+  string air_quality = 2;
+  string HVAC_control = 3;
+  string message = 4;
+}
