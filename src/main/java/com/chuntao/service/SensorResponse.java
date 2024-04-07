@@ -160,6 +160,7 @@ private static final long serialVersionUID = 0L;
   private int pollutionLevel_ = 0;
   /**
    * <code>int32 pollution_level = 7;</code>
+   *
    * @return The pollutionLevel.
    */
   @java.lang.Override
@@ -904,6 +905,7 @@ private static final long serialVersionUID = 0L;
     private int pollutionLevel_ ;
     /**
      * <code>int32 pollution_level = 7;</code>
+     *
      * @return The pollutionLevel.
      */
     @java.lang.Override

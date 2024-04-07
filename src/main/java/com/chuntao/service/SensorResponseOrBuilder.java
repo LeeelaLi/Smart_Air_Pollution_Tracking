@@ -72,6 +72,7 @@ public interface SensorResponseOrBuilder extends
 
   /**
    * <code>int32 pollution_level = 7;</code>
+   *
    * @return The pollutionLevel.
    */
   int getPollutionLevel();

@@ -6,7 +6,8 @@ import com.chuntao.service.*;
 
 import java.time.Instant;
 
-public class grpcClient {
+public class SensorClient {
+    private static SensorResponse sensorResponse;
     public static void main(String[] args) {
         // create sensor channel
         ManagedChannel sensorChannel = ManagedChannelBuilder.forAddress("localhost", 9090)
@@ -56,5 +57,9 @@ public class grpcClient {
                 .setSeconds(now.getEpochSecond())
                 .setNanos(now.getNano())
                 .build();
+    }
+    // Getter method for sensorResponse
+    public static SensorResponse getSensorResponse() {
+        return sensorResponse;
     }
 }
