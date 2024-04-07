@@ -33,26 +33,29 @@ public interface NotificationMessageOrBuilder extends
       getAirQualityBytes();
 
   /**
-   * <code>string HVAC_control = 3;</code>
-   * @return The hVACControl.
-   */
-  java.lang.String getHVACControl();
-  /**
-   * <code>string HVAC_control = 3;</code>
-   * @return The bytes for hVACControl.
-   */
-  com.google.protobuf.ByteString
-      getHVACControlBytes();
-
-  /**
-   * <code>string message = 4;</code>
+   * <code>string message = 3;</code>
    * @return The message.
    */
   java.lang.String getMessage();
   /**
-   * <code>string message = 4;</code>
+   * <code>string message = 3;</code>
    * @return The bytes for message.
    */
   com.google.protobuf.ByteString
       getMessageBytes();
+
+  /**
+   * <code>.google.protobuf.Timestamp timestamp = 4;</code>
+   * @return Whether the timestamp field is set.
+   */
+  boolean hasTimestamp();
+  /**
+   * <code>.google.protobuf.Timestamp timestamp = 4;</code>
+   * @return The timestamp.
+   */
+  com.google.protobuf.Timestamp getTimestamp();
+  /**
+   * <code>.google.protobuf.Timestamp timestamp = 4;</code>
+   */
+  com.google.protobuf.TimestampOrBuilder getTimestampOrBuilder();
 }

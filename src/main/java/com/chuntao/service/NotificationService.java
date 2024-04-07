@@ -40,16 +40,16 @@ public final class NotificationService {
     java.lang.String[] descriptorData = {
       "\n\022Notification.proto\022\013com.chuntao\032\037googl" +
       "e/protobuf/timestamp.proto\032\014Sensor.proto" +
-      "\032\nHVAC.proto\"c\n\023NotificationMessage\022\020\n\010l" +
-      "ocation\030\001 \001(\t\022\023\n\013air_quality\030\002 \001(\t\022\024\n\014HV" +
-      "AC_control\030\003 \001(\t\022\017\n\007message\030\004 \001(\t2\277\001\n\014No" +
-      "tification\022Y\n\023SensorNotifications\022\034.com." +
-      "chuntao.AnalyseResponse\032 .com.chuntao.No" +
-      "tificationMessage\"\0000\001\022T\n\021VentNotificatio" +
-      "ns\022\031.com.chuntao.HVACResponse\032 .com.chun" +
-      "tao.NotificationMessage\"\0000\001B,\n\023com.chunt" +
-      "ao.serviceB\023NotificationServiceP\001b\006proto" +
-      "3"
+      "\032\nHVAC.proto\"|\n\023NotificationMessage\022\020\n\010l" +
+      "ocation\030\001 \001(\t\022\023\n\013air_quality\030\002 \001(\t\022\017\n\007me" +
+      "ssage\030\003 \001(\t\022-\n\ttimestamp\030\004 \001(\0132\032.google." +
+      "protobuf.Timestamp2\277\001\n\014Notification\022Y\n\023S" +
+      "ensorNotifications\022\034.com.chuntao.Analyse" +
+      "Response\032 .com.chuntao.NotificationMessa" +
+      "ge\"\0000\001\022T\n\021VentNotifications\022\031.com.chunta" +
+      "o.HVACResponse\032 .com.chuntao.Notificatio" +
+      "nMessage\"\0000\001B,\n\023com.chuntao.serviceB\023Not" +
+      "ificationServiceP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -63,7 +63,7 @@ public final class NotificationService {
     internal_static_com_chuntao_NotificationMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_com_chuntao_NotificationMessage_descriptor,
-        new java.lang.String[] { "Location", "AirQuality", "HVACControl", "Message", });
+        new java.lang.String[] { "Location", "AirQuality", "Message", "Timestamp", });
     descriptor.resolveAllFeaturesImmutable();
     com.google.protobuf.TimestampProto.getDescriptor();
     com.chuntao.service.SensorService.getDescriptor();

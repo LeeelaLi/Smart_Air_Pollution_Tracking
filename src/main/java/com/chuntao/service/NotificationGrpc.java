@@ -1,5 +1,7 @@
 package com.chuntao.service;
 
+import io.grpc.stub.StreamObserver;
+
 import static io.grpc.MethodDescriptor.generateFullMethodName;
 
 /**
@@ -164,6 +166,10 @@ public final class NotificationGrpc {
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return NotificationGrpc.bindService(this);
     }
+
+      public abstract StreamObserver<AnalyseResponse> sensorNotifications(StreamObserver<NotificationMessage> responseObserver);
+
+    public abstract StreamObserver<HVACResponse> ventNotifications(StreamObserver<NotificationMessage> responseObserver);
   }
 
   /**

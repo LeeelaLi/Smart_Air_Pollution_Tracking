@@ -21,6 +21,6 @@ service Notification {
 message NotificationMessage {
   string location = 1;
   string air_quality = 2;
-  string HVAC_control = 3;
-  string message = 4;
+  string message = 3;
+  google.protobuf.Timestamp timestamp = 4;
 }

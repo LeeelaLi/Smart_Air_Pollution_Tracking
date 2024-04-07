@@ -33,4 +33,5 @@ message AnalyseResponse {
   int32 pollution_level = 1;
   string analyse = 2;
   google.protobuf.Timestamp timestamp = 3;
+  string location = 4;
 }
