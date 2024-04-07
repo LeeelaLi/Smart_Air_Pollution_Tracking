@@ -9,22 +9,28 @@ public interface AnalyseResponseOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>int32 pollution_level = 1;</code>
-   * @return The pollutionLevel.
-   */
-  int getPollutionLevel();
-
-  /**
-   * <code>string analyse = 2;</code>
+   * <code>string analyse = 1;</code>
    * @return The analyse.
    */
   java.lang.String getAnalyse();
   /**
-   * <code>string analyse = 2;</code>
+   * <code>string analyse = 1;</code>
    * @return The bytes for analyse.
    */
   com.google.protobuf.ByteString
       getAnalyseBytes();
+
+  /**
+   * <code>string location = 2;</code>
+   * @return The location.
+   */
+  java.lang.String getLocation();
+  /**
+   * <code>string location = 2;</code>
+   * @return The bytes for location.
+   */
+  com.google.protobuf.ByteString
+      getLocationBytes();
 
   /**
    * <code>.google.protobuf.Timestamp timestamp = 3;</code>
@@ -40,16 +46,4 @@ public interface AnalyseResponseOrBuilder extends
    * <code>.google.protobuf.Timestamp timestamp = 3;</code>
    */
   com.google.protobuf.TimestampOrBuilder getTimestampOrBuilder();
-
-  /**
-   * <code>string location = 4;</code>
-   * @return The location.
-   */
-  java.lang.String getLocation();
-  /**
-   * <code>string location = 4;</code>
-   * @return The bytes for location.
-   */
-  com.google.protobuf.ByteString
-      getLocationBytes();
 }

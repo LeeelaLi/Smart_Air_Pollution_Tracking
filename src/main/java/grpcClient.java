@@ -21,13 +21,14 @@ public class grpcClient {
                         "\n2. Temperature: " + sensorResponse.getTemperature() +
                         "\n3. VOC: " + sensorResponse.getVOC() +
                         "\n4. Humidity: " + sensorResponse.getHumidity() +
-                        "\n5. CO: " + sensorResponse.getCO());
+                        "\n5. CO: " + sensorResponse.getCO() +
+                        "\nAir pollution level: " + sensorResponse.getPollutionLevel());
 
         // create analyse channel
-        ManagedChannel analyseChannel = ManagedChannelBuilder.forAddress("localhost", 9091)
-                .usePlaintext()
-                .build();
-        SensorGrpc.SensorBlockingStub sensorBlockingStub1 = SensorGrpc.newBlockingStub(analyseChannel);
+//        ManagedChannel analyseChannel = ManagedChannelBuilder.forAddress("localhost", 9091)
+//                .usePlaintext()
+//                .build();
+//        SensorGrpc.SensorBlockingStub sensorBlockingStub1 = SensorGrpc.newBlockingStub(analyseChannel);
 //
 //        SensorResponse sensorResponse1 = SensorResponse.newBuilder()
 //                .setPollutionLevel(2)

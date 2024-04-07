@@ -44,22 +44,11 @@ private static final long serialVersionUID = 0L;
   }
 
   private int bitField0_;
-  public static final int POLLUTION_LEVEL_FIELD_NUMBER = 1;
-  private int pollutionLevel_ = 0;
-  /**
-   * <code>int32 pollution_level = 1;</code>
-   * @return The pollutionLevel.
-   */
-  @java.lang.Override
-  public int getPollutionLevel() {
-    return pollutionLevel_;
-  }
-
-  public static final int ANALYSE_FIELD_NUMBER = 2;
+  public static final int ANALYSE_FIELD_NUMBER = 1;
   @SuppressWarnings("serial")
   private volatile java.lang.Object analyse_ = "";
   /**
-   * <code>string analyse = 2;</code>
+   * <code>string analyse = 1;</code>
    * @return The analyse.
    */
   @java.lang.Override
@@ -76,7 +65,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>string analyse = 2;</code>
+   * <code>string analyse = 1;</code>
    * @return The bytes for analyse.
    */
   @java.lang.Override
@@ -88,6 +77,45 @@ private static final long serialVersionUID = 0L;
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
       analyse_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int LOCATION_FIELD_NUMBER = 2;
+  @SuppressWarnings("serial")
+  private volatile java.lang.Object location_ = "";
+  /**
+   * <code>string location = 2;</code>
+   * @return The location.
+   */
+  @java.lang.Override
+  public java.lang.String getLocation() {
+    java.lang.Object ref = location_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      location_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string location = 2;</code>
+   * @return The bytes for location.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getLocationBytes() {
+    java.lang.Object ref = location_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      location_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
@@ -120,45 +148,6 @@ private static final long serialVersionUID = 0L;
     return timestamp_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : timestamp_;
   }
 
-  public static final int LOCATION_FIELD_NUMBER = 4;
-  @SuppressWarnings("serial")
-  private volatile java.lang.Object location_ = "";
-  /**
-   * <code>string location = 4;</code>
-   * @return The location.
-   */
-  @java.lang.Override
-  public java.lang.String getLocation() {
-    java.lang.Object ref = location_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      location_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>string location = 4;</code>
-   * @return The bytes for location.
-   */
-  @java.lang.Override
-  public com.google.protobuf.ByteString
-      getLocationBytes() {
-    java.lang.Object ref = location_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      location_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -173,17 +162,14 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (pollutionLevel_ != 0) {
-      output.writeInt32(1, pollutionLevel_);
-    }
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(analyse_)) {
-      com.google.protobuf.GeneratedMessage.writeString(output, 2, analyse_);
+      com.google.protobuf.GeneratedMessage.writeString(output, 1, analyse_);
+    }
+    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(location_)) {
+      com.google.protobuf.GeneratedMessage.writeString(output, 2, location_);
     }
     if (((bitField0_ & 0x00000001) != 0)) {
       output.writeMessage(3, getTimestamp());
-    }
-    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(location_)) {
-      com.google.protobuf.GeneratedMessage.writeString(output, 4, location_);
     }
     getUnknownFields().writeTo(output);
   }
@@ -194,19 +180,15 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (pollutionLevel_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(1, pollutionLevel_);
-    }
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(analyse_)) {
-      size += com.google.protobuf.GeneratedMessage.computeStringSize(2, analyse_);
+      size += com.google.protobuf.GeneratedMessage.computeStringSize(1, analyse_);
+    }
+    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(location_)) {
+      size += com.google.protobuf.GeneratedMessage.computeStringSize(2, location_);
     }
     if (((bitField0_ & 0x00000001) != 0)) {
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(3, getTimestamp());
-    }
-    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(location_)) {
-      size += com.google.protobuf.GeneratedMessage.computeStringSize(4, location_);
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -223,17 +205,15 @@ private static final long serialVersionUID = 0L;
     }
     com.chuntao.service.AnalyseResponse other = (com.chuntao.service.AnalyseResponse) obj;
 
-    if (getPollutionLevel()
-        != other.getPollutionLevel()) return false;
     if (!getAnalyse()
         .equals(other.getAnalyse())) return false;
+    if (!getLocation()
+        .equals(other.getLocation())) return false;
     if (hasTimestamp() != other.hasTimestamp()) return false;
     if (hasTimestamp()) {
       if (!getTimestamp()
           .equals(other.getTimestamp())) return false;
     }
-    if (!getLocation()
-        .equals(other.getLocation())) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -245,16 +225,14 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + POLLUTION_LEVEL_FIELD_NUMBER;
-    hash = (53 * hash) + getPollutionLevel();
     hash = (37 * hash) + ANALYSE_FIELD_NUMBER;
     hash = (53 * hash) + getAnalyse().hashCode();
+    hash = (37 * hash) + LOCATION_FIELD_NUMBER;
+    hash = (53 * hash) + getLocation().hashCode();
     if (hasTimestamp()) {
       hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
       hash = (53 * hash) + getTimestamp().hashCode();
     }
-    hash = (37 * hash) + LOCATION_FIELD_NUMBER;
-    hash = (53 * hash) + getLocation().hashCode();
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -392,14 +370,13 @@ private static final long serialVersionUID = 0L;
     public Builder clear() {
       super.clear();
       bitField0_ = 0;
-      pollutionLevel_ = 0;
       analyse_ = "";
+      location_ = "";
       timestamp_ = null;
       if (timestampBuilder_ != null) {
         timestampBuilder_.dispose();
         timestampBuilder_ = null;
       }
-      location_ = "";
       return this;
     }
 
@@ -434,10 +411,10 @@ private static final long serialVersionUID = 0L;
     private void buildPartial0(com.chuntao.service.AnalyseResponse result) {
       int from_bitField0_ = bitField0_;
       if (((from_bitField0_ & 0x00000001) != 0)) {
-        result.pollutionLevel_ = pollutionLevel_;
+        result.analyse_ = analyse_;
       }
       if (((from_bitField0_ & 0x00000002) != 0)) {
-        result.analyse_ = analyse_;
+        result.location_ = location_;
       }
       int to_bitField0_ = 0;
       if (((from_bitField0_ & 0x00000004) != 0)) {
@@ -445,9 +422,6 @@ private static final long serialVersionUID = 0L;
             ? timestamp_
             : timestampBuilder_.build();
         to_bitField0_ |= 0x00000001;
-      }
-      if (((from_bitField0_ & 0x00000008) != 0)) {
-        result.location_ = location_;
       }
       result.bitField0_ |= to_bitField0_;
     }
@@ -464,21 +438,18 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(com.chuntao.service.AnalyseResponse other) {
       if (other == com.chuntao.service.AnalyseResponse.getDefaultInstance()) return this;
-      if (other.getPollutionLevel() != 0) {
-        setPollutionLevel(other.getPollutionLevel());
-      }
       if (!other.getAnalyse().isEmpty()) {
         analyse_ = other.analyse_;
+        bitField0_ |= 0x00000001;
+        onChanged();
+      }
+      if (!other.getLocation().isEmpty()) {
+        location_ = other.location_;
         bitField0_ |= 0x00000002;
         onChanged();
       }
       if (other.hasTimestamp()) {
         mergeTimestamp(other.getTimestamp());
-      }
-      if (!other.getLocation().isEmpty()) {
-        location_ = other.location_;
-        bitField0_ |= 0x00000008;
-        onChanged();
       }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
@@ -506,13 +477,13 @@ private static final long serialVersionUID = 0L;
             case 0:
               done = true;
               break;
-            case 8: {
-              pollutionLevel_ = input.readInt32();
+            case 10: {
+              analyse_ = input.readStringRequireUtf8();
               bitField0_ |= 0x00000001;
               break;
-            } // case 8
+            } // case 10
             case 18: {
-              analyse_ = input.readStringRequireUtf8();
+              location_ = input.readStringRequireUtf8();
               bitField0_ |= 0x00000002;
               break;
             } // case 18
@@ -523,11 +494,6 @@ private static final long serialVersionUID = 0L;
               bitField0_ |= 0x00000004;
               break;
             } // case 26
-            case 34: {
-              location_ = input.readStringRequireUtf8();
-              bitField0_ |= 0x00000008;
-              break;
-            } // case 34
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -545,41 +511,9 @@ private static final long serialVersionUID = 0L;
     }
     private int bitField0_;
 
-    private int pollutionLevel_ ;
-    /**
-     * <code>int32 pollution_level = 1;</code>
-     * @return The pollutionLevel.
-     */
-    @java.lang.Override
-    public int getPollutionLevel() {
-      return pollutionLevel_;
-    }
-    /**
-     * <code>int32 pollution_level = 1;</code>
-     * @param value The pollutionLevel to set.
-     * @return This builder for chaining.
-     */
-    public Builder setPollutionLevel(int value) {
-
-      pollutionLevel_ = value;
-      bitField0_ |= 0x00000001;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>int32 pollution_level = 1;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearPollutionLevel() {
-      bitField0_ = (bitField0_ & ~0x00000001);
-      pollutionLevel_ = 0;
-      onChanged();
-      return this;
-    }
-
     private java.lang.Object analyse_ = "";
     /**
-     * <code>string analyse = 2;</code>
+     * <code>string analyse = 1;</code>
      * @return The analyse.
      */
     public java.lang.String getAnalyse() {
@@ -595,7 +529,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string analyse = 2;</code>
+     * <code>string analyse = 1;</code>
      * @return The bytes for analyse.
      */
     public com.google.protobuf.ByteString
@@ -612,7 +546,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string analyse = 2;</code>
+     * <code>string analyse = 1;</code>
      * @param value The analyse to set.
      * @return This builder for chaining.
      */
@@ -620,22 +554,22 @@ private static final long serialVersionUID = 0L;
         java.lang.String value) {
       if (value == null) { throw new NullPointerException(); }
       analyse_ = value;
-      bitField0_ |= 0x00000002;
+      bitField0_ |= 0x00000001;
       onChanged();
       return this;
     }
     /**
-     * <code>string analyse = 2;</code>
+     * <code>string analyse = 1;</code>
      * @return This builder for chaining.
      */
     public Builder clearAnalyse() {
       analyse_ = getDefaultInstance().getAnalyse();
-      bitField0_ = (bitField0_ & ~0x00000002);
+      bitField0_ = (bitField0_ & ~0x00000001);
       onChanged();
       return this;
     }
     /**
-     * <code>string analyse = 2;</code>
+     * <code>string analyse = 1;</code>
      * @param value The bytes for analyse to set.
      * @return This builder for chaining.
      */
@@ -644,6 +578,78 @@ private static final long serialVersionUID = 0L;
       if (value == null) { throw new NullPointerException(); }
       checkByteStringIsUtf8(value);
       analyse_ = value;
+      bitField0_ |= 0x00000001;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object location_ = "";
+    /**
+     * <code>string location = 2;</code>
+     * @return The location.
+     */
+    public java.lang.String getLocation() {
+      java.lang.Object ref = location_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        location_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string location = 2;</code>
+     * @return The bytes for location.
+     */
+    public com.google.protobuf.ByteString
+        getLocationBytes() {
+      java.lang.Object ref = location_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        location_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string location = 2;</code>
+     * @param value The location to set.
+     * @return This builder for chaining.
+     */
+    public Builder setLocation(
+        java.lang.String value) {
+      if (value == null) { throw new NullPointerException(); }
+      location_ = value;
+      bitField0_ |= 0x00000002;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string location = 2;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearLocation() {
+      location_ = getDefaultInstance().getLocation();
+      bitField0_ = (bitField0_ & ~0x00000002);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string location = 2;</code>
+     * @param value The bytes for location to set.
+     * @return This builder for chaining.
+     */
+    public Builder setLocationBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) { throw new NullPointerException(); }
+      checkByteStringIsUtf8(value);
+      location_ = value;
       bitField0_ |= 0x00000002;
       onChanged();
       return this;
@@ -768,78 +774,6 @@ private static final long serialVersionUID = 0L;
         timestamp_ = null;
       }
       return timestampBuilder_;
-    }
-
-    private java.lang.Object location_ = "";
-    /**
-     * <code>string location = 4;</code>
-     * @return The location.
-     */
-    public java.lang.String getLocation() {
-      java.lang.Object ref = location_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        location_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
-    }
-    /**
-     * <code>string location = 4;</code>
-     * @return The bytes for location.
-     */
-    public com.google.protobuf.ByteString
-        getLocationBytes() {
-      java.lang.Object ref = location_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        location_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string location = 4;</code>
-     * @param value The location to set.
-     * @return This builder for chaining.
-     */
-    public Builder setLocation(
-        java.lang.String value) {
-      if (value == null) { throw new NullPointerException(); }
-      location_ = value;
-      bitField0_ |= 0x00000008;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string location = 4;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearLocation() {
-      location_ = getDefaultInstance().getLocation();
-      bitField0_ = (bitField0_ & ~0x00000008);
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string location = 4;</code>
-     * @param value The bytes for location to set.
-     * @return This builder for chaining.
-     */
-    public Builder setLocationBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) { throw new NullPointerException(); }
-      checkByteStringIsUtf8(value);
-      location_ = value;
-      bitField0_ |= 0x00000008;
-      onChanged();
-      return this;
     }
 
     // @@protoc_insertion_point(builder_scope:com.chuntao.AnalyseResponse)

@@ -35,8 +35,8 @@ public class grpcService {
 //        NotifyServer.awaitTermination();
 //    }
 
-    private int port;
-    private Server server;
+    private final int port;
+    private final Server server;
 
     public grpcService(int port) {
         this.port = port;
@@ -107,7 +107,7 @@ public class grpcService {
                 float sumHumidity = 0; // Humidity in Percentage
                 float sumCO = 0; // CO in ppm
                 int pollutionItem = 0;
-
+                int pollutionLevel;
                 @Override
                 public void onNext(SensorResponse sensorResponse) {
                     // Calculate pollution level based on PM2.5
@@ -115,7 +115,7 @@ public class grpcService {
                     sumTemp += sensorResponse.getTemperature();
                     sumVOC += sensorResponse.getVOC();
                     sumHumidity += sensorResponse.getHumidity();
-                    sumCO += sensorResponse.getCO();;
+                    sumCO += sensorResponse.getCO();
                 }
 
                 @Override
@@ -128,33 +128,36 @@ public class grpcService {
                     //int avgPM25 = sumPM25 / numSamples;
 
                     // Determine pollution level based on average PM2.5
-                    int pollutionLevel;
-                    String analyse;
+                    String analyse = "";
                     if (sumPM25 > 12) {
                         pollutionItem++;
+                        analyse += "\nPM2.5 is over 12.";
                     } else if (sumTemp < 18 || sumTemp > 22) {
                         pollutionItem++;
+                        analyse += "\nTemperature is exceed 18-22.";
                     } else if (sumVOC < 0 || sumVOC > 0.5) {
                         pollutionItem++;
+                        analyse += "\nVOC is exceed 0-0.5.";
                     } else if (sumHumidity < 30 || sumHumidity > 50) {
                         pollutionItem++;
+                        analyse += "\nHumidity is exceed 30-50.";
                     } else if (sumCO < 0 || sumCO > 15) {
                         pollutionItem++;
+                        analyse += "\nPCO is exceed 0-15.";
                     }
 
                     if (pollutionItem <= 0) {
                         pollutionLevel = 1;
-                        analyse = "Low pollution";
+                        analyse += "\nPollution level: Low pollution";
                     } else if (pollutionItem < 2) {
                         pollutionLevel = 2;
-                        analyse = "Moderate pollution";
+                        analyse += "\nPollution level: Moderate pollution";
                     } else {
                         pollutionLevel = 3;
-                        analyse = "High pollution";
+                        analyse += "\nPollution level: High pollution";
                     }
                     // Create AnalyseResponse
                     AnalyseResponse analyseResponse = AnalyseResponse.newBuilder()
-                            .setPollutionLevel(pollutionLevel)
                             .setAnalyse(analyse)
                             .build();
 
@@ -170,19 +173,19 @@ public class grpcService {
     static class HVACImpl extends HVACGrpc.HVACImplBase {
 
         @Override
-        public StreamObserver<AnalyseResponse> hvacAction(StreamObserver<HVACCommand> responseObserver) {
+        public StreamObserver<SensorResponse> hvacAction(StreamObserver<HVACCommand> responseObserver) {
             return null;
         }
 
         @Override
-        public StreamObserver<AnalyseResponse> hvacControl(StreamObserver<HVACCommand> responseObserver) {
-            return new StreamObserver<AnalyseResponse>() {
-                int pollution_level;
+        public StreamObserver<SensorResponse> hvacControl(StreamObserver<HVACCommand> responseObserver) {
+            return new StreamObserver<SensorResponse>() {
+                int pollutionLevel;
                 String action;
                 String HVACAction;
                 @Override
-                public void onNext(AnalyseResponse analyseResponse) {
-                    pollution_level = analyseResponse.getPollutionLevel();
+                public void onNext(SensorResponse sensorResponse) {
+                    pollutionLevel = sensorResponse.getPollutionLevel();
                 }
 
                 @Override
@@ -192,7 +195,7 @@ public class grpcService {
 
                 @Override
                 public void onCompleted() {
-                    if(pollution_level > 2) {
+                    if(pollutionLevel > 2) {
                         action = "START";
                         HVACAction = "Turn on the HVAC";
                     } else {
@@ -251,22 +254,20 @@ public class grpcService {
     }
 
     // Notification service implement
-    class NotificationServiceImpl extends NotificationGrpc.NotificationImplBase {
+    static class NotificationServiceImpl extends NotificationGrpc.NotificationImplBase {
         @Override
-        public StreamObserver<AnalyseResponse> sensorNotifications(StreamObserver<NotificationMessage> responseObserver) {
+        public StreamObserver<SensorResponse> sensorNotifications(StreamObserver<NotificationMessage> responseObserver) {
             // Implementation for receiving sensor notifications (Server-side streaming RPC)
-            return new StreamObserver<AnalyseResponse>() {
-                int pollution_level = 0;
+            return new StreamObserver<SensorResponse>() {
+                int pollutionLevel = 0;
                 String location = "";
                 String air_quality = "";
                 String message = "";
-                Timestamp timestamp;
                 @Override
-                public void onNext(AnalyseResponse analyzeResponse) {
+                public void onNext(SensorResponse sensorResponse) {
                     // Process incoming analysis responses and send notifications
-                    location = analyzeResponse.getLocation();
-                    pollution_level = analyzeResponse.getPollutionLevel();
-                    timestamp = analyzeResponse.getTimestamp();
+                    location = sensorResponse.getLocation();
+                    pollutionLevel = sensorResponse.getPollutionLevel();
                 }
 
                 @Override
@@ -277,10 +278,10 @@ public class grpcService {
                 @Override
                 public void onCompleted() {
                     // Finalize processing
-                    if (pollution_level == 1) {
+                    if (pollutionLevel == 1) {
                         air_quality = "Air quality: Great";
                         message = "The air is healthy, HVAC is off";
-                    } else if (pollution_level == 2) {
+                    } else if (pollutionLevel == 2) {
                         air_quality = "Air quality: Moderate";
                         message = "The air is fine. HVAC is off now, you could turn on the HVAC.";
                     } else {
@@ -292,7 +293,7 @@ public class grpcService {
                             .setLocation(location)
                             .setAirQuality(air_quality)
                             .setMessage(message)
-                            .setTimestamp(timestamp)
+                            .setTimestamp(timestampNow())
                             .build();
                     responseObserver.onNext(notificationMessage);
                     responseObserver.onCompleted();
@@ -322,7 +323,7 @@ public class grpcService {
                 @Override
                 public void onCompleted() {
                     // Finalize processing
-                    if (status == true) {
+                    if (status) {
                         message = "HVAC is on.";
                     } else {
                         message = "HVAC is off.";
@@ -336,6 +337,13 @@ public class grpcService {
                 responseObserver.onCompleted();
                 }
             };
+        }
+        private Timestamp timestampNow() {
+            Instant now = Instant.now();
+            return Timestamp.newBuilder()
+                    .setSeconds(now.getEpochSecond())
+                    .setNanos(now.getNano())
+                    .build();
         }
     }
 }

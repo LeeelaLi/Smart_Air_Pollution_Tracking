@@ -49,12 +49,12 @@ public final class HVACService {
       "ACCommand.Action\"\035\n\006Action\022\t\n\005START\020\000\022\010\n" +
       "\004STOP\020\001\"_\n\014HVACResponse\022\020\n\010location\030\001 \001(" +
       "\t\022\016\n\006status\030\002 \001(\010\022-\n\ttimestamp\030\003 \001(\0132\032.g" +
-      "oogle.protobuf.Timestamp2\232\001\n\004HVAC\022I\n\013HVA" +
-      "CControl\022\034.com.chuntao.AnalyseResponse\032\030" +
-      ".com.chuntao.HVACCommand\"\000(\001\022G\n\nHVACSwit" +
-      "ch\022\030.com.chuntao.HVACCommand\032\031.com.chunt" +
-      "ao.HVACResponse\"\000(\0010\001B$\n\023com.chuntao.ser" +
-      "viceB\013HVACServiceP\001b\006proto3"
+      "oogle.protobuf.Timestamp2\231\001\n\004HVAC\022H\n\013HVA" +
+      "CControl\022\033.com.chuntao.SensorResponse\032\030." +
+      "com.chuntao.HVACCommand\"\000(\001\022G\n\nHVACSwitc" +
+      "h\022\030.com.chuntao.HVACCommand\032\031.com.chunta" +
+      "o.HVACResponse\"\000(\0010\001B$\n\023com.chuntao.serv" +
+      "iceB\013HVACServiceP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

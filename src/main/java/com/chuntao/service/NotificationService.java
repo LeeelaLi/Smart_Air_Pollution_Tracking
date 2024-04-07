@@ -43,13 +43,13 @@ public final class NotificationService {
       "\032\nHVAC.proto\"|\n\023NotificationMessage\022\020\n\010l" +
       "ocation\030\001 \001(\t\022\023\n\013air_quality\030\002 \001(\t\022\017\n\007me" +
       "ssage\030\003 \001(\t\022-\n\ttimestamp\030\004 \001(\0132\032.google." +
-      "protobuf.Timestamp2\277\001\n\014Notification\022Y\n\023S" +
-      "ensorNotifications\022\034.com.chuntao.Analyse" +
-      "Response\032 .com.chuntao.NotificationMessa" +
-      "ge\"\0000\001\022T\n\021VentNotifications\022\031.com.chunta" +
-      "o.HVACResponse\032 .com.chuntao.Notificatio" +
-      "nMessage\"\0000\001B,\n\023com.chuntao.serviceB\023Not" +
-      "ificationServiceP\001b\006proto3"
+      "protobuf.Timestamp2\276\001\n\014Notification\022X\n\023S" +
+      "ensorNotifications\022\033.com.chuntao.SensorR" +
+      "esponse\032 .com.chuntao.NotificationMessag" +
+      "e\"\0000\001\022T\n\021VentNotifications\022\031.com.chuntao" +
+      ".HVACResponse\032 .com.chuntao.Notification" +
+      "Message\"\0000\001B,\n\023com.chuntao.serviceB\023Noti" +
+      "ficationServiceP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

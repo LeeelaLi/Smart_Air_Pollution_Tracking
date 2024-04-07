@@ -20,27 +20,27 @@ public final class NotificationGrpc {
   public static final java.lang.String SERVICE_NAME = "com.chuntao.Notification";
 
   // Static method descriptors that strictly reflect the proto.
-  private static volatile io.grpc.MethodDescriptor<com.chuntao.service.AnalyseResponse,
+  private static volatile io.grpc.MethodDescriptor<com.chuntao.service.SensorResponse,
       com.chuntao.service.NotificationMessage> getSensorNotificationsMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "SensorNotifications",
-      requestType = com.chuntao.service.AnalyseResponse.class,
+      requestType = com.chuntao.service.SensorResponse.class,
       responseType = com.chuntao.service.NotificationMessage.class,
       methodType = io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
-  public static io.grpc.MethodDescriptor<com.chuntao.service.AnalyseResponse,
+  public static io.grpc.MethodDescriptor<com.chuntao.service.SensorResponse,
       com.chuntao.service.NotificationMessage> getSensorNotificationsMethod() {
-    io.grpc.MethodDescriptor<com.chuntao.service.AnalyseResponse, com.chuntao.service.NotificationMessage> getSensorNotificationsMethod;
+    io.grpc.MethodDescriptor<com.chuntao.service.SensorResponse, com.chuntao.service.NotificationMessage> getSensorNotificationsMethod;
     if ((getSensorNotificationsMethod = NotificationGrpc.getSensorNotificationsMethod) == null) {
       synchronized (NotificationGrpc.class) {
         if ((getSensorNotificationsMethod = NotificationGrpc.getSensorNotificationsMethod) == null) {
           NotificationGrpc.getSensorNotificationsMethod = getSensorNotificationsMethod =
-              io.grpc.MethodDescriptor.<com.chuntao.service.AnalyseResponse, com.chuntao.service.NotificationMessage>newBuilder()
+              io.grpc.MethodDescriptor.<com.chuntao.service.SensorResponse, com.chuntao.service.NotificationMessage>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
               .setFullMethodName(generateFullMethodName(SERVICE_NAME, "SensorNotifications"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  com.chuntao.service.AnalyseResponse.getDefaultInstance()))
+                  com.chuntao.service.SensorResponse.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.chuntao.service.NotificationMessage.getDefaultInstance()))
               .setSchemaDescriptor(new NotificationMethodDescriptorSupplier("SensorNotifications"))
@@ -138,7 +138,7 @@ public final class NotificationGrpc {
      * Server-side streaming RPC for receiving notifications based on analyze response
      * </pre>
      */
-    default void sensorNotifications(com.chuntao.service.AnalyseResponse request,
+    default void sensorNotifications(com.chuntao.service.SensorResponse request,
         io.grpc.stub.StreamObserver<com.chuntao.service.NotificationMessage> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getSensorNotificationsMethod(), responseObserver);
     }
@@ -167,7 +167,7 @@ public final class NotificationGrpc {
       return NotificationGrpc.bindService(this);
     }
 
-      public abstract StreamObserver<AnalyseResponse> sensorNotifications(StreamObserver<NotificationMessage> responseObserver);
+      public abstract StreamObserver<SensorResponse> sensorNotifications(StreamObserver<NotificationMessage> responseObserver);
 
     public abstract StreamObserver<HVACResponse> ventNotifications(StreamObserver<NotificationMessage> responseObserver);
   }
@@ -196,7 +196,7 @@ public final class NotificationGrpc {
      * Server-side streaming RPC for receiving notifications based on analyze response
      * </pre>
      */
-    public void sensorNotifications(com.chuntao.service.AnalyseResponse request,
+    public void sensorNotifications(com.chuntao.service.SensorResponse request,
         io.grpc.stub.StreamObserver<com.chuntao.service.NotificationMessage> responseObserver) {
       io.grpc.stub.ClientCalls.asyncServerStreamingCall(
           getChannel().newCall(getSensorNotificationsMethod(), getCallOptions()), request, responseObserver);
@@ -239,7 +239,7 @@ public final class NotificationGrpc {
      * </pre>
      */
     public java.util.Iterator<com.chuntao.service.NotificationMessage> sensorNotifications(
-        com.chuntao.service.AnalyseResponse request) {
+        com.chuntao.service.SensorResponse request) {
       return io.grpc.stub.ClientCalls.blockingServerStreamingCall(
           getChannel(), getSensorNotificationsMethod(), getCallOptions(), request);
     }
@@ -297,7 +297,7 @@ public final class NotificationGrpc {
     public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
         case METHODID_SENSOR_NOTIFICATIONS:
-          serviceImpl.sensorNotifications((com.chuntao.service.AnalyseResponse) request,
+          serviceImpl.sensorNotifications((com.chuntao.service.SensorResponse) request,
               (io.grpc.stub.StreamObserver<com.chuntao.service.NotificationMessage>) responseObserver);
           break;
         case METHODID_VENT_NOTIFICATIONS:
@@ -326,7 +326,7 @@ public final class NotificationGrpc {
           getSensorNotificationsMethod(),
           io.grpc.stub.ServerCalls.asyncServerStreamingCall(
             new MethodHandlers<
-              com.chuntao.service.AnalyseResponse,
+              com.chuntao.service.SensorResponse,
               com.chuntao.service.NotificationMessage>(
                 service, METHODID_SENSOR_NOTIFICATIONS)))
         .addMethod(
