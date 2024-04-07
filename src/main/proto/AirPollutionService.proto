@@ -35,6 +35,7 @@ message SensorResponse {
   float CO = 6; // CO in ppm
   int32 pollution_level = 7;
   google.protobuf.Timestamp timestamp = 8;
+  string message = 9;
 }
 
 // Ventilation Service: automatically turn on ventilation based on air quality
