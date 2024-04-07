@@ -9,70 +9,70 @@ import java.io.IOException;
 import java.time.Instant;
 
 public class grpcService {
-//    public static void main(String[] args) throws Exception {
-//        Server sensorServer = ServerBuilder.forPort(9090)
-//                .addService(new SensorServiceImpl())
-//                .build();
-//
-//        sensorServer.start();
-//        System.out.println("Sensor Service started on port 9090");
-//        sensorServer.awaitTermination();
-//
-//        Server HVACServer = ServerBuilder.forPort(9091)
-//                .addService(new HVACServiceImpl())
-//                .build();
-//
-//        HVACServer.start();
-//        System.out.println("HVAC Service started on port 9091");
-//        HVACServer.awaitTermination();
-//
-//        Server NotifyServer = ServerBuilder.forPort(9092)
-//                .addService(new NotificationServiceImpl())
-//                .build();
-//
-//        NotifyServer.start();
-//        System.out.println("Notification Service started on port 9092");
-//        NotifyServer.awaitTermination();
-//    }
-
-    private final int port;
-    private final Server server;
-
-    public grpcService(int port) {
-        this.port = port;
-        this.server = ServerBuilder.forPort(port)
+    public static void main(String[] args) throws Exception {
+        Server sensorServer = ServerBuilder.forPort(9090)
                 .addService(new SensorImpl())
+                .build();
+
+        sensorServer.start();
+        System.out.println("Sensor Service started on port 9090");
+        sensorServer.awaitTermination();
+
+        Server HVACServer = ServerBuilder.forPort(9091)
                 .addService(new HVACImpl())
                 .build();
+
+        HVACServer.start();
+        System.out.println("HVAC Service started on port 9091");
+        HVACServer.awaitTermination();
+
+        Server NotifyServer = ServerBuilder.forPort(9092)
+                .addService(new NotificationServiceImpl())
+                .build();
+
+        NotifyServer.start();
+        System.out.println("Notification Service started on port 9092");
+        NotifyServer.awaitTermination();
     }
 
-    public void start() throws IOException {
-        server.start();
-        System.out.println("Server started, listening on " + port);
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            System.out.println("Shutting down gRPC server");
-            grpcService.this.stop();
-            System.out.println("Server shut down");
-        }));
-    }
-
-    private void stop() {
-        if (server != null) {
-            server.shutdown();
-        }
-    }
-
-    public void blockUntilShutdown() throws InterruptedException {
-        if (server != null) {
-            server.awaitTermination();
-        }
-    }
-
-    public static void main(String[] args) throws IOException, InterruptedException {
-        grpcService server = new grpcService(9090);
-        server.start();
-        server.blockUntilShutdown();
-    }
+//    private final int port;
+//    private final Server server;
+//
+//    public grpcService(int port) {
+//        this.port = port;
+//        this.server = ServerBuilder.forPort(port)
+//                .addService(new SensorImpl())
+//                .addService(new HVACImpl())
+//                .build();
+//    }
+//
+//    public void start() throws IOException {
+//        server.start();
+//        System.out.println("Server started, listening on " + port);
+//        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+//            System.out.println("Shutting down gRPC server");
+//            grpcService.this.stop();
+//            System.out.println("Server shut down");
+//        }));
+//    }
+//
+//    private void stop() {
+//        if (server != null) {
+//            server.shutdown();
+//        }
+//    }
+//
+//    public void blockUntilShutdown() throws InterruptedException {
+//        if (server != null) {
+//            server.awaitTermination();
+//        }
+//    }
+//
+//    public static void main(String[] args) throws IOException, InterruptedException {
+//        grpcService server = new grpcService(9090);
+//        server.start();
+//        server.blockUntilShutdown();
+//    }
 
     // Sensor service implement
     static class SensorImpl extends SensorGrpc.SensorImplBase {
