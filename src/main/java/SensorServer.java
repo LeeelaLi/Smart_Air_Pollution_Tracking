@@ -50,7 +50,7 @@ public class SensorServer {
 
                 @Override
                 public void onNext(SensorResponse sensorResponse) {
-                    // Calculate pollution level based on PM2.5
+                    // Calculate pollution level based on 5 factors of qir quality
                     sumPM25 += sensorResponse.getPM25();
                     sumTemp += sensorResponse.getTemperature();
                     sumVOC += sensorResponse.getVOC();

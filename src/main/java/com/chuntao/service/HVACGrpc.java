@@ -170,8 +170,6 @@ public final class HVACGrpc {
     public abstract StreamObserver<SensorResponse> hvacAction(StreamObserver<HVACCommand> responseObserver);
 
     public abstract StreamObserver<SensorResponse> hvacControl(StreamObserver<HVACCommand> responseObserver);
-
-    public abstract StreamObserver<HVACCommand> hvacSwitch(StreamObserver<HVACResponse> responseObserver);
   }
 
   /**

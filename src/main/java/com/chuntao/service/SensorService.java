@@ -50,18 +50,19 @@ public final class SensorService {
     java.lang.String[] descriptorData = {
       "\n\014Sensor.proto\022\013com.chuntao\032\037google/prot" +
       "obuf/timestamp.proto\"\"\n\rSensorRequest\022\021\n" +
-      "\tsensor_id\030\001 \001(\005\"\211\001\n\016SensorResponse\022\020\n\010l" +
-      "ocation\030\001 \001(\t\022\014\n\004PM25\030\002 \001(\002\022\023\n\013temperatu" +
-      "re\030\003 \001(\002\022\013\n\003VOC\030\004 \001(\002\022\020\n\010humidity\030\005 \001(\002\022" +
-      "\n\n\002CO\030\006 \001(\002\022\027\n\017pollution_level\030\007 \001(\005\"c\n\017" +
-      "AnalyseResponse\022\017\n\007analyse\030\001 \001(\t\022\020\n\010loca" +
-      "tion\030\002 \001(\t\022-\n\ttimestamp\030\003 \001(\0132\032.google.p" +
-      "rotobuf.Timestamp2\250\001\n\006Sensor\022J\n\rGetSenso" +
-      "rData\022\032.com.chuntao.SensorRequest\032\033.com." +
-      "chuntao.SensorResponse\"\000\022R\n\021AnalyseSenso" +
-      "rData\022\033.com.chuntao.SensorResponse\032\034.com" +
-      ".chuntao.AnalyseResponse\"\000(\001B&\n\023com.chun" +
-      "tao.serviceB\rSensorServiceP\001b\006proto3"
+      "\tsensor_id\030\001 \001(\005\"p\n\016SensorResponse\022\020\n\010lo" +
+      "cation\030\001 \001(\t\022\014\n\004PM25\030\002 \001(\002\022\023\n\013temperatur" +
+      "e\030\003 \001(\002\022\013\n\003VOC\030\004 \001(\002\022\020\n\010humidity\030\005 \001(\002\022\n" +
+      "\n\002CO\030\006 \001(\002\"\215\001\n\017AnalyseResponse\022\017\n\007analys" +
+      "e\030\001 \001(\t\022\020\n\010location\030\002 \001(\t\022\027\n\017pollution_l" +
+      "evel\030\003 \001(\005\022\017\n\007message\030\004 \001(\t\022-\n\ttimestamp" +
+      "\030\005 \001(\0132\032.google.protobuf.Timestamp2\250\001\n\006S" +
+      "ensor\022J\n\rGetSensorData\022\032.com.chuntao.Sen" +
+      "sorRequest\032\033.com.chuntao.SensorResponse\"" +
+      "\000\022R\n\021AnalyseSensorData\022\033.com.chuntao.Sen" +
+      "sorResponse\032\034.com.chuntao.AnalyseRespons" +
+      "e\"\000(\001B&\n\023com.chuntao.serviceB\rSensorServ" +
+      "iceP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -79,13 +80,13 @@ public final class SensorService {
     internal_static_com_chuntao_SensorResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_com_chuntao_SensorResponse_descriptor,
-        new java.lang.String[] { "Location", "PM25", "Temperature", "VOC", "Humidity", "CO", "PollutionLevel", });
+        new java.lang.String[] { "Location", "PM25", "Temperature", "VOC", "Humidity", "CO", });
     internal_static_com_chuntao_AnalyseResponse_descriptor =
       getDescriptor().getMessageTypes().get(2);
     internal_static_com_chuntao_AnalyseResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_com_chuntao_AnalyseResponse_descriptor,
-        new java.lang.String[] { "Analyse", "Location", "Timestamp", });
+        new java.lang.String[] { "Analyse", "Location", "PollutionLevel", "Message", "Timestamp", });
     descriptor.resolveAllFeaturesImmutable();
     com.google.protobuf.TimestampProto.getDescriptor();
   }

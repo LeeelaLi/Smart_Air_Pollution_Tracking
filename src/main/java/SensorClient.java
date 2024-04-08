@@ -9,8 +9,8 @@ import java.util.Scanner;
 import java.util.Date;
 
 public class SensorClient {
-    public static int pollution_level;
     public static int id;
+    public static int pollution_level;
     public static String location;
 
     public static void main(String[] args) {
@@ -73,7 +73,6 @@ public class SensorClient {
                 "\n4. Humidity: " + sensorResponse.getHumidity() + " %" +
                 "\n5. CO: " + sensorResponse.getCO() + " ppm");
         location = sensorResponse.getLocation();
-        pollution_level = sensorResponse.getPollutionLevel();
     }
 
     private static AnalyseResponse createAnalyseResponse(SensorResponse sensorResponse) {
@@ -101,19 +100,27 @@ public class SensorClient {
             analyseBuilder.append("\n· PCO is exceed 0-15 ppm.");
         }
 
-        analyseBuilder.append("\n2. Pollution number: ").append(pollution_item).append("\n3. Pollution level: ");
+        analyseBuilder.append("\n2. Pollution number: ").append(pollution_item)
+                .append("\n3. Pollution level: ").append(pollution_item)
+                .append("\n4. Quality: ");
+        StringBuilder adviceBuilder = new StringBuilder();
         if (pollution_item <= 2) {
             analyseBuilder.append("Low pollution");
+            adviceBuilder.append("The air quality is great, keep going.");
         } else if (pollution_item == 3) {
             analyseBuilder.append("Moderate pollution");
+            adviceBuilder.append("The air is a bit polluted, it is recommended to turn on the HVAC.");
         } else {
             analyseBuilder.append("High pollution");
+            adviceBuilder.append("The air is highly polluted, HVAC is automatically turning on.");
         }
 
         Timestamp timestamp = timestampNow();
         return AnalyseResponse.newBuilder()
                 .setAnalyse(analyseBuilder.toString())
                 .setLocation(sensorResponse.getLocation())
+                .setPollutionLevel(pollution_item)
+                .setMessage(adviceBuilder.toString())
                 .setTimestamp(timestamp)
                 .build();
     }
@@ -122,7 +129,9 @@ public class SensorClient {
         Date updatedTime = new Date(analyseResponse.getTimestamp().getSeconds() * 1000);
         System.out.println("\nThe air quality of " + analyseResponse.getLocation() + ":" +
                 "\n1. " + analyseResponse.getAnalyse() +
-                "\n4. Updated time: " + updatedTime);
+                "\n5. Advice: " + analyseResponse.getMessage() +
+                "\n6. Updated time: " + updatedTime);
+        pollution_level = analyseResponse.getPollutionLevel();
     }
 
     private static Timestamp timestampNow() {

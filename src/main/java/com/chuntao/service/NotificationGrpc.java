@@ -168,8 +168,6 @@ public final class NotificationGrpc {
     }
 
     public abstract StreamObserver<SensorResponse> sensorNotifications(StreamObserver<NotificationMessage> responseObserver);
-
-    public abstract StreamObserver<HVACResponse> ventNotifications(StreamObserver<NotificationMessage> responseObserver);
   }
 
   /**

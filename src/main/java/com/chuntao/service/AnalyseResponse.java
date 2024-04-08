@@ -28,6 +28,7 @@ private static final long serialVersionUID = 0L;
   private AnalyseResponse() {
     analyse_ = "";
     location_ = "";
+    message_ = "";
   }
 
   public static final com.google.protobuf.Descriptors.Descriptor
@@ -122,10 +123,60 @@ private static final long serialVersionUID = 0L;
     }
   }
 
-  public static final int TIMESTAMP_FIELD_NUMBER = 3;
+  public static final int POLLUTION_LEVEL_FIELD_NUMBER = 3;
+  private int pollutionLevel_ = 0;
+  /**
+   * <code>int32 pollution_level = 3;</code>
+   * @return The pollutionLevel.
+   */
+  @java.lang.Override
+  public int getPollutionLevel() {
+    return pollutionLevel_;
+  }
+
+  public static final int MESSAGE_FIELD_NUMBER = 4;
+  @SuppressWarnings("serial")
+  private volatile java.lang.Object message_ = "";
+  /**
+   * <code>string message = 4;</code>
+   * @return The message.
+   */
+  @java.lang.Override
+  public java.lang.String getMessage() {
+    java.lang.Object ref = message_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      message_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string message = 4;</code>
+   * @return The bytes for message.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getMessageBytes() {
+    java.lang.Object ref = message_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      message_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int TIMESTAMP_FIELD_NUMBER = 5;
   private com.google.protobuf.Timestamp timestamp_;
   /**
-   * <code>.google.protobuf.Timestamp timestamp = 3;</code>
+   * <code>.google.protobuf.Timestamp timestamp = 5;</code>
    * @return Whether the timestamp field is set.
    */
   @java.lang.Override
@@ -133,7 +184,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>.google.protobuf.Timestamp timestamp = 3;</code>
+   * <code>.google.protobuf.Timestamp timestamp = 5;</code>
    * @return The timestamp.
    */
   @java.lang.Override
@@ -141,7 +192,7 @@ private static final long serialVersionUID = 0L;
     return timestamp_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : timestamp_;
   }
   /**
-   * <code>.google.protobuf.Timestamp timestamp = 3;</code>
+   * <code>.google.protobuf.Timestamp timestamp = 5;</code>
    */
   @java.lang.Override
   public com.google.protobuf.TimestampOrBuilder getTimestampOrBuilder() {
@@ -168,8 +219,14 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(location_)) {
       com.google.protobuf.GeneratedMessage.writeString(output, 2, location_);
     }
+    if (pollutionLevel_ != 0) {
+      output.writeInt32(3, pollutionLevel_);
+    }
+    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(message_)) {
+      com.google.protobuf.GeneratedMessage.writeString(output, 4, message_);
+    }
     if (((bitField0_ & 0x00000001) != 0)) {
-      output.writeMessage(3, getTimestamp());
+      output.writeMessage(5, getTimestamp());
     }
     getUnknownFields().writeTo(output);
   }
@@ -186,9 +243,16 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(location_)) {
       size += com.google.protobuf.GeneratedMessage.computeStringSize(2, location_);
     }
+    if (pollutionLevel_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(3, pollutionLevel_);
+    }
+    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(message_)) {
+      size += com.google.protobuf.GeneratedMessage.computeStringSize(4, message_);
+    }
     if (((bitField0_ & 0x00000001) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(3, getTimestamp());
+        .computeMessageSize(5, getTimestamp());
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -209,6 +273,10 @@ private static final long serialVersionUID = 0L;
         .equals(other.getAnalyse())) return false;
     if (!getLocation()
         .equals(other.getLocation())) return false;
+    if (getPollutionLevel()
+        != other.getPollutionLevel()) return false;
+    if (!getMessage()
+        .equals(other.getMessage())) return false;
     if (hasTimestamp() != other.hasTimestamp()) return false;
     if (hasTimestamp()) {
       if (!getTimestamp()
@@ -229,6 +297,10 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getAnalyse().hashCode();
     hash = (37 * hash) + LOCATION_FIELD_NUMBER;
     hash = (53 * hash) + getLocation().hashCode();
+    hash = (37 * hash) + POLLUTION_LEVEL_FIELD_NUMBER;
+    hash = (53 * hash) + getPollutionLevel();
+    hash = (37 * hash) + MESSAGE_FIELD_NUMBER;
+    hash = (53 * hash) + getMessage().hashCode();
     if (hasTimestamp()) {
       hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
       hash = (53 * hash) + getTimestamp().hashCode();
@@ -372,6 +444,8 @@ private static final long serialVersionUID = 0L;
       bitField0_ = 0;
       analyse_ = "";
       location_ = "";
+      pollutionLevel_ = 0;
+      message_ = "";
       timestamp_ = null;
       if (timestampBuilder_ != null) {
         timestampBuilder_.dispose();
@@ -416,8 +490,14 @@ private static final long serialVersionUID = 0L;
       if (((from_bitField0_ & 0x00000002) != 0)) {
         result.location_ = location_;
       }
-      int to_bitField0_ = 0;
       if (((from_bitField0_ & 0x00000004) != 0)) {
+        result.pollutionLevel_ = pollutionLevel_;
+      }
+      if (((from_bitField0_ & 0x00000008) != 0)) {
+        result.message_ = message_;
+      }
+      int to_bitField0_ = 0;
+      if (((from_bitField0_ & 0x00000010) != 0)) {
         result.timestamp_ = timestampBuilder_ == null
             ? timestamp_
             : timestampBuilder_.build();
@@ -446,6 +526,14 @@ private static final long serialVersionUID = 0L;
       if (!other.getLocation().isEmpty()) {
         location_ = other.location_;
         bitField0_ |= 0x00000002;
+        onChanged();
+      }
+      if (other.getPollutionLevel() != 0) {
+        setPollutionLevel(other.getPollutionLevel());
+      }
+      if (!other.getMessage().isEmpty()) {
+        message_ = other.message_;
+        bitField0_ |= 0x00000008;
         onChanged();
       }
       if (other.hasTimestamp()) {
@@ -487,13 +575,23 @@ private static final long serialVersionUID = 0L;
               bitField0_ |= 0x00000002;
               break;
             } // case 18
-            case 26: {
+            case 24: {
+              pollutionLevel_ = input.readInt32();
+              bitField0_ |= 0x00000004;
+              break;
+            } // case 24
+            case 34: {
+              message_ = input.readStringRequireUtf8();
+              bitField0_ |= 0x00000008;
+              break;
+            } // case 34
+            case 42: {
               input.readMessage(
                   getTimestampFieldBuilder().getBuilder(),
                   extensionRegistry);
-              bitField0_ |= 0x00000004;
+              bitField0_ |= 0x00000010;
               break;
-            } // case 26
+            } // case 42
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -655,18 +753,122 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
+    private int pollutionLevel_ ;
+    /**
+     * <code>int32 pollution_level = 3;</code>
+     * @return The pollutionLevel.
+     */
+    @java.lang.Override
+    public int getPollutionLevel() {
+      return pollutionLevel_;
+    }
+    /**
+     * <code>int32 pollution_level = 3;</code>
+     * @param value The pollutionLevel to set.
+     * @return This builder for chaining.
+     */
+    public Builder setPollutionLevel(int value) {
+
+      pollutionLevel_ = value;
+      bitField0_ |= 0x00000004;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int32 pollution_level = 3;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearPollutionLevel() {
+      bitField0_ = (bitField0_ & ~0x00000004);
+      pollutionLevel_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object message_ = "";
+    /**
+     * <code>string message = 4;</code>
+     * @return The message.
+     */
+    public java.lang.String getMessage() {
+      java.lang.Object ref = message_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        message_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string message = 4;</code>
+     * @return The bytes for message.
+     */
+    public com.google.protobuf.ByteString
+        getMessageBytes() {
+      java.lang.Object ref = message_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        message_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string message = 4;</code>
+     * @param value The message to set.
+     * @return This builder for chaining.
+     */
+    public Builder setMessage(
+        java.lang.String value) {
+      if (value == null) { throw new NullPointerException(); }
+      message_ = value;
+      bitField0_ |= 0x00000008;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string message = 4;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearMessage() {
+      message_ = getDefaultInstance().getMessage();
+      bitField0_ = (bitField0_ & ~0x00000008);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string message = 4;</code>
+     * @param value The bytes for message to set.
+     * @return This builder for chaining.
+     */
+    public Builder setMessageBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) { throw new NullPointerException(); }
+      checkByteStringIsUtf8(value);
+      message_ = value;
+      bitField0_ |= 0x00000008;
+      onChanged();
+      return this;
+    }
+
     private com.google.protobuf.Timestamp timestamp_;
     private com.google.protobuf.SingleFieldBuilder<
         com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> timestampBuilder_;
     /**
-     * <code>.google.protobuf.Timestamp timestamp = 3;</code>
+     * <code>.google.protobuf.Timestamp timestamp = 5;</code>
      * @return Whether the timestamp field is set.
      */
     public boolean hasTimestamp() {
-      return ((bitField0_ & 0x00000004) != 0);
+      return ((bitField0_ & 0x00000010) != 0);
     }
     /**
-     * <code>.google.protobuf.Timestamp timestamp = 3;</code>
+     * <code>.google.protobuf.Timestamp timestamp = 5;</code>
      * @return The timestamp.
      */
     public com.google.protobuf.Timestamp getTimestamp() {
@@ -677,7 +879,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>.google.protobuf.Timestamp timestamp = 3;</code>
+     * <code>.google.protobuf.Timestamp timestamp = 5;</code>
      */
     public Builder setTimestamp(com.google.protobuf.Timestamp value) {
       if (timestampBuilder_ == null) {
@@ -688,12 +890,12 @@ private static final long serialVersionUID = 0L;
       } else {
         timestampBuilder_.setMessage(value);
       }
-      bitField0_ |= 0x00000004;
+      bitField0_ |= 0x00000010;
       onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.Timestamp timestamp = 3;</code>
+     * <code>.google.protobuf.Timestamp timestamp = 5;</code>
      */
     public Builder setTimestamp(
         com.google.protobuf.Timestamp.Builder builderForValue) {
@@ -702,16 +904,16 @@ private static final long serialVersionUID = 0L;
       } else {
         timestampBuilder_.setMessage(builderForValue.build());
       }
-      bitField0_ |= 0x00000004;
+      bitField0_ |= 0x00000010;
       onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.Timestamp timestamp = 3;</code>
+     * <code>.google.protobuf.Timestamp timestamp = 5;</code>
      */
     public Builder mergeTimestamp(com.google.protobuf.Timestamp value) {
       if (timestampBuilder_ == null) {
-        if (((bitField0_ & 0x00000004) != 0) &&
+        if (((bitField0_ & 0x00000010) != 0) &&
           timestamp_ != null &&
           timestamp_ != com.google.protobuf.Timestamp.getDefaultInstance()) {
           getTimestampBuilder().mergeFrom(value);
@@ -722,16 +924,16 @@ private static final long serialVersionUID = 0L;
         timestampBuilder_.mergeFrom(value);
       }
       if (timestamp_ != null) {
-        bitField0_ |= 0x00000004;
+        bitField0_ |= 0x00000010;
         onChanged();
       }
       return this;
     }
     /**
-     * <code>.google.protobuf.Timestamp timestamp = 3;</code>
+     * <code>.google.protobuf.Timestamp timestamp = 5;</code>
      */
     public Builder clearTimestamp() {
-      bitField0_ = (bitField0_ & ~0x00000004);
+      bitField0_ = (bitField0_ & ~0x00000010);
       timestamp_ = null;
       if (timestampBuilder_ != null) {
         timestampBuilder_.dispose();
@@ -741,15 +943,15 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.google.protobuf.Timestamp timestamp = 3;</code>
+     * <code>.google.protobuf.Timestamp timestamp = 5;</code>
      */
     public com.google.protobuf.Timestamp.Builder getTimestampBuilder() {
-      bitField0_ |= 0x00000004;
+      bitField0_ |= 0x00000010;
       onChanged();
       return getTimestampFieldBuilder().getBuilder();
     }
     /**
-     * <code>.google.protobuf.Timestamp timestamp = 3;</code>
+     * <code>.google.protobuf.Timestamp timestamp = 5;</code>
      */
     public com.google.protobuf.TimestampOrBuilder getTimestampOrBuilder() {
       if (timestampBuilder_ != null) {
@@ -760,7 +962,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>.google.protobuf.Timestamp timestamp = 3;</code>
+     * <code>.google.protobuf.Timestamp timestamp = 5;</code>
      */
     private com.google.protobuf.SingleFieldBuilder<
         com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> 

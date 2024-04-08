@@ -33,17 +33,35 @@ public interface AnalyseResponseOrBuilder extends
       getLocationBytes();
 
   /**
-   * <code>.google.protobuf.Timestamp timestamp = 3;</code>
+   * <code>int32 pollution_level = 3;</code>
+   * @return The pollutionLevel.
+   */
+  int getPollutionLevel();
+
+  /**
+   * <code>string message = 4;</code>
+   * @return The message.
+   */
+  java.lang.String getMessage();
+  /**
+   * <code>string message = 4;</code>
+   * @return The bytes for message.
+   */
+  com.google.protobuf.ByteString
+      getMessageBytes();
+
+  /**
+   * <code>.google.protobuf.Timestamp timestamp = 5;</code>
    * @return Whether the timestamp field is set.
    */
   boolean hasTimestamp();
   /**
-   * <code>.google.protobuf.Timestamp timestamp = 3;</code>
+   * <code>.google.protobuf.Timestamp timestamp = 5;</code>
    * @return The timestamp.
    */
   com.google.protobuf.Timestamp getTimestamp();
   /**
-   * <code>.google.protobuf.Timestamp timestamp = 3;</code>
+   * <code>.google.protobuf.Timestamp timestamp = 5;</code>
    */
   com.google.protobuf.TimestampOrBuilder getTimestampOrBuilder();
 }

@@ -156,17 +156,6 @@ private static final long serialVersionUID = 0L;
     return cO_;
   }
 
-  public static final int POLLUTION_LEVEL_FIELD_NUMBER = 7;
-  private int pollutionLevel_ = 0;
-  /**
-   * <code>int32 pollution_level = 7;</code>
-   * @return The pollutionLevel.
-   */
-  @java.lang.Override
-  public int getPollutionLevel() {
-    return pollutionLevel_;
-  }
-
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -198,9 +187,6 @@ private static final long serialVersionUID = 0L;
     }
     if (java.lang.Float.floatToRawIntBits(cO_) != 0) {
       output.writeFloat(6, cO_);
-    }
-    if (pollutionLevel_ != 0) {
-      output.writeInt32(7, pollutionLevel_);
     }
     getUnknownFields().writeTo(output);
   }
@@ -234,10 +220,6 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeFloatSize(6, cO_);
     }
-    if (pollutionLevel_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(7, pollutionLevel_);
-    }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
     return size;
@@ -270,8 +252,6 @@ private static final long serialVersionUID = 0L;
     if (java.lang.Float.floatToIntBits(getCO())
         != java.lang.Float.floatToIntBits(
             other.getCO())) return false;
-    if (getPollutionLevel()
-        != other.getPollutionLevel()) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -300,8 +280,6 @@ private static final long serialVersionUID = 0L;
     hash = (37 * hash) + CO_FIELD_NUMBER;
     hash = (53 * hash) + java.lang.Float.floatToIntBits(
         getCO());
-    hash = (37 * hash) + POLLUTION_LEVEL_FIELD_NUMBER;
-    hash = (53 * hash) + getPollutionLevel();
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -439,7 +417,6 @@ private static final long serialVersionUID = 0L;
       vOC_ = 0F;
       humidity_ = 0F;
       cO_ = 0F;
-      pollutionLevel_ = 0;
       return this;
     }
 
@@ -491,9 +468,6 @@ private static final long serialVersionUID = 0L;
       if (((from_bitField0_ & 0x00000020) != 0)) {
         result.cO_ = cO_;
       }
-      if (((from_bitField0_ & 0x00000040) != 0)) {
-        result.pollutionLevel_ = pollutionLevel_;
-      }
     }
 
     @java.lang.Override
@@ -527,9 +501,6 @@ private static final long serialVersionUID = 0L;
       }
       if (other.getCO() != 0F) {
         setCO(other.getCO());
-      }
-      if (other.getPollutionLevel() != 0) {
-        setPollutionLevel(other.getPollutionLevel());
       }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
@@ -587,11 +558,6 @@ private static final long serialVersionUID = 0L;
               bitField0_ |= 0x00000020;
               break;
             } // case 53
-            case 56: {
-              pollutionLevel_ = input.readInt32();
-              bitField0_ |= 0x00000040;
-              break;
-            } // case 56
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -897,38 +863,6 @@ private static final long serialVersionUID = 0L;
     public Builder clearCO() {
       bitField0_ = (bitField0_ & ~0x00000020);
       cO_ = 0F;
-      onChanged();
-      return this;
-    }
-
-    private int pollutionLevel_ ;
-    /**
-     * <code>int32 pollution_level = 7;</code>
-     * @return The pollutionLevel.
-     */
-    @java.lang.Override
-    public int getPollutionLevel() {
-      return pollutionLevel_;
-    }
-    /**
-     * <code>int32 pollution_level = 7;</code>
-     * @param value The pollutionLevel to set.
-     * @return This builder for chaining.
-     */
-    public Builder setPollutionLevel(int value) {
-
-      pollutionLevel_ = value;
-      bitField0_ |= 0x00000040;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>int32 pollution_level = 7;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearPollutionLevel() {
-      bitField0_ = (bitField0_ & ~0x00000040);
-      pollutionLevel_ = 0;
       onChanged();
       return this;
     }

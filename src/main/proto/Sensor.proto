@@ -27,11 +27,12 @@ message SensorResponse {
   float VOC = 4; // VOC level in mg/m3
   float humidity = 5; // Humidity in Percentage
   float CO = 6; // CO in ppm
-  int32 pollution_level = 7;
 }
 
 message AnalyseResponse {
   string analyse = 1;
   string location = 2;
-  google.protobuf.Timestamp timestamp = 3;
+  int32 pollution_level = 3;
+  string message = 4;
+  google.protobuf.Timestamp timestamp = 5;
 }
