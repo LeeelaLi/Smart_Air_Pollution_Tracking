@@ -29,7 +29,6 @@ public class HVACService {
             return new StreamObserver<SensorResponse>() {
                 int pollutionLevel;
                 String action;
-                String HVACAction;
                 @Override
                 public void onNext(SensorResponse sensorResponse) {
                     pollutionLevel = sensorResponse.getPollutionLevel();
@@ -44,10 +43,8 @@ public class HVACService {
                 public void onCompleted() {
                     if(pollutionLevel > 2) {
                         action = "START";
-                        HVACAction = "Turn on the HVAC";
                     } else {
                         action = "STOP";
-                        HVACAction = "Turn off the HVAC";
                     }
                     HVACCommand hvacCommand = HVACCommand.newBuilder()
                             .setAction(HVACCommand.Action.valueOf(action))

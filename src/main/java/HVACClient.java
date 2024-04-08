@@ -54,10 +54,13 @@ public class HVACClient {
         System.out.println("HVAC is now: " + hvacCommand.getAction());
 
         HVACCommand.Action action1 = hvacCommand.getAction();
+        String statusMessage;
         if (action1 == HVACCommand.Action.valueOf(0)) {
             status = true;
+            statusMessage = "ON";
         } else {
             status = false;
+            statusMessage = "OFF";
         }
         // Set location and status based on sensor response
         HVACResponse hvacResponse = HVACResponse.newBuilder()
@@ -70,7 +73,7 @@ public class HVACClient {
 
         // Print HVAC response
         System.out.println("\nResponse from HVAC in: " + hvacResponse.getLocation() +
-                "\n1. HVAC status: " + hvacResponse.getStatus() +
+                "\n1. HVAC status: " + statusMessage +
                 "\n2. Time: " + updatedTime);
 
         // Shutdown channels
