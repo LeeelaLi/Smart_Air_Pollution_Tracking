@@ -11,6 +11,7 @@ import java.util.Date;
 public class SensorClient {
     public static int pollution_level;
     public static int id;
+    public static String location;
 
     public static void main(String[] args) {
         ManagedChannel sensorChannel = ManagedChannelBuilder.forAddress("localhost", 9090)
@@ -72,7 +73,7 @@ public class SensorClient {
                 "\n4. Humidity: " + sensorResponse.getHumidity() + " %" +
                 "\n5. CO: " + sensorResponse.getCO() + " ppm" +
                 "\nAir pollution level: " + sensorResponse.getPollutionLevel());
-
+        location = sensorResponse.getLocation();
         pollution_level = sensorResponse.getPollutionLevel();
     }
 

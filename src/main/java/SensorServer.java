@@ -4,7 +4,7 @@ import io.grpc.stub.StreamObserver;
 
 import com.chuntao.service.*;
 
-public class SensorService {
+public class SensorServer {
     public static void main(String[] args) throws Exception {
         Server sensorServer = ServerBuilder.forPort(9090)
                 .addService(new SensorImpl())

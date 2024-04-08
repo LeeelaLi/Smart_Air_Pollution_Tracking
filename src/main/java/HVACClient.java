@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 public class HVACClient {
 
+    public static boolean statusQuote;
     public static void main(String[] args) {
 
         // Use sensor response data
@@ -40,6 +41,7 @@ public class HVACClient {
                 .setAction(action)
                 .build();
         System.out.println("HVAC is: " + hvacCommand.getAction());
+        // Ask users if they want to turn on/off the HVAC
         System.out.println("Do you want to turn on(1)/turn off(2)?");
         Scanner keyboard = new Scanner(System.in);
         int turnOn = keyboard.nextInt();
@@ -68,7 +70,7 @@ public class HVACClient {
                 .setStatus(status)
                 .setTimestamp(timestampNow())
                 .build();
-
+        statusQuote = hvacResponse.getStatus();
         Date updatedTime = new Date(hvacResponse.getTimestamp().getSeconds() * 1000);
 
         // Print HVAC response

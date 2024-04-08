@@ -6,7 +6,7 @@ import io.grpc.stub.StreamObserver;
 
 import java.io.IOException;
 import java.time.Instant;
-public class HVACService {
+public class HVACServer {
     public static void main(String[] args) throws IOException, InterruptedException {
         Server HVACServer = ServerBuilder.forPort(9091)
                 .addService(new HVACImpl())
