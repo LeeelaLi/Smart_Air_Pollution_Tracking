@@ -23,11 +23,11 @@ public class HVACClient {
         String location;
         int id = SensorClient.id;
         if(id == 1){
-            location = "home";
+            location = "Home";
         } else if (id == 2) {
-            location = "garden";
+            location = "Garden";
         }else {
-            location = "car";
+            location = "Car";
         }
 
         // Create the ManagedChannel for HVAC command
@@ -74,8 +74,8 @@ public class HVACClient {
         Date updatedTime = new Date(hvacResponse.getTimestamp().getSeconds() * 1000);
 
         // Print HVAC response
-        System.out.println("\nResponse from HVAC in: " + hvacResponse.getLocation() +
-                "\n1. HVAC status: " + statusMessage +
+        System.out.println("\n1. HVAC status of " + hvacResponse.getLocation() +
+                ": " + statusMessage +
                 "\n2. Time: " + updatedTime);
 
         // Shutdown channels
