@@ -2,6 +2,7 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import com.google.protobuf.Timestamp;
 import com.chuntao.service.*;
+import io.grpc.stub.StreamObserver;
 
 import java.time.Instant;
 import java.util.InputMismatchException;
@@ -11,9 +12,9 @@ import java.util.Date;
 public class SensorClient {
     public static int id;
     public static int pollution_level;
-    public static String location;
 
-    public static void main(String[] args) {
+    public static <Empty> void main(String[] args) {
+
         ManagedChannel sensorChannel = ManagedChannelBuilder.forAddress("localhost", 9090)
                 .usePlaintext()
                 .build();
@@ -46,18 +47,15 @@ public class SensorClient {
         SensorResponse sensorResponse = sensorBlockingStub.getSensorData(sensorRequest);
         printSensorResponse(sensorResponse);
 
+        // Ask user to review analyse
         System.out.println("Do you want to analyze this sensor data? (yes/other)");
         keyboard.nextLine(); // Consume newline left from previous nextInt
         String analyzeChoice = keyboard.nextLine().trim().toLowerCase();
         if (analyzeChoice.equals("yes")) {
             // Analyze the sensor data
-            ManagedChannel analyseChannel = ManagedChannelBuilder.forAddress("localhost", 9091)
-                    .usePlaintext()
-                    .build();
-            SensorGrpc.SensorStub sensorStub = SensorGrpc.newStub(analyseChannel);
             AnalyseResponse analyseResponse = createAnalyseResponse(sensorResponse);
             printAnalyseResponse(analyseResponse);
-            analyseChannel.shutdown();
+            updatePollutionLevel(analyseResponse);
         } else {
             System.out.println("Thank you for using the sensor service.");
         }
@@ -72,7 +70,6 @@ public class SensorClient {
                 "\n3. VOC: " + sensorResponse.getVOC() + " mg/m3" +
                 "\n4. Humidity: " + sensorResponse.getHumidity() + " %" +
                 "\n5. CO: " + sensorResponse.getCO() + " ppm");
-        location = sensorResponse.getLocation();
     }
 
     private static AnalyseResponse createAnalyseResponse(SensorResponse sensorResponse) {
@@ -131,7 +128,12 @@ public class SensorClient {
                 "\n1. " + analyseResponse.getAnalyse() +
                 "\n5. Advice: " + analyseResponse.getMessage() +
                 "\n6. Updated time: " + updatedTime);
-        pollution_level = analyseResponse.getPollutionLevel();
+    }
+
+    private static PollutionLevelResponse updatePollutionLevel(AnalyseResponse analyseResponse) {
+        return PollutionLevelResponse.newBuilder()
+                .setPollutionLevel(analyseResponse.getPollutionLevel())
+                .build();
     }
 
     private static Timestamp timestampNow() {

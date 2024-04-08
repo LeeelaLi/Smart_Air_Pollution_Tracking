@@ -1,8 +1,7 @@
+import com.chuntao.service.*;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
-
-import com.chuntao.service.*;
 
 public class SensorServer {
     public static void main(String[] args) throws Exception {
@@ -46,7 +45,6 @@ public class SensorServer {
                 float sumHumidity = 0; // Humidity in Percentage
                 float sumCO = 0; // CO in ppm
                 int pollutionItem = 0;
-                int pollutionLevel;
 
                 @Override
                 public void onNext(SensorResponse sensorResponse) {
@@ -88,23 +86,39 @@ public class SensorServer {
                         analyse += "\nPCO is exceed 0-15.";
                     }
 
-                    if (pollutionItem <= 0) {
-                        pollutionLevel = 1;
-                        analyse += "\nPollution level: Low pollution";
-                    } else if (pollutionItem < 2) {
-                        pollutionLevel = 2;
-                        analyse += "\nPollution level: Moderate pollution";
-                    } else {
-                        pollutionLevel = 3;
-                        analyse += "\nPollution level: High pollution";
-                    }
                     // Create AnalyseResponse
                     AnalyseResponse analyseResponse = AnalyseResponse.newBuilder()
                             .setAnalyse(analyse)
+                            .setPollutionLevel(pollutionItem)
                             .build();
 
                     // Send response to client
                     responseObserver.onNext(analyseResponse);
+                    responseObserver.onCompleted();
+                }
+            };
+        }
+
+        @Override
+        public StreamObserver<AnalyseResponse> sendPollutionLevelUpdate(StreamObserver<PollutionLevelResponse> responseObserver) {
+            return new StreamObserver<AnalyseResponse>() {
+                int pollution_level;
+                @Override
+                public void onNext(AnalyseResponse analyseResponse) {
+                    pollution_level = analyseResponse.getPollutionLevel();
+                }
+
+                @Override
+                public void onError(Throwable throwable) {
+
+                }
+
+                @Override
+                public void onCompleted() {
+                    PollutionLevelResponse pollutionLevelResponse = PollutionLevelResponse.newBuilder()
+                            .setPollutionLevel(pollution_level)
+                            .build();
+                    responseObserver.onNext(pollutionLevelResponse);
                     responseObserver.onCompleted();
                 }
             };
