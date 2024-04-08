@@ -46,7 +46,7 @@ public class SensorClient {
         SensorResponse sensorResponse = sensorBlockingStub.getSensorData(sensorRequest);
         printSensorResponse(sensorResponse);
 
-        System.out.println("Do you want to analyze this sensor data? (yes/no)");
+        System.out.println("Do you want to analyze this sensor data? (yes/other)");
         keyboard.nextLine(); // Consume newline left from previous nextInt
         String analyzeChoice = keyboard.nextLine().trim().toLowerCase();
         if (analyzeChoice.equals("yes")) {
@@ -71,38 +71,45 @@ public class SensorClient {
                 "\n2. Temperature: " + sensorResponse.getTemperature() + " °C" +
                 "\n3. VOC: " + sensorResponse.getVOC() + " mg/m3" +
                 "\n4. Humidity: " + sensorResponse.getHumidity() + " %" +
-                "\n5. CO: " + sensorResponse.getCO() + " ppm" +
-                "\nAir pollution level: " + sensorResponse.getPollutionLevel());
+                "\n5. CO: " + sensorResponse.getCO() + " ppm");
         location = sensorResponse.getLocation();
         pollution_level = sensorResponse.getPollutionLevel();
     }
 
     private static AnalyseResponse createAnalyseResponse(SensorResponse sensorResponse) {
-        int pollution_level = sensorResponse.getPollutionLevel();
-        StringBuilder analyseBuilder = new StringBuilder("Pollution level: ");
-        if (pollution_level <= 0) {
+        int pollution_item = 0;
+        StringBuilder analyseBuilder = new StringBuilder("Pollution item(s): ");
+
+        if (sensorResponse.getPM25() > 12) {
+            pollution_item++;
+            analyseBuilder.append("\n· PM2.5 is over 12 μg/m3.");
+        }
+        if (sensorResponse.getTemperature() < 18 || sensorResponse.getTemperature() > 22) {
+            pollution_item++;
+            analyseBuilder.append("\n· Temperature is exceed 18-22 °C.");
+        }
+        if (sensorResponse.getVOC() < 0 || sensorResponse.getVOC() > 0.5) {
+            pollution_item++;
+            analyseBuilder.append("\n· VOC is exceed 0-0.5 mg/m3.");
+        }
+        if (sensorResponse.getHumidity() < 30 || sensorResponse.getHumidity() > 50) {
+            pollution_item++;
+            analyseBuilder.append("\n· Humidity is exceed 30-50 %.");
+        }
+        if (sensorResponse.getCO() < 0 || sensorResponse.getCO() > 15) {
+            pollution_item++;
+            analyseBuilder.append("\n· PCO is exceed 0-15 ppm.");
+        }
+
+        analyseBuilder.append("\n2. Pollution number: ").append(pollution_item).append("\n3. Pollution level: ");
+        if (pollution_item <= 2) {
             analyseBuilder.append("Low pollution");
-        } else if (pollution_level < 2) {
+        } else if (pollution_item == 3) {
             analyseBuilder.append("Moderate pollution");
         } else {
             analyseBuilder.append("High pollution");
         }
-        analyseBuilder.append("\n2. Pollution item(s): ");
-        if (sensorResponse.getPM25() > 12) {
-            analyseBuilder.append("PM2.5 is over 12.");
-        }
-        if (sensorResponse.getTemperature() < 18 || sensorResponse.getTemperature() > 22) {
-            analyseBuilder.append("Temperature is exceed 18-22.");
-        }
-        if (sensorResponse.getVOC() < 0 || sensorResponse.getVOC() > 0.5) {
-            analyseBuilder.append("VOC is exceed 0-0.5.");
-        }
-        if (sensorResponse.getHumidity() < 30 || sensorResponse.getHumidity() > 50) {
-            analyseBuilder.append("Humidity is exceed 30-50.");
-        }
-        if (sensorResponse.getCO() < 0 || sensorResponse.getCO() > 15) {
-            analyseBuilder.append("PCO is exceed 0-15.");
-        }
+
         Timestamp timestamp = timestampNow();
         return AnalyseResponse.newBuilder()
                 .setAnalyse(analyseBuilder.toString())
@@ -115,7 +122,7 @@ public class SensorClient {
         Date updatedTime = new Date(analyseResponse.getTimestamp().getSeconds() * 1000);
         System.out.println("\nThe air quality of " + analyseResponse.getLocation() + ":" +
                 "\n1. " + analyseResponse.getAnalyse() +
-                "\n3. Updated time: " + updatedTime);
+                "\n4. Updated time: " + updatedTime);
     }
 
     private static Timestamp timestampNow() {
