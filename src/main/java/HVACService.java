@@ -8,12 +8,12 @@ import java.io.IOException;
 import java.time.Instant;
 public class HVACService {
     public static void main(String[] args) throws IOException, InterruptedException {
-        Server HVACServer = ServerBuilder.forPort(9092)
+        Server HVACServer = ServerBuilder.forPort(9091)
                 .addService(new HVACImpl())
                 .build();
 
         HVACServer.start();
-        System.out.println("HVAC Service started on port 9092");
+        System.out.println("HVAC Service started on port 9091");
         HVACServer.awaitTermination();
     }
     // HVAC service implement
@@ -67,13 +67,13 @@ public class HVACService {
                     HVACResponse.Builder response = HVACResponse.newBuilder();
                     switch (hvacCommand.getAction()) {
                         case START:
-                            response.setLocation("Location").setStatus(true).setTimestamp(timestampNow());
+                            response.setStatus(true).setTimestamp(timestampNow());
                             break;
                         case STOP:
-                            response.setLocation("Location").setStatus(false).setTimestamp(timestampNow());
+                            response.setStatus(false).setTimestamp(timestampNow());
                             break;
                         default:
-                            // Handle unsupported action
+                            // *
                             break;
                     }
                     responseObserver.onNext(response.build());
@@ -81,7 +81,7 @@ public class HVACService {
 
                 @Override
                 public void onError(Throwable throwable) {
-                    // Handle error
+                    // *
                 }
 
                 @Override

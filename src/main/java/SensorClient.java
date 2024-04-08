@@ -9,6 +9,9 @@ import java.util.Scanner;
 import java.util.Date;
 
 public class SensorClient {
+    public static int pollution_level;
+    public static int id;
+
     public static void main(String[] args) {
         ManagedChannel sensorChannel = ManagedChannelBuilder.forAddress("localhost", 9090)
                 .usePlaintext()
@@ -33,6 +36,8 @@ public class SensorClient {
                 sensorId = -1; // Set to an invalid value to continue the loop
             }
         } while (sensorId < 1 || sensorId > 3);
+
+        id = sensorId;
 
         SensorRequest sensorRequest = SensorRequest.newBuilder()
                 .setSensorId(sensorId)
@@ -67,6 +72,8 @@ public class SensorClient {
                 "\n4. Humidity: " + sensorResponse.getHumidity() + " %" +
                 "\n5. CO: " + sensorResponse.getCO() + " ppm" +
                 "\nAir pollution level: " + sensorResponse.getPollutionLevel());
+
+        pollution_level = sensorResponse.getPollutionLevel();
     }
 
     private static AnalyseResponse createAnalyseResponse(SensorResponse sensorResponse) {
