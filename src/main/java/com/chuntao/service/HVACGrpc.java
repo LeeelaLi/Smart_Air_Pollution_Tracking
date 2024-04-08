@@ -167,7 +167,7 @@ public final class HVACGrpc {
       return HVACGrpc.bindService(this);
     }
 
-      public abstract StreamObserver<SensorResponse> hvacAction(StreamObserver<HVACCommand> responseObserver);
+    public abstract StreamObserver<SensorResponse> hvacAction(StreamObserver<HVACCommand> responseObserver);
 
     public abstract StreamObserver<SensorResponse> hvacControl(StreamObserver<HVACCommand> responseObserver);
 

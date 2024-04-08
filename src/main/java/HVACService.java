@@ -8,12 +8,12 @@ import java.io.IOException;
 import java.time.Instant;
 public class HVACService {
     public static void main(String[] args) throws IOException, InterruptedException {
-        Server HVACServer = ServerBuilder.forPort(9091)
+        Server HVACServer = ServerBuilder.forPort(9092)
                 .addService(new HVACImpl())
                 .build();
 
         HVACServer.start();
-        System.out.println("HVAC Service started on port 9091");
+        System.out.println("HVAC Service started on port 9092");
         HVACServer.awaitTermination();
     }
     // HVAC service implement

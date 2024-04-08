@@ -167,7 +167,7 @@ public final class NotificationGrpc {
       return NotificationGrpc.bindService(this);
     }
 
-      public abstract StreamObserver<SensorResponse> sensorNotifications(StreamObserver<NotificationMessage> responseObserver);
+    public abstract StreamObserver<SensorResponse> sensorNotifications(StreamObserver<NotificationMessage> responseObserver);
 
     public abstract StreamObserver<HVACResponse> ventNotifications(StreamObserver<NotificationMessage> responseObserver);
   }

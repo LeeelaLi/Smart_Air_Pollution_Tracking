@@ -1,65 +1,120 @@
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import com.google.protobuf.Timestamp;
-
 import com.chuntao.service.*;
 
 import java.time.Instant;
+import java.util.InputMismatchException;
+import java.util.Scanner;
+import java.util.Date;
 
 public class SensorClient {
-    private static SensorResponse sensorResponse;
     public static void main(String[] args) {
-        // create sensor channel
         ManagedChannel sensorChannel = ManagedChannelBuilder.forAddress("localhost", 9090)
                 .usePlaintext()
                 .build();
         SensorGrpc.SensorBlockingStub sensorBlockingStub = SensorGrpc.newBlockingStub(sensorChannel);
 
+        Scanner keyboard = new Scanner(System.in);
+        System.out.println("Select the sensor id you want to review:" +
+                "\n1. Sensor 1 - Home" +
+                "\n2. Sensor 2 - Garden" +
+                "\n3. Sensor 3 - Car");
+        int sensorId;
+        do {
+            try {
+                sensorId = keyboard.nextInt();
+                if (sensorId < 1 || sensorId > 3) {
+                    System.out.println("Invalid sensor ID. Please enter a number between 1 and 3.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a valid number.");
+                keyboard.next();
+                sensorId = -1; // Set to an invalid value to continue the loop
+            }
+        } while (sensorId < 1 || sensorId > 3);
+
         SensorRequest sensorRequest = SensorRequest.newBuilder()
-                .setSensorId(1)
+                .setSensorId(sensorId)
                 .build();
         SensorResponse sensorResponse = sensorBlockingStub.getSensorData(sensorRequest);
-        System.out.println("The air quality of " + sensorResponse.getLocation() + ":" +
-                "\n1. PM25: " + sensorResponse.getPM25() +
-                "\n2. Temperature: " + sensorResponse.getTemperature() +
-                "\n3. VOC: " + sensorResponse.getVOC() +
-                "\n4. Humidity: " + sensorResponse.getHumidity() +
-                "\n5. CO: " + sensorResponse.getCO() +
-                "\nAir pollution level: " + sensorResponse.getPollutionLevel());
+        printSensorResponse(sensorResponse);
 
-        // create analyse channel
-        ManagedChannel analyseChannel = ManagedChannelBuilder.forAddress("localhost", 9091)
-                .usePlaintext()
-                .build();
-        SensorGrpc.SensorStub sensorStub = SensorGrpc.newStub(analyseChannel);
+        System.out.println("Do you want to analyze this sensor data? (yes/no)");
+        keyboard.nextLine(); // Consume newline left from previous nextInt
+        String analyzeChoice = keyboard.nextLine().trim().toLowerCase();
+        if (analyzeChoice.equals("yes")) {
+            // Analyze the sensor data
+            ManagedChannel analyseChannel = ManagedChannelBuilder.forAddress("localhost", 9091)
+                    .usePlaintext()
+                    .build();
+            SensorGrpc.SensorStub sensorStub = SensorGrpc.newStub(analyseChannel);
+            AnalyseResponse analyseResponse = createAnalyseResponse(sensorResponse);
+            printAnalyseResponse(analyseResponse);
+            analyseChannel.shutdown();
+        } else {
+            System.out.println("Thank you for using the sensor service.");
+        }
 
-        // Pass the pollution level from SensorResponse to AnalyseResponse
-        AnalyseResponse analyseResponse = AnalyseResponse.newBuilder()
-                .setAnalyse("" + sensorResponse.getPollutionLevel())
-                .setLocation(sensorResponse.getLocation())
-                .setTimestamp(timestampNow())
-                .build();
-
-        // Print AnalyseResponse
-        System.out.println("The analysis of air quality is:" +
-                "\n1. Pollution level: " + analyseResponse.getAnalyse() +
-                "\n2. Location: " + analyseResponse.getLocation() +
-                "\n3. Time: " + analyseResponse.getTimestamp());
-
-        // Shutdown channels
         sensorChannel.shutdown();
-        analyseChannel.shutdown();
     }
-    // Helper method to get the current timestamp
+
+    private static void printSensorResponse(SensorResponse sensorResponse) {
+        System.out.println("The air index of " + sensorResponse.getLocation() + ":" +
+                "\n1. PM25: " + sensorResponse.getPM25() + " μg/m3" +
+                "\n2. Temperature: " + sensorResponse.getTemperature() + " °C" +
+                "\n3. VOC: " + sensorResponse.getVOC() + " mg/m3" +
+                "\n4. Humidity: " + sensorResponse.getHumidity() + " %" +
+                "\n5. CO: " + sensorResponse.getCO() + " ppm" +
+                "\nAir pollution level: " + sensorResponse.getPollutionLevel());
+    }
+
+    private static AnalyseResponse createAnalyseResponse(SensorResponse sensorResponse) {
+        int pollution_level = sensorResponse.getPollutionLevel();
+        StringBuilder analyseBuilder = new StringBuilder("Pollution level: ");
+        if (pollution_level <= 0) {
+            analyseBuilder.append("Low pollution");
+        } else if (pollution_level < 2) {
+            analyseBuilder.append("Moderate pollution");
+        } else {
+            analyseBuilder.append("High pollution");
+        }
+        analyseBuilder.append("\n2. Pollution item(s): ");
+        if (sensorResponse.getPM25() > 12) {
+            analyseBuilder.append("PM2.5 is over 12.");
+        }
+        if (sensorResponse.getTemperature() < 18 || sensorResponse.getTemperature() > 22) {
+            analyseBuilder.append("Temperature is exceed 18-22.");
+        }
+        if (sensorResponse.getVOC() < 0 || sensorResponse.getVOC() > 0.5) {
+            analyseBuilder.append("VOC is exceed 0-0.5.");
+        }
+        if (sensorResponse.getHumidity() < 30 || sensorResponse.getHumidity() > 50) {
+            analyseBuilder.append("Humidity is exceed 30-50.");
+        }
+        if (sensorResponse.getCO() < 0 || sensorResponse.getCO() > 15) {
+            analyseBuilder.append("PCO is exceed 0-15.");
+        }
+        Timestamp timestamp = timestampNow();
+        return AnalyseResponse.newBuilder()
+                .setAnalyse(analyseBuilder.toString())
+                .setLocation(sensorResponse.getLocation())
+                .setTimestamp(timestamp)
+                .build();
+    }
+
+    private static void printAnalyseResponse(AnalyseResponse analyseResponse) {
+        Date updatedTime = new Date(analyseResponse.getTimestamp().getSeconds() * 1000);
+        System.out.println("\nThe air quality of " + analyseResponse.getLocation() + ":" +
+                "\n1. " + analyseResponse.getAnalyse() +
+                "\n3. Updated time: " + updatedTime);
+    }
+
     private static Timestamp timestampNow() {
         Instant now = Instant.now();
         return Timestamp.newBuilder()
                 .setSeconds(now.getEpochSecond())
                 .setNanos(now.getNano())
                 .build();
-    }
-    // Getter method for sensorResponse
-    public static SensorResponse getSensorResponse() {
-        return sensorResponse;
     }
 }
