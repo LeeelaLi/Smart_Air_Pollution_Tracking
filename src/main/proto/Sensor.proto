@@ -14,7 +14,6 @@ service Sensor {
   rpc GetSensorData(SensorRequest) returns (SensorResponse) {}
   // Client-side streaming RPC for analysing sensor data based on sensor response
   rpc AnalyseSensorData(stream SensorResponse) returns (AnalyseResponse) {}
-  rpc SendPollutionLevelUpdate(stream AnalyseResponse) returns (PollutionLevelResponse);
 }
 
 message SensorRequest {
@@ -38,6 +37,3 @@ message AnalyseResponse {
   google.protobuf.Timestamp timestamp = 5;
 }
 
-message PollutionLevelResponse {
-  int32 pollution_level = 1;
-}

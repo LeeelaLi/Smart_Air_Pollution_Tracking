@@ -3,19 +3,43 @@ import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
 
-public class SensorServer {
-    public static void main(String[] args) throws Exception {
-        Server sensorServer = ServerBuilder.forPort(9090)
-                .addService(new SensorImpl())
-                .build();
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
-        sensorServer.start();
-        System.out.println("Sensor Service started on port 9090");
-        sensorServer.awaitTermination();
-    }
+public class SensorServer {
 
     // Sensor service implement
-    static class SensorImpl extends SensorGrpc.SensorImplBase {
+    private Server server;
+    public void start(int port) throws IOException {
+        server = ServerBuilder.forPort(port)
+                .addService(new SensorImpl())
+                .build()
+                .start();
+        System.out.println("Sensor server started, listening on port " + port);
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            System.out.println("Shutting down gRPC server");
+            try {
+                SensorServer.this.stop();
+            } catch (InterruptedException e) {
+                e.printStackTrace(System.err);
+            }
+        }));
+    }
+
+    private void stop() throws InterruptedException {
+        if (server != null) {
+            server.shutdown().awaitTermination(30, TimeUnit.SECONDS);
+        }
+    }
+
+    public void blockUntilShutdown() throws InterruptedException {
+        if (server != null) {
+            server.awaitTermination();
+        }
+    }
+
+    private static class SensorImpl extends SensorGrpc.SensorImplBase {
         @Override
         public void getSensorData(SensorRequest request, StreamObserver<SensorResponse> responseObserver) {
             int sensor_id = request.getSensorId();
@@ -23,7 +47,7 @@ public class SensorServer {
             SensorResponse.Builder response = SensorResponse.newBuilder();
             switch (sensor_id) {
                 case 1:
-                    response.setLocation("Home").setPM25(9).setTemperature(29).setVOC(0.3F).setHumidity(36).setCO(8);
+                    response.setLocation("Home").setPM25(19).setTemperature(29).setVOC(10.3F).setHumidity(36).setCO(18);
                     break;
                 case 2:
                     response.setLocation("Garden").setPM25(10).setTemperature(19).setVOC(0.1F).setHumidity(45).setCO(14);
@@ -98,30 +122,10 @@ public class SensorServer {
                 }
             };
         }
-
-        @Override
-        public StreamObserver<AnalyseResponse> sendPollutionLevelUpdate(StreamObserver<PollutionLevelResponse> responseObserver) {
-            return new StreamObserver<AnalyseResponse>() {
-                int pollution_level;
-                @Override
-                public void onNext(AnalyseResponse analyseResponse) {
-                    pollution_level = analyseResponse.getPollutionLevel();
-                }
-
-                @Override
-                public void onError(Throwable throwable) {
-
-                }
-
-                @Override
-                public void onCompleted() {
-                    PollutionLevelResponse pollutionLevelResponse = PollutionLevelResponse.newBuilder()
-                            .setPollutionLevel(pollution_level)
-                            .build();
-                    responseObserver.onNext(pollutionLevelResponse);
-                    responseObserver.onCompleted();
-                }
-            };
-        }
+    }
+    public static void main(String[] args) throws IOException, InterruptedException {
+        SensorServer sensorServer = new SensorServer();
+        sensorServer.start(9090);
+        sensorServer.blockUntilShutdown();
     }
 }

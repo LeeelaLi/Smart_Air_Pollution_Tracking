@@ -7,32 +7,12 @@
 //import java.util.Date;
 //import java.util.Scanner;
 //
-//import com.chuntao.service.PollutionLevelUpdate;
 //import io.grpc.stub.StreamObserver;
 //
 //public class HVACClient {
 //
 //    public static boolean statusQuote;
 //    public static void main(String[] args) {
-//
-//        // Inside main method of HVACClient class
-//        StreamObserver<PollutionLevelUpdate> pollutionLevelObserver = new StreamObserver<PollutionLevelUpdate>() {
-//            @Override
-//            public void onNext(PollutionLevelUpdate update) {
-//                SensorClient.pollution_level = update.getPollutionLevel();
-//                // You can add further logic here if needed
-//            }
-//
-//            @Override
-//            public void onError(Throwable throwable) {
-//                // Handle error
-//            }
-//
-//            @Override
-//            public void onCompleted() {
-//                // Handle completion
-//            }
-//        };
 //
 //        // Use sensor response data
 //        boolean status = SensorClient.pollution_level > 2;
@@ -52,7 +32,6 @@
 //            location = "Car";
 //        }
 //        System.out.println("pollution level: " + SensorClient.pollution_level);
-//        StreamObserver<PollutionLevelRequest> pollutionLevelRequestObserver = sensorStub.sendPollutionLevelUpdates(pollutionLevelObserver);
 //
 //        // Create the ManagedChannel for HVAC command
 //        ManagedChannel HVACCommandChannel = ManagedChannelBuilder.forAddress("localhost", 9091)
