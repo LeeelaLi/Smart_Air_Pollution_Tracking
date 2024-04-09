@@ -1,9 +1,11 @@
 import com.chuntao.service.*;
+import com.google.protobuf.Timestamp;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -95,32 +97,44 @@ public class SensorServer {
                     int pollutionItem = 0;
 
                     // Determine pollution level based on sensor data
-                    String analyse = "";
+                    StringBuffer analyse = new StringBuffer().append("");
+                    String message = "";
                     if (sumPM25 > 12) {
                         pollutionItem++;
-                        analyse += "\nPM2.5 is over 12.";
+                        analyse.append("\n· PM2.5 is over 12.");
                     }
                     if (sumTemp < 18 || sumTemp > 22) {
                         pollutionItem++;
-                        analyse += "\nTemperature is exceed 18-22.";
+                        analyse.append("\n· Temperature is exceed 18-22.");
                     }
                     if (sumVOC < 0 || sumVOC > 0.5) {
                         pollutionItem++;
-                        analyse += "\nVOC is exceed 0-0.5.";
+                        analyse.append("\n· VOC is exceed 0-0.5.");
                     }
                     if (sumHumidity < 30 || sumHumidity > 50) {
                         pollutionItem++;
-                        analyse += "\nHumidity is exceed 30-50.";
+                        analyse.append("\n· Humidity is exceed 30-50.");
                     }
                     if (sumCO < 0 || sumCO > 15) {
                         pollutionItem++;
-                        analyse += "\nCO is exceed 0-15.";
+                        analyse.append("\n· CO is exceed 0-15.");
+                    }
+                    
+                    if (pollutionItem < 1) {
+                        message += "Low pollution";
+                    } else if (pollutionItem < 3 && pollutionItem > 1) {
+                        message += "Moderare pollution";
+                    } else {
+                        message += "High pollution";
                     }
 
                     // Create AnalyseResponse
                     AnalyseResponse analyseResponse = AnalyseResponse.newBuilder()
-                            .setAnalyse(analyse)
+                            .setLocation(sensorData.getLocation())
+                            .setAnalyse(analyse.toString())
                             .setPollutionLevel(pollutionItem)
+                            .setMessage(message)
+                            .setTimestamp(timestampNow())
                             .build();
 
                     // Send response to client
@@ -130,7 +144,13 @@ public class SensorServer {
             };
         }
     }
-
+    private static Timestamp timestampNow() {
+        Instant now = Instant.now();
+        return Timestamp.newBuilder()
+                .setSeconds(now.getEpochSecond())
+                .setNanos(now.getNano())
+                .build();
+    }
 
     public static void main(String[] args) throws IOException, InterruptedException {
         SensorServer sensorServer = new SensorServer();
