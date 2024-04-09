@@ -7,6 +7,7 @@ import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 public class SensorClient {
+    private String location;
     private final ManagedChannel sensorChannel;
     private final SensorGrpc.SensorStub sensorStub;
 
@@ -31,6 +32,7 @@ public class SensorClient {
                         "\n3. VOC: " + sensorResponse.getVOC() +
                         "\n4. Humidity: " + sensorResponse.getHumidity() +
                         "\n5. CO: " + sensorResponse.getCO());
+                location = sensorResponse.getLocation();
             }
 
             @Override
@@ -51,7 +53,7 @@ public class SensorClient {
             public void onNext(AnalyseResponse analyseResponse) {
                 // Process each AnalyseResponse received
                 System.out.println("\nAnalyse Response: ");
-                System.out.println("Location: " + analyseResponse.getLocation());
+                System.out.println("Location: " + location);
                 System.out.println("Analyse: " + analyseResponse.getAnalyse());
                 System.out.println("Pollution Level: " + analyseResponse.getPollutionLevel());
                 System.out.println("Message: " + analyseResponse.getMessage());

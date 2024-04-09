@@ -1,7 +1,5 @@
 package com.chuntao.service;
 
-import io.grpc.stub.StreamObserver;
-
 import static io.grpc.MethodDescriptor.generateFullMethodName;
 
 /**
@@ -82,37 +80,6 @@ public final class SensorGrpc {
     return getAnalyseSensorDataMethod;
   }
 
-  private static volatile io.grpc.MethodDescriptor<com.chuntao.service.AnalyseResponse,
-      com.chuntao.service.PollutionLevelResponse> getSendPollutionLevelUpdateMethod;
-
-  @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "SendPollutionLevelUpdate",
-      requestType = com.chuntao.service.AnalyseResponse.class,
-      responseType = com.chuntao.service.PollutionLevelResponse.class,
-      methodType = io.grpc.MethodDescriptor.MethodType.CLIENT_STREAMING)
-  public static io.grpc.MethodDescriptor<com.chuntao.service.AnalyseResponse,
-      com.chuntao.service.PollutionLevelResponse> getSendPollutionLevelUpdateMethod() {
-    io.grpc.MethodDescriptor<com.chuntao.service.AnalyseResponse, com.chuntao.service.PollutionLevelResponse> getSendPollutionLevelUpdateMethod;
-    if ((getSendPollutionLevelUpdateMethod = SensorGrpc.getSendPollutionLevelUpdateMethod) == null) {
-      synchronized (SensorGrpc.class) {
-        if ((getSendPollutionLevelUpdateMethod = SensorGrpc.getSendPollutionLevelUpdateMethod) == null) {
-          SensorGrpc.getSendPollutionLevelUpdateMethod = getSendPollutionLevelUpdateMethod =
-              io.grpc.MethodDescriptor.<com.chuntao.service.AnalyseResponse, com.chuntao.service.PollutionLevelResponse>newBuilder()
-              .setType(io.grpc.MethodDescriptor.MethodType.CLIENT_STREAMING)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "SendPollutionLevelUpdate"))
-              .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  com.chuntao.service.AnalyseResponse.getDefaultInstance()))
-              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  com.chuntao.service.PollutionLevelResponse.getDefaultInstance()))
-              .setSchemaDescriptor(new SensorMethodDescriptorSupplier("SendPollutionLevelUpdate"))
-              .build();
-        }
-      }
-    }
-    return getSendPollutionLevelUpdateMethod;
-  }
-
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -183,13 +150,6 @@ public final class SensorGrpc {
         io.grpc.stub.StreamObserver<com.chuntao.service.AnalyseResponse> responseObserver) {
       return io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall(getAnalyseSensorDataMethod(), responseObserver);
     }
-
-    /**
-     */
-    default io.grpc.stub.StreamObserver<com.chuntao.service.AnalyseResponse> sendPollutionLevelUpdate(
-        io.grpc.stub.StreamObserver<com.chuntao.service.PollutionLevelResponse> responseObserver) {
-      return io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall(getSendPollutionLevelUpdateMethod(), responseObserver);
-    }
   }
 
   /**
@@ -241,18 +201,10 @@ public final class SensorGrpc {
      * Client-side streaming RPC for analysing sensor data based on sensor response
      * </pre>
      */
-    public StreamObserver<SensorResponse> analyseSensorData(
-            StreamObserver<AnalyseResponse> responseObserver) {
+    public io.grpc.stub.StreamObserver<com.chuntao.service.SensorResponse> analyseSensorData(
+        io.grpc.stub.StreamObserver<com.chuntao.service.AnalyseResponse> responseObserver) {
       return io.grpc.stub.ClientCalls.asyncClientStreamingCall(
           getChannel().newCall(getAnalyseSensorDataMethod(), getCallOptions()), responseObserver);
-    }
-
-    /**
-     */
-    public io.grpc.stub.StreamObserver<com.chuntao.service.AnalyseResponse> sendPollutionLevelUpdate(
-        io.grpc.stub.StreamObserver<com.chuntao.service.PollutionLevelResponse> responseObserver) {
-      return io.grpc.stub.ClientCalls.asyncClientStreamingCall(
-          getChannel().newCall(getSendPollutionLevelUpdateMethod(), getCallOptions()), responseObserver);
     }
   }
 
@@ -319,7 +271,6 @@ public final class SensorGrpc {
 
   private static final int METHODID_GET_SENSOR_DATA = 0;
   private static final int METHODID_ANALYSE_SENSOR_DATA = 1;
-  private static final int METHODID_SEND_POLLUTION_LEVEL_UPDATE = 2;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -355,9 +306,6 @@ public final class SensorGrpc {
         case METHODID_ANALYSE_SENSOR_DATA:
           return (io.grpc.stub.StreamObserver<Req>) serviceImpl.analyseSensorData(
               (io.grpc.stub.StreamObserver<com.chuntao.service.AnalyseResponse>) responseObserver);
-        case METHODID_SEND_POLLUTION_LEVEL_UPDATE:
-          return (io.grpc.stub.StreamObserver<Req>) serviceImpl.sendPollutionLevelUpdate(
-              (io.grpc.stub.StreamObserver<com.chuntao.service.PollutionLevelResponse>) responseObserver);
         default:
           throw new AssertionError();
       }
@@ -380,13 +328,6 @@ public final class SensorGrpc {
               com.chuntao.service.SensorResponse,
               com.chuntao.service.AnalyseResponse>(
                 service, METHODID_ANALYSE_SENSOR_DATA)))
-        .addMethod(
-          getSendPollutionLevelUpdateMethod(),
-          io.grpc.stub.ServerCalls.asyncClientStreamingCall(
-            new MethodHandlers<
-              com.chuntao.service.AnalyseResponse,
-              com.chuntao.service.PollutionLevelResponse>(
-                service, METHODID_SEND_POLLUTION_LEVEL_UPDATE)))
         .build();
   }
 
@@ -437,7 +378,6 @@ public final class SensorGrpc {
               .setSchemaDescriptor(new SensorFileDescriptorSupplier())
               .addMethod(getGetSensorDataMethod())
               .addMethod(getAnalyseSensorDataMethod())
-              .addMethod(getSendPollutionLevelUpdateMethod())
               .build();
         }
       }

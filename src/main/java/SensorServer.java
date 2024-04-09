@@ -4,6 +4,10 @@ import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class SensorServer {
@@ -40,10 +44,11 @@ public class SensorServer {
     }
 
     private static class SensorImpl extends SensorGrpc.SensorImplBase {
+        private SensorResponse sensorData;
+
         @Override
         public void getSensorData(SensorRequest request, StreamObserver<SensorResponse> responseObserver) {
             int sensor_id = request.getSensorId();
-
             SensorResponse.Builder response = SensorResponse.newBuilder();
             switch (sensor_id) {
                 case 1:
@@ -52,32 +57,26 @@ public class SensorServer {
                 case 2:
                     response.setLocation("Garden").setPM25(10).setTemperature(19).setVOC(0.1F).setHumidity(45).setCO(14);
                     break;
-                default:
+                case 3:
                     response.setLocation("Car").setPM25(13).setTemperature(24).setVOC(0.6F).setHumidity(27).setCO(11);
+                    break;
+                default:
+                    response.setLocation("Unknown");
             }
 
-            responseObserver.onNext(response.build());
+            // Store the sensor data for analysis
+            sensorData = response.build();
+
+            // Send response to client
+            responseObserver.onNext(sensorData);
             responseObserver.onCompleted();
         }
 
         @Override
         public StreamObserver<SensorResponse> analyseSensorData(StreamObserver<AnalyseResponse> responseObserver) {
             return new StreamObserver<SensorResponse>() {
-                float sumPM25 = 0;
-                float sumTemp = 0; // Air temperature in Celsius
-                float sumVOC = 0; // VOC level in mg/m3
-                float sumHumidity = 0; // Humidity in Percentage
-                float sumCO = 0; // CO in ppm
-                int pollutionItem = 0;
-
                 @Override
                 public void onNext(SensorResponse sensorResponse) {
-                    // Calculate pollution level based on 5 factors of qir quality
-                    sumPM25 += sensorResponse.getPM25();
-                    sumTemp += sensorResponse.getTemperature();
-                    sumVOC += sensorResponse.getVOC();
-                    sumHumidity += sensorResponse.getHumidity();
-                    sumCO += sensorResponse.getCO();
                 }
 
                 @Override
@@ -87,7 +86,15 @@ public class SensorServer {
 
                 @Override
                 public void onCompleted() {
-                    // Determine pollution level based on average PM2.5
+                    // Perform analysis based on the stored sensor data
+                    float sumPM25 = sensorData.getPM25();
+                    float sumTemp = sensorData.getTemperature();
+                    float sumVOC = sensorData.getVOC();
+                    float sumHumidity = sensorData.getHumidity();
+                    float sumCO = sensorData.getCO();
+                    int pollutionItem = 0;
+
+                    // Determine pollution level based on sensor data
                     String analyse = "";
                     if (sumPM25 > 12) {
                         pollutionItem++;
@@ -107,7 +114,7 @@ public class SensorServer {
                     }
                     if (sumCO < 0 || sumCO > 15) {
                         pollutionItem++;
-                        analyse += "\nPCO is exceed 0-15.";
+                        analyse += "\nCO is exceed 0-15.";
                     }
 
                     // Create AnalyseResponse
@@ -123,6 +130,8 @@ public class SensorServer {
             };
         }
     }
+
+
     public static void main(String[] args) throws IOException, InterruptedException {
         SensorServer sensorServer = new SensorServer();
         sensorServer.start(9090);

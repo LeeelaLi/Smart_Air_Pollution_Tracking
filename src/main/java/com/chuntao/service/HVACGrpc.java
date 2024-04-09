@@ -1,7 +1,5 @@
 package com.chuntao.service;
 
-import io.grpc.stub.StreamObserver;
-
 import static io.grpc.MethodDescriptor.generateFullMethodName;
 
 /**
@@ -166,12 +164,6 @@ public final class HVACGrpc {
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return HVACGrpc.bindService(this);
     }
-
-      public abstract StreamObserver<SensorResponse> hvacAction(StreamObserver<HVACCommand> responseObserver);
-
-    public abstract StreamObserver<AnalyseResponse> hvacControl(StreamObserver<HVACCommand> responseObserver);
-
-    public abstract StreamObserver<HVACCommand> hvacSwitch(StreamObserver<HVACResponse> responseObserver);
   }
 
   /**

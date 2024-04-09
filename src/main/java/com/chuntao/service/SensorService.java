@@ -39,11 +39,6 @@ public final class SensorService {
   static final 
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_com_chuntao_AnalyseResponse_fieldAccessorTable;
-  static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_com_chuntao_PollutionLevelResponse_descriptor;
-  static final 
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_com_chuntao_PollutionLevelResponse_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -61,17 +56,13 @@ public final class SensorService {
       "\n\002CO\030\006 \001(\002\"\215\001\n\017AnalyseResponse\022\017\n\007analys" +
       "e\030\001 \001(\t\022\020\n\010location\030\002 \001(\t\022\027\n\017pollution_l" +
       "evel\030\003 \001(\005\022\017\n\007message\030\004 \001(\t\022-\n\ttimestamp" +
-      "\030\005 \001(\0132\032.google.protobuf.Timestamp\"1\n\026Po" +
-      "llutionLevelResponse\022\027\n\017pollution_level\030" +
-      "\001 \001(\0052\211\002\n\006Sensor\022J\n\rGetSensorData\022\032.com." +
-      "chuntao.SensorRequest\032\033.com.chuntao.Sens" +
-      "orResponse\"\000\022R\n\021AnalyseSensorData\022\033.com." +
-      "chuntao.SensorResponse\032\034.com.chuntao.Ana" +
-      "lyseResponse\"\000(\001\022_\n\030SendPollutionLevelUp" +
-      "date\022\034.com.chuntao.AnalyseResponse\032#.com" +
-      ".chuntao.PollutionLevelResponse(\001B&\n\023com" +
-      ".chuntao.serviceB\rSensorServiceP\001b\006proto" +
-      "3"
+      "\030\005 \001(\0132\032.google.protobuf.Timestamp2\250\001\n\006S" +
+      "ensor\022J\n\rGetSensorData\022\032.com.chuntao.Sen" +
+      "sorRequest\032\033.com.chuntao.SensorResponse\"" +
+      "\000\022R\n\021AnalyseSensorData\022\033.com.chuntao.Sen" +
+      "sorResponse\032\034.com.chuntao.AnalyseRespons" +
+      "e\"\000(\001B&\n\023com.chuntao.serviceB\rSensorServ" +
+      "iceP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -96,12 +87,6 @@ public final class SensorService {
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_com_chuntao_AnalyseResponse_descriptor,
         new java.lang.String[] { "Analyse", "Location", "PollutionLevel", "Message", "Timestamp", });
-    internal_static_com_chuntao_PollutionLevelResponse_descriptor =
-      getDescriptor().getMessageTypes().get(3);
-    internal_static_com_chuntao_PollutionLevelResponse_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-        internal_static_com_chuntao_PollutionLevelResponse_descriptor,
-        new java.lang.String[] { "PollutionLevel", });
     descriptor.resolveAllFeaturesImmutable();
     com.google.protobuf.TimestampProto.getDescriptor();
   }
