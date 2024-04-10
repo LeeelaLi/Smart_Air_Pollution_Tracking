@@ -7,23 +7,30 @@
 //import java.util.Date;
 //import java.util.Scanner;
 //
-//import io.grpc.stub.StreamObserver;
-//
 //public class HVACClient {
 //
 //    public static boolean statusQuote;
 //    public static void main(String[] args) {
 //
+//        // Create the ManagedChannel for HVAC command
+//        ManagedChannel HVACCommandChannel = ManagedChannelBuilder.forAddress("localhost", 9091)
+//                .usePlaintext()
+//                .build();
+//        HVACGrpc.HVACBlockingStub hvacBlockingStub = HVACGrpc.newBlockingStub(HVACCommandChannel);
+//
 //        // Use sensor response data
-//        boolean status = SensorClient.pollution_level > 2;
+//        System.out.println("Enter the pollution level:");
+//        Scanner keyboard = new Scanner(System.in);
+//        int pollution_level = keyboard.nextInt();
+//        boolean status = pollution_level > 2;
 //        HVACCommand.Action action;
-//        if (SensorClient.pollution_level < 2) {
-//            action = HVACCommand.Action.valueOf(1);
+//        if (pollution_level < 2) {
+//            action = HVACCommand.Action.STOP;
 //        }else {
-//            action = HVACCommand.Action.valueOf(0);
+//            action = HVACCommand.Action.START;
 //        }
 //        String location;
-//        int id = SensorClient.id;
+//        int id = 1;
 //        if(id == 1){
 //            location = "Home";
 //        } else if (id == 2) {
@@ -31,13 +38,7 @@
 //        }else {
 //            location = "Car";
 //        }
-//        System.out.println("pollution level: " + SensorClient.pollution_level);
-//
-//        // Create the ManagedChannel for HVAC command
-//        ManagedChannel HVACCommandChannel = ManagedChannelBuilder.forAddress("localhost", 9091)
-//                .usePlaintext()
-//                .build();
-//        HVACGrpc.HVACBlockingStub hvacBlockingStub = HVACGrpc.newBlockingStub(HVACCommandChannel);
+//        System.out.println("pollution level: " + pollution_level);
 //
 //        // Set action based on sensor pollution level
 //        HVACCommand hvacCommand = HVACCommand.newBuilder()
@@ -46,7 +47,6 @@
 //        System.out.println("HVAC is: " + hvacCommand.getAction());
 //        // Ask users if they want to turn on/off the HVAC
 //        System.out.println("Do you want to turn on(1)/turn off(2)?");
-//        Scanner keyboard = new Scanner(System.in);
 //        int turnOn = keyboard.nextInt();
 //        if (turnOn == 1) {
 //            action = HVACCommand.Action.valueOf(0);

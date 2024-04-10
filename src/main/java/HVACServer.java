@@ -1,35 +1,53 @@
+//import java.io.IOException;
+//import java.util.concurrent.TimeUnit;
+//
 //import com.chuntao.service.*;
+//
 //import com.google.protobuf.Timestamp;
+//
 //import io.grpc.Server;
 //import io.grpc.ServerBuilder;
 //import io.grpc.stub.StreamObserver;
-//
-//import java.io.IOException;
 //import java.time.Instant;
+//
 //public class HVACServer {
-//    public static void main(String[] args) throws IOException, InterruptedException {
 //
-//        Server HVACServer = ServerBuilder.forPort(9091)
+//    private Server server;
+//    public static int pollutionLevel;
+//    public void start(int port) throws IOException {
+//        server = ServerBuilder.forPort(port)
 //                .addService(new HVACImpl())
-//                .build();
+//                .build()
+//                .start();
+//        System.out.println("HVAC server started, listening on port " + port);
 //
-//        HVACServer.start();
-//        System.out.println("HVAC Service started on port 9091");
-//        HVACServer.awaitTermination();
+//        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+//            System.out.println("Shutting down gRPC server");
+//            try {
+//                HVACServer.this.stop();
+//            } catch (InterruptedException e) {
+//                e.printStackTrace(System.err);
+//            }
+//        }));
 //    }
-//    // HVAC service implement
-//    static class HVACImpl extends HVACGrpc.HVACImplBase {
 //
-//        @Override
-//        public StreamObserver<SensorResponse> hvacAction(StreamObserver<HVACCommand> responseObserver) {
-//            return null;
+//    private void stop() throws InterruptedException {
+//        if (server != null) {
+//            server.shutdown().awaitTermination(30, TimeUnit.SECONDS);
 //        }
+//    }
+//
+//    public void blockUntilShutdown() throws InterruptedException {
+//        if (server != null) {
+//            server.awaitTermination();
+//        }
+//    }
+//
+//    private static class HVACImpl extends HVACGrpc.HVACImplBase {
 //
 //        @Override
 //        public StreamObserver<AnalyseResponse> hvacControl(StreamObserver<HVACCommand> responseObserver) {
 //            return new StreamObserver<AnalyseResponse>() {
-//                int pollutionLevel;
-//                String action;
 //                @Override
 //                public void onNext(AnalyseResponse analyseResponse) {
 //                    pollutionLevel = analyseResponse.getPollutionLevel();
@@ -37,18 +55,21 @@
 //
 //                @Override
 //                public void onError(Throwable throwable) {
-//
+//                    // Handle error if any
 //                }
 //
 //                @Override
 //                public void onCompleted() {
-//                    if(pollutionLevel > 2) {
-//                        action = "START";
+//                    // Use sensor response data
+//                    boolean status = pollutionLevel > 2;
+//                    HVACCommand.Action action;
+//                    if (status) {
+//                        action = HVACCommand.Action.START;
 //                    } else {
-//                        action = "STOP";
+//                        action = HVACCommand.Action.STOP;
 //                    }
 //                    HVACCommand hvacCommand = HVACCommand.newBuilder()
-//                            .setAction(HVACCommand.Action.valueOf(action))
+//                            .setAction(action)
 //                            .build();
 //                    responseObserver.onNext(hvacCommand);
 //                    responseObserver.onCompleted();
@@ -58,43 +79,23 @@
 //
 //        @Override
 //        public StreamObserver<HVACCommand> hvacSwitch(StreamObserver<HVACResponse> responseObserver) {
-//            return new StreamObserver<HVACCommand>() {
-//                @Override
-//                public void onNext(HVACCommand hvacCommand) {
-//                    // Logic to switch HVAC based on the received command
-//                    HVACResponse.Builder response = HVACResponse.newBuilder();
-//                    switch (hvacCommand.getAction()) {
-//                        case START:
-//                            response.setStatus(true).setTimestamp(timestampNow());
-//                            break;
-//                        case STOP:
-//                            response.setStatus(false).setTimestamp(timestampNow());
-//                            break;
-//                        default:
-//                            // *
-//                            break;
-//                    }
-//                    responseObserver.onNext(response.build());
-//                }
-//
-//                @Override
-//                public void onError(Throwable throwable) {
-//                    // *
-//                }
-//
-//                @Override
-//                public void onCompleted() {
-//                    responseObserver.onCompleted();
-//                }
-//            };
+//            return null;
 //        }
 //
-//        private Timestamp timestampNow() {
-//            Instant now = Instant.now();
-//            return Timestamp.newBuilder()
-//                    .setSeconds(now.getEpochSecond())
-//                    .setNanos(now.getNano())
-//                    .build();
-//        }
+//    }
+//
+//    private static Timestamp timestampNow() {
+//        Instant now = Instant.now();
+//        return Timestamp.newBuilder()
+//                .setSeconds(now.getEpochSecond())
+//                .setNanos(now.getNano())
+//                .build();
+//    }
+//
+//
+//    public static void main(String[] args) throws IOException, InterruptedException {
+//        HVACServer hvacServer = new HVACServer();
+//        hvacServer.start(9091);
+//        hvacServer.blockUntilShutdown();
 //    }
 //}

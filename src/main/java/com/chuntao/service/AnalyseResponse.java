@@ -124,7 +124,7 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int POLLUTION_LEVEL_FIELD_NUMBER = 3;
-  private int pollutionLevel_ = 0;
+  private static int pollutionLevel_ = 0;
   /**
    * <code>int32 pollution_level = 3;</code>
    * @return The pollutionLevel.

@@ -6,14 +6,9 @@ import io.grpc.stub.StreamObserver;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class SensorServer {
-
     // Sensor service implement
     private Server server;
     public void start(int port) throws IOException {
@@ -60,7 +55,7 @@ public class SensorServer {
                     response.setLocation("Garden").setPM25(10).setTemperature(19).setVOC(0.1F).setHumidity(45).setCO(14);
                     break;
                 case 3:
-                    response.setLocation("Car").setPM25(13).setTemperature(24).setVOC(0.6F).setHumidity(27).setCO(11);
+                    response.setLocation("Car").setPM25(13).setTemperature(20).setVOC(0.6F).setHumidity(27).setCO(11);
                     break;
                 default:
                     response.setLocation("Unknown");
@@ -97,8 +92,8 @@ public class SensorServer {
                     int pollutionItem = 0;
 
                     // Determine pollution level based on sensor data
-                    StringBuffer analyse = new StringBuffer().append("");
-                    String message = "";
+                    StringBuilder analyse = new StringBuilder();
+                    StringBuilder message = new StringBuilder();
                     if (sumPM25 > 12) {
                         pollutionItem++;
                         analyse.append("\n· PM2.5 is over 12.");
@@ -119,13 +114,13 @@ public class SensorServer {
                         pollutionItem++;
                         analyse.append("\n· CO is exceed 0-15.");
                     }
-                    
+
                     if (pollutionItem < 1) {
-                        message += "Low pollution";
-                    } else if (pollutionItem < 3 && pollutionItem > 1) {
-                        message += "Moderare pollution";
+                        message.append("Low pollution");
+                    } else if (pollutionItem == 2) {
+                        message.append("Moderate pollution");
                     } else {
-                        message += "High pollution";
+                        message.append("High pollution");
                     }
 
                     // Create AnalyseResponse
@@ -133,7 +128,7 @@ public class SensorServer {
                             .setLocation(sensorData.getLocation())
                             .setAnalyse(analyse.toString())
                             .setPollutionLevel(pollutionItem)
-                            .setMessage(message)
+                            .setMessage(message.toString())
                             .setTimestamp(timestampNow())
                             .build();
 
