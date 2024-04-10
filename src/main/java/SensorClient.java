@@ -88,24 +88,21 @@ public class SensorClient {
     public static void main(String[] args) throws InterruptedException {
         String host = "localhost";
         int port = 9090;
-        int sensor_id;
         System.out.println("Select the sensor id you want to review:" +
                 "\n1. Sensor 1 - Home" +
                 "\n2. Sensor 2 - Garden" +
                 "\n3. Sensor 3 - Car");
         Scanner keyboard = new Scanner(System.in);
-        sensor_id = keyboard.nextInt();
 
         SensorClient sensorClient = new SensorClient(host, port);
-        sensorClient.GetSensorData(sensor_id); // Send unary request
 
         // Wait for user input to continue request or stop streaming
         while (true) {
             System.out.println("Enter sensor ID (or 'q' to quit):");
             if (keyboard.hasNextInt()) {
-                int sensor_id1 = keyboard.nextInt();
-                if (sensor_id1 > 0 && sensor_id1 < 4) {
-                    sensorClient.GetSensorData(sensor_id1);
+                int sensor_id = keyboard.nextInt();
+                if (sensor_id > 0 && sensor_id < 4) {
+                    sensorClient.GetSensorData(sensor_id);
                 } else {
                     System.out.println("Invalid sensor ID. Sensor ID should be between 1 and 3.");
                 }

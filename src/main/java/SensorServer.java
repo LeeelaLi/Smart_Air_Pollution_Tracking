@@ -11,6 +11,8 @@ import java.util.concurrent.TimeUnit;
 public class SensorServer {
     // Sensor service implement
     private Server server;
+    public static int pollution_level;
+
     public void start(int port) throws IOException {
         server = ServerBuilder.forPort(port)
                 .addService(new SensorImpl())
@@ -83,6 +85,8 @@ public class SensorServer {
 
                 @Override
                 public void onCompleted() {
+
+                    // Determine pollution level based on sensor data
                     // Perform analysis based on the stored sensor data
                     float sumPM25 = sensorData.getPM25();
                     float sumTemp = sensorData.getTemperature();
@@ -91,7 +95,6 @@ public class SensorServer {
                     float sumCO = sensorData.getCO();
                     int pollutionItem = 0;
 
-                    // Determine pollution level based on sensor data
                     StringBuilder analyse = new StringBuilder();
                     StringBuilder message = new StringBuilder();
                     if (sumPM25 > 12) {
@@ -115,19 +118,21 @@ public class SensorServer {
                         analyse.append("\n· CO is exceed 0-15.");
                     }
 
-                    if (pollutionItem < 1) {
+                    if (pollutionItem < 2) {
+                        pollution_level = 1;
                         message.append("Low pollution");
                     } else if (pollutionItem == 2) {
+                        pollution_level = 2;
                         message.append("Moderate pollution");
                     } else {
+                        pollution_level = 3;
                         message.append("High pollution");
                     }
-
                     // Create AnalyseResponse
                     AnalyseResponse analyseResponse = AnalyseResponse.newBuilder()
                             .setLocation(sensorData.getLocation())
                             .setAnalyse(analyse.toString())
-                            .setPollutionLevel(pollutionItem)
+                            .setPollutionLevel(pollution_level)
                             .setMessage(message.toString())
                             .setTimestamp(timestampNow())
                             .build();
