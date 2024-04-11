@@ -1,14 +1,12 @@
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
-
-import com.chuntao.service.*;
-
 import com.google.protobuf.Timestamp;
-
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
 import java.time.Instant;
+
+import com.chuntao.service.*;
 
 public class HVACServer {
 
@@ -48,9 +46,23 @@ public class HVACServer {
         @Override
         public StreamObserver<AnalyseResponse> hvacControl(StreamObserver<HVACCommand> responseObserver) {
             return new StreamObserver<AnalyseResponse>() {
+                boolean isOn = false;
+
                 @Override
                 public void onNext(AnalyseResponse analyseResponse) {
                     pollutionLevel = analyseResponse.getPollutionLevel();
+                    isOn = pollutionLevel > 2;
+                    HVACCommand.Action action;
+                    if (isOn) {
+                        action = HVACCommand.Action.START;
+                    } else {
+                        action = HVACCommand.Action.STOP;
+                    }
+                    HVACCommand hvacCommand = HVACCommand.newBuilder()
+                            .setAction(action)
+                            .build();
+
+                    responseObserver.onNext(hvacCommand);
                 }
 
                 @Override
@@ -60,18 +72,6 @@ public class HVACServer {
 
                 @Override
                 public void onCompleted() {
-                    // Use sensor response data
-                    boolean status = pollutionLevel > 2;
-                    HVACCommand.Action action;
-                    if (status) {
-                        action = HVACCommand.Action.START;
-                    } else {
-                        action = HVACCommand.Action.STOP;
-                    }
-                    HVACCommand hvacCommand = HVACCommand.newBuilder()
-                            .setAction(action)
-                            .build();
-                    responseObserver.onNext(hvacCommand);
                     responseObserver.onCompleted();
                 }
             };
@@ -79,7 +79,27 @@ public class HVACServer {
 
         @Override
         public StreamObserver<HVACCommand> hvacSwitch(StreamObserver<HVACResponse> responseObserver) {
-            return null;
+            return new StreamObserver<HVACCommand>() {
+                @Override
+                public void onNext(HVACCommand hvacCommand) {
+                    HVACResponse hvacResponse = HVACResponse.newBuilder()
+                            .setStatus(true)
+                            .setLocation("Home")
+                            .setTimestamp(timestampNow())
+                            .build();
+                    responseObserver.onNext(hvacResponse);
+                }
+
+                @Override
+                public void onError(Throwable throwable) {
+
+                }
+
+                @Override
+                public void onCompleted() {
+                    responseObserver.onCompleted();
+                }
+            };
         }
 
     }
@@ -91,7 +111,6 @@ public class HVACServer {
                 .setNanos(now.getNano())
                 .build();
     }
-
 
     public static void main(String[] args) throws IOException, InterruptedException {
         HVACServer hvacServer = new HVACServer();
