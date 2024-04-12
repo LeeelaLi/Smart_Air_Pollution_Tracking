@@ -3,15 +3,12 @@ import com.google.protobuf.Timestamp;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
-
 import java.time.Instant;
-import java.util.Date;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 public class HVACClient {
 
-    public static boolean statusQuote;
     private final HVACGrpc.HVACStub hvacStub;
     private final ManagedChannel hvacChannel;
 
@@ -27,50 +24,20 @@ public class HVACClient {
     }
 
     public static void main(String[] args) throws InterruptedException {
-
         String host = "localhost";
         int port = 9091;
 
         HVACClient hvacClient = new HVACClient(host, port);
 
         Scanner keyboard = new Scanner(System.in);
-        String location;
-        int pollution_level;
+        int sensorId;
 
-        while(true) {
+        while (true) {
             System.out.println("Enter the sensor id to check HVAC status (or 'q' to quit):");
-            if(keyboard.hasNextInt()) {
-                int id = keyboard.nextInt();
-                if (id > 0 && id < 4) {
-                    switch (id) {
-                        case 1:
-                            location = "Home";
-                            pollution_level = 3;
-                            break;
-                        case 2:
-                            location = "Garden";
-                            pollution_level = 1;
-                            break;
-                        default:
-                            location = "Car";
-                            pollution_level = 3;
-                            break;
-                    }
-                    // Use sensor response data
-                    boolean status = pollution_level < 2;
-                    HVACCommand.Action action;
-                    if (status) {
-                        action = HVACCommand.Action.STOP;
-                    }else {
-                        action = HVACCommand.Action.START;
-                    }
-
-                    // Set action based on sensor pollution level
-                    HVACCommand hvacCommand = HVACCommand.newBuilder()
-                            .setAction(action)
-                            .build();
-                    System.out.println("Pollution level: " + pollution_level +
-                            "\nHVAC is: " + hvacCommand.getAction());
+            if (keyboard.hasNextInt()) {
+                sensorId = keyboard.nextInt();
+                if (isValidSensorId(sensorId)) {
+                    hvacClient.HVACControl(sensorId);
                 } else {
                     System.out.println("Invalid sensor ID. Sensor ID should be between 1 and 3.");
                 }
@@ -84,45 +51,27 @@ public class HVACClient {
             }
         }
 
-
-        // Ask users if they want to turn on/off the HVAC
-//        System.out.println("Do you want to turn on(1)/turn off(2)?");
-//        int turnOn = keyboard.nextInt();
-//        if (turnOn == 1) {
-//            action = HVACCommand.Action.valueOf(0);
-//        } else {
-//            action = HVACCommand.Action.valueOf(1);
-//        }
-//        hvacCommand = HVACCommand.newBuilder()
-//                .setAction(action)
-//                .build();
-//        System.out.println("HVAC is now: " + hvacCommand.getAction());
-//
-//        HVACCommand.Action action1 = hvacCommand.getAction();
-//        String statusMessage;
-//        if (action1 == HVACCommand.Action.valueOf(0)) {
-//            status = true;
-//            statusMessage = "ON";
-//        } else {
-//            status = false;
-//            statusMessage = "OFF";
-//        }
-//        // Set location and status based on sensor response
-//        HVACResponse hvacResponse = HVACResponse.newBuilder()
-//                .setLocation(location)
-//                .setStatus(status)
-//                .setTimestamp(timestampNow())
-//                .build();
-//        statusQuote = hvacResponse.getStatus();
-//        Date updatedTime = new Date(hvacResponse.getTimestamp().getSeconds() * 1000);
-//
-//        // Print HVAC response
-//        System.out.println("\n1. HVAC status of " + hvacResponse.getLocation() +
-//                ": " + statusMessage +
-//                "\n2. Time: " + updatedTime);
-
         // Shutdown channels
         hvacClient.shutdown();
+    }
+
+    private static boolean isValidSensorId(int id) {
+        return id > 0 && id < 4;
+    }
+
+    private static int calculatePollutionLevel(int sensorId) {
+        switch (sensorId) {
+            case 1:
+                return 3;
+            case 2:
+                return 1;
+            default:
+                return 3;
+        }
+    }
+
+    private static HVACCommand.Action determineHVACAction(int pollutionLevel) {
+        return pollutionLevel < 2 ? HVACCommand.Action.STOP : HVACCommand.Action.START;
     }
 
     private static Timestamp timestampNow() {
@@ -133,39 +82,18 @@ public class HVACClient {
                 .build();
     }
 
-    public void HVACControl(int sensor_id) {
-
-        StreamObserver<HVACCommand> hvacCommandObserver = new StreamObserver<HVACCommand>() {
+    public void HVACControl(int sensorId) {
+        int pollutionLevel = calculatePollutionLevel(sensorId);
+        HVACCommand.Action action = determineHVACAction(pollutionLevel);
+        HVACCommand hvacCommand = HVACCommand.newBuilder()
+                .setAction(action)
+                .build();
+        System.out.println("Pollution level: " + pollutionLevel +
+                "\nHVAC is: " + hvacCommand.getAction());
+        StreamObserver<AnalyseResponse> analyseResponseObserver = hvacStub.hVACControl(new StreamObserver<HVACCommand>() {
             @Override
             public void onNext(HVACCommand hvacCommand) {
-                String location;
-                int pollution_level;
-                if(sensor_id == 1){
-                    location = "Home";
-                    pollution_level = 3;
-                } else if (sensor_id == 2) {
-                    location = "Garden";
-                    pollution_level = 1;
-                }else {
-                    location = "Car";
-                    pollution_level = 3;
-                }
-
-                // Use sensor response data
-                boolean status = pollution_level < 2;
-                HVACCommand.Action action;
-                if (status) {
-                    action = HVACCommand.Action.STOP;
-                }else {
-                    action = HVACCommand.Action.START;
-                }
-
-                // Set action based on sensor pollution level
-                hvacCommand = HVACCommand.newBuilder()
-                        .setAction(action)
-                        .build();
-                System.out.println("Pollution level: " + pollution_level +
-                        "\nHVAC is: " + hvacCommand.getAction());
+                // Handle onNext
             }
 
             @Override
@@ -175,11 +103,10 @@ public class HVACClient {
 
             @Override
             public void onCompleted() {
+                // Handle onCompleted
             }
-        };
-        StreamObserver<AnalyseResponse> analyseResponseObserver = hvacStub.hVACControl(hvacCommandObserver);
-
-        analyseResponseObserver.onNext(AnalyseResponse.newBuilder().setPollutionLevel(sensor_id).build());
+        });
+        analyseResponseObserver.onNext(AnalyseResponse.newBuilder().setPollutionLevel(sensorId).build());
         analyseResponseObserver.onCompleted();
     }
 }
