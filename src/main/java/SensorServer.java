@@ -11,7 +11,6 @@ import java.util.concurrent.TimeUnit;
 public class SensorServer {
     // Sensor service implement
     private Server server;
-    public static int pollution_level;
 
     public void start(int port) throws IOException {
         server = ServerBuilder.forPort(port)
@@ -61,6 +60,7 @@ public class SensorServer {
                     break;
                 default:
                     response.setLocation("Unknown");
+                    break;
             }
 
             // Store the sensor data for analysis
@@ -74,6 +74,8 @@ public class SensorServer {
         @Override
         public StreamObserver<SensorResponse> analyseSensorData(StreamObserver<AnalyseResponse> responseObserver) {
             return new StreamObserver<SensorResponse>() {
+                int pollution_level;
+
                 @Override
                 public void onNext(SensorResponse sensorResponse) {
                 }
@@ -86,7 +88,6 @@ public class SensorServer {
                 @Override
                 public void onCompleted() {
 
-                    // Determine pollution level based on sensor data
                     // Perform analysis based on the stored sensor data
                     float sumPM25 = sensorData.getPM25();
                     float sumTemp = sensorData.getTemperature();

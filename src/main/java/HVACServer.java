@@ -12,6 +12,7 @@ public class HVACServer {
 
     private Server server;
     public static int pollutionLevel;
+
     public void start(int port) throws IOException {
         server = ServerBuilder.forPort(port)
                 .addService(new HVACImpl())
@@ -46,32 +47,26 @@ public class HVACServer {
         @Override
         public StreamObserver<AnalyseResponse> hvacControl(StreamObserver<HVACCommand> responseObserver) {
             return new StreamObserver<AnalyseResponse>() {
-                boolean isOn = false;
 
                 @Override
                 public void onNext(AnalyseResponse analyseResponse) {
                     pollutionLevel = analyseResponse.getPollutionLevel();
-                    isOn = pollutionLevel > 2;
-                    HVACCommand.Action action;
-                    if (isOn) {
-                        action = HVACCommand.Action.START;
-                    } else {
-                        action = HVACCommand.Action.STOP;
-                    }
-                    HVACCommand hvacCommand = HVACCommand.newBuilder()
-                            .setAction(action)
-                            .build();
-
-                    responseObserver.onNext(hvacCommand);
+                    System.out.println("Received pollution level: " + pollutionLevel);
                 }
 
                 @Override
                 public void onError(Throwable throwable) {
-                    // Handle error if any
+                    System.err.println("Error in HVAC control: " + throwable.getMessage());
                 }
 
                 @Override
                 public void onCompleted() {
+                    String action = (pollutionLevel > 2) ? "START" : "STOP";
+                    HVACCommand hvacCommand = HVACCommand.newBuilder()
+                            .setAction(HVACCommand.Action.valueOf(action))
+                            .build();
+
+                    responseObserver.onNext(hvacCommand);
                     responseObserver.onCompleted();
                 }
             };
@@ -82,17 +77,15 @@ public class HVACServer {
             return new StreamObserver<HVACCommand>() {
                 @Override
                 public void onNext(HVACCommand hvacCommand) {
-                    HVACResponse hvacResponse = HVACResponse.newBuilder()
-                            .setStatus(true)
-                            .setLocation("Home")
-                            .setTimestamp(timestampNow())
-                            .build();
-                    responseObserver.onNext(hvacResponse);
+                    HVACResponse.Builder hvacResponse = HVACResponse.newBuilder();
+                    boolean status = hvacCommand.getAction() == HVACCommand.Action.START;
+                    hvacResponse.setStatus(status).setTimestamp(timestampNow());
+                    responseObserver.onNext(hvacResponse.build());
                 }
 
                 @Override
                 public void onError(Throwable throwable) {
-
+                    System.err.println("Error in HVAC switch: " + throwable.getMessage());
                 }
 
                 @Override
@@ -101,7 +94,6 @@ public class HVACServer {
                 }
             };
         }
-
     }
 
     private static Timestamp timestampNow() {
