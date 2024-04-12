@@ -44,7 +44,6 @@ public class HVACServer {
 
     private static class HVACImpl extends HVACGrpc.HVACImplBase {
 
-        @Override
         public StreamObserver<AnalyseResponse> hvacControl(StreamObserver<HVACCommand> responseObserver) {
             return new StreamObserver<AnalyseResponse>() {
 
@@ -72,7 +71,6 @@ public class HVACServer {
             };
         }
 
-        @Override
         public StreamObserver<HVACCommand> hvacSwitch(StreamObserver<HVACResponse> responseObserver) {
             return new StreamObserver<HVACCommand>() {
                 @Override

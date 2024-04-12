@@ -1,14 +1,88 @@
-//import com.chuntao.service.*;
-//import com.google.protobuf.Timestamp;
-//import io.grpc.ManagedChannel;
-//import io.grpc.ManagedChannelBuilder;
-//
-//import java.time.Instant;
-//import java.util.Date;
-//
-//public class NotifyClient {
-//    public static void main(String[] args) {
-//
+import com.chuntao.service.AnalyseResponse;
+import com.chuntao.service.HVACResponse;
+import com.chuntao.service.NotificationGrpc;
+import com.chuntao.service.NotificationMessage;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
+import io.grpc.stub.StreamObserver;
+
+import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
+
+public class NotifyClient {
+    private final ManagedChannel notifyChannel;
+    private final NotificationGrpc.NotificationStub notificationStub;
+
+    public NotifyClient(String host, int port) {
+        this.notifyChannel = ManagedChannelBuilder.forAddress(host, port)
+                .usePlaintext()
+                .build();
+        this.notificationStub = NotificationGrpc.newStub(notifyChannel);
+    }
+
+    public void sensorNotifications() {
+        StreamObserver<NotificationMessage> notificationObserver = new StreamObserver<NotificationMessage>() {
+            @Override
+            public void onNext(NotificationMessage notificationMessage) {
+                System.out.println("Sensor server message: " + notificationMessage.getMessage());
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                System.out.println("Error in server streaming: " + throwable.getMessage());
+            }
+
+            @Override
+            public void onCompleted() {
+                System.out.println("Server streaming completed");
+            }
+        };
+        notificationStub.sensorNotifications(AnalyseResponse.newBuilder().setPollutionLevel(1).build(), notificationObserver);
+    }
+
+    public void hvacNotifications() {
+        StreamObserver<NotificationMessage> notificationObserver = new StreamObserver<NotificationMessage>() {
+            @Override
+            public void onNext(NotificationMessage notificationMessage) {
+                System.out.println("HVAC server message: " + notificationMessage.getMessage());
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                System.out.println("Error in HVAC server streaming: " + throwable.getMessage());
+            }
+
+            @Override
+            public void onCompleted() {
+                System.out.println("Server streaming completed");
+            }
+        };
+        notificationStub.hVACNotifications(HVACResponse.newBuilder().setStatus(true).build(), notificationObserver);
+    }
+    public static void main(String[] args) {
+        NotifyClient client = new NotifyClient("localhost", 9092);
+        client.sensorNotifications();
+        client.hvacNotifications();
+
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            System.out.println("Press 'Q' to quit");
+            String input = scanner.nextLine();
+            if (input.equalsIgnoreCase("Q")) {
+                client.shutdown();
+                break;
+            }
+        }
+    }
+
+    public void shutdown() {
+        try {
+            notifyChannel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            System.err.println("Error while shutting down client: " + e.getMessage());
+        }
+    }
+
 //        // Use sensor response data
 //        int pollutionLevel = SensorClient.pollution_level;
 //        String location;
@@ -66,11 +140,4 @@
 //                "\n4. Time: " + updatedTime);
 //        sensorNotifyChannel.shutdown();
 //    }
-//    private static Timestamp timestampNow() {
-//        Instant now = Instant.now();
-//        return Timestamp.newBuilder()
-//                .setSeconds(now.getEpochSecond())
-//                .setNanos(now.getNano())
-//                .build();
-//    }
-//}
+}
