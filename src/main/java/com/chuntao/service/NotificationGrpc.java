@@ -19,28 +19,28 @@ public final class NotificationGrpc {
 
   // Static method descriptors that strictly reflect the proto.
   private static volatile io.grpc.MethodDescriptor<com.chuntao.service.AnalyseResponse,
-      com.chuntao.service.NotificationMessage> getSensorNotificationsMethod;
+      com.chuntao.service.SensorMessage> getSensorNotificationsMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "SensorNotifications",
       requestType = com.chuntao.service.AnalyseResponse.class,
-      responseType = com.chuntao.service.NotificationMessage.class,
+      responseType = com.chuntao.service.SensorMessage.class,
       methodType = io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
   public static io.grpc.MethodDescriptor<com.chuntao.service.AnalyseResponse,
-      com.chuntao.service.NotificationMessage> getSensorNotificationsMethod() {
-    io.grpc.MethodDescriptor<com.chuntao.service.AnalyseResponse, com.chuntao.service.NotificationMessage> getSensorNotificationsMethod;
+      com.chuntao.service.SensorMessage> getSensorNotificationsMethod() {
+    io.grpc.MethodDescriptor<com.chuntao.service.AnalyseResponse, com.chuntao.service.SensorMessage> getSensorNotificationsMethod;
     if ((getSensorNotificationsMethod = NotificationGrpc.getSensorNotificationsMethod) == null) {
       synchronized (NotificationGrpc.class) {
         if ((getSensorNotificationsMethod = NotificationGrpc.getSensorNotificationsMethod) == null) {
           NotificationGrpc.getSensorNotificationsMethod = getSensorNotificationsMethod =
-              io.grpc.MethodDescriptor.<com.chuntao.service.AnalyseResponse, com.chuntao.service.NotificationMessage>newBuilder()
+              io.grpc.MethodDescriptor.<com.chuntao.service.AnalyseResponse, com.chuntao.service.SensorMessage>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
               .setFullMethodName(generateFullMethodName(SERVICE_NAME, "SensorNotifications"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.chuntao.service.AnalyseResponse.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  com.chuntao.service.NotificationMessage.getDefaultInstance()))
+                  com.chuntao.service.SensorMessage.getDefaultInstance()))
               .setSchemaDescriptor(new NotificationMethodDescriptorSupplier("SensorNotifications"))
               .build();
         }
@@ -50,28 +50,28 @@ public final class NotificationGrpc {
   }
 
   private static volatile io.grpc.MethodDescriptor<com.chuntao.service.HVACResponse,
-      com.chuntao.service.NotificationMessage> getHVACNotificationsMethod;
+      com.chuntao.service.HVACMessage> getHVACNotificationsMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "HVACNotifications",
       requestType = com.chuntao.service.HVACResponse.class,
-      responseType = com.chuntao.service.NotificationMessage.class,
+      responseType = com.chuntao.service.HVACMessage.class,
       methodType = io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
   public static io.grpc.MethodDescriptor<com.chuntao.service.HVACResponse,
-      com.chuntao.service.NotificationMessage> getHVACNotificationsMethod() {
-    io.grpc.MethodDescriptor<com.chuntao.service.HVACResponse, com.chuntao.service.NotificationMessage> getHVACNotificationsMethod;
+      com.chuntao.service.HVACMessage> getHVACNotificationsMethod() {
+    io.grpc.MethodDescriptor<com.chuntao.service.HVACResponse, com.chuntao.service.HVACMessage> getHVACNotificationsMethod;
     if ((getHVACNotificationsMethod = NotificationGrpc.getHVACNotificationsMethod) == null) {
       synchronized (NotificationGrpc.class) {
         if ((getHVACNotificationsMethod = NotificationGrpc.getHVACNotificationsMethod) == null) {
           NotificationGrpc.getHVACNotificationsMethod = getHVACNotificationsMethod =
-              io.grpc.MethodDescriptor.<com.chuntao.service.HVACResponse, com.chuntao.service.NotificationMessage>newBuilder()
+              io.grpc.MethodDescriptor.<com.chuntao.service.HVACResponse, com.chuntao.service.HVACMessage>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
               .setFullMethodName(generateFullMethodName(SERVICE_NAME, "HVACNotifications"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.chuntao.service.HVACResponse.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  com.chuntao.service.NotificationMessage.getDefaultInstance()))
+                  com.chuntao.service.HVACMessage.getDefaultInstance()))
               .setSchemaDescriptor(new NotificationMethodDescriptorSupplier("HVACNotifications"))
               .build();
         }
@@ -137,7 +137,7 @@ public final class NotificationGrpc {
      * </pre>
      */
     default void sensorNotifications(com.chuntao.service.AnalyseResponse request,
-        io.grpc.stub.StreamObserver<com.chuntao.service.NotificationMessage> responseObserver) {
+        io.grpc.stub.StreamObserver<com.chuntao.service.SensorMessage> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getSensorNotificationsMethod(), responseObserver);
     }
 
@@ -147,7 +147,7 @@ public final class NotificationGrpc {
      * </pre>
      */
     default void hVACNotifications(com.chuntao.service.HVACResponse request,
-        io.grpc.stub.StreamObserver<com.chuntao.service.NotificationMessage> responseObserver) {
+        io.grpc.stub.StreamObserver<com.chuntao.service.HVACMessage> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getHVACNotificationsMethod(), responseObserver);
     }
   }
@@ -191,7 +191,7 @@ public final class NotificationGrpc {
      * </pre>
      */
     public void sensorNotifications(com.chuntao.service.AnalyseResponse request,
-        io.grpc.stub.StreamObserver<com.chuntao.service.NotificationMessage> responseObserver) {
+        io.grpc.stub.StreamObserver<com.chuntao.service.SensorMessage> responseObserver) {
       io.grpc.stub.ClientCalls.asyncServerStreamingCall(
           getChannel().newCall(getSensorNotificationsMethod(), getCallOptions()), request, responseObserver);
     }
@@ -202,7 +202,7 @@ public final class NotificationGrpc {
      * </pre>
      */
     public void hVACNotifications(com.chuntao.service.HVACResponse request,
-        io.grpc.stub.StreamObserver<com.chuntao.service.NotificationMessage> responseObserver) {
+        io.grpc.stub.StreamObserver<com.chuntao.service.HVACMessage> responseObserver) {
       io.grpc.stub.ClientCalls.asyncServerStreamingCall(
           getChannel().newCall(getHVACNotificationsMethod(), getCallOptions()), request, responseObserver);
     }
@@ -232,7 +232,7 @@ public final class NotificationGrpc {
      * Server-side streaming RPC for receiving notifications based on analyze response
      * </pre>
      */
-    public java.util.Iterator<com.chuntao.service.NotificationMessage> sensorNotifications(
+    public java.util.Iterator<com.chuntao.service.SensorMessage> sensorNotifications(
         com.chuntao.service.AnalyseResponse request) {
       return io.grpc.stub.ClientCalls.blockingServerStreamingCall(
           getChannel(), getSensorNotificationsMethod(), getCallOptions(), request);
@@ -243,7 +243,7 @@ public final class NotificationGrpc {
      * Server-side streaming RPC for receiving notifications based on HVAC response
      * </pre>
      */
-    public java.util.Iterator<com.chuntao.service.NotificationMessage> hVACNotifications(
+    public java.util.Iterator<com.chuntao.service.HVACMessage> hVACNotifications(
         com.chuntao.service.HVACResponse request) {
       return io.grpc.stub.ClientCalls.blockingServerStreamingCall(
           getChannel(), getHVACNotificationsMethod(), getCallOptions(), request);
@@ -292,11 +292,11 @@ public final class NotificationGrpc {
       switch (methodId) {
         case METHODID_SENSOR_NOTIFICATIONS:
           serviceImpl.sensorNotifications((com.chuntao.service.AnalyseResponse) request,
-              (io.grpc.stub.StreamObserver<com.chuntao.service.NotificationMessage>) responseObserver);
+              (io.grpc.stub.StreamObserver<com.chuntao.service.SensorMessage>) responseObserver);
           break;
         case METHODID_HVACNOTIFICATIONS:
           serviceImpl.hVACNotifications((com.chuntao.service.HVACResponse) request,
-              (io.grpc.stub.StreamObserver<com.chuntao.service.NotificationMessage>) responseObserver);
+              (io.grpc.stub.StreamObserver<com.chuntao.service.HVACMessage>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -321,14 +321,14 @@ public final class NotificationGrpc {
           io.grpc.stub.ServerCalls.asyncServerStreamingCall(
             new MethodHandlers<
               com.chuntao.service.AnalyseResponse,
-              com.chuntao.service.NotificationMessage>(
+              com.chuntao.service.SensorMessage>(
                 service, METHODID_SENSOR_NOTIFICATIONS)))
         .addMethod(
           getHVACNotificationsMethod(),
           io.grpc.stub.ServerCalls.asyncServerStreamingCall(
             new MethodHandlers<
               com.chuntao.service.HVACResponse,
-              com.chuntao.service.NotificationMessage>(
+              com.chuntao.service.HVACMessage>(
                 service, METHODID_HVACNOTIFICATIONS)))
         .build();
   }

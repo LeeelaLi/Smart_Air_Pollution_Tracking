@@ -4,8 +4,8 @@
 // Protobuf Java Version: 4.26.1
 package com.chuntao.service;
 
-public interface NotificationMessageOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:com.chuntao.service.NotificationMessage)
+public interface SensorMessageOrBuilder extends
+    // @@protoc_insertion_point(interface_extends:com.chuntao.service.SensorMessage)
     com.google.protobuf.MessageOrBuilder {
 
   /**

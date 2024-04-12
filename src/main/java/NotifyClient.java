@@ -1,7 +1,4 @@
-import com.chuntao.service.AnalyseResponse;
-import com.chuntao.service.HVACResponse;
-import com.chuntao.service.NotificationGrpc;
-import com.chuntao.service.NotificationMessage;
+import com.chuntao.service.*;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
@@ -20,11 +17,40 @@ public class NotifyClient {
         this.notificationStub = NotificationGrpc.newStub(notifyChannel);
     }
 
+    public void start() {
+        // Start threads for listening to sensor and HVAC notifications concurrently
+        Thread sensorThread = new Thread(this::sensorNotifications);
+        Thread hvacThread = new Thread(this::hvacNotifications);
+
+        sensorThread.start();
+        hvacThread.start();
+
+        try {
+            // Wait for both threads to complete
+            sensorThread.join();
+            hvacThread.join();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            System.err.println("Error while waiting for threads to complete: " + e.getMessage());
+        }
+    }
+
+    public void shutdown()  throws InterruptedException  {
+        try {
+            notifyChannel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            System.err.println("Error while shutting down client: " + e.getMessage());
+        }
+    }
+
     public void sensorNotifications() {
-        StreamObserver<NotificationMessage> notificationObserver = new StreamObserver<NotificationMessage>() {
+        StreamObserver<SensorMessage> sensorObserver = new StreamObserver<SensorMessage>() {
             @Override
-            public void onNext(NotificationMessage notificationMessage) {
-                System.out.println("Sensor server message: " + notificationMessage.getMessage());
+            public void onNext(SensorMessage sensorMessage) {
+                System.out.println("Sensor server message: " +
+                        "\n1. Location: " + sensorMessage.getLocation() +
+                        "\n2. Air quality: " + sensorMessage.getAirQuality() +
+                        "\n3. Advice: " + sensorMessage.getMessage());
             }
 
             @Override
@@ -37,14 +63,16 @@ public class NotifyClient {
                 System.out.println("Server streaming completed");
             }
         };
-        notificationStub.sensorNotifications(AnalyseResponse.newBuilder().setPollutionLevel(1).build(), notificationObserver);
+        notificationStub.sensorNotifications(AnalyseResponse.newBuilder().setPollutionLevel(1).build(), sensorObserver);
     }
 
     public void hvacNotifications() {
-        StreamObserver<NotificationMessage> notificationObserver = new StreamObserver<NotificationMessage>() {
+        StreamObserver<HVACMessage> havcObserver = new StreamObserver<HVACMessage>() {
             @Override
-            public void onNext(NotificationMessage notificationMessage) {
-                System.out.println("HVAC server message: " + notificationMessage.getMessage());
+            public void onNext(HVACMessage hvacMessage) {
+                System.out.println("HVAC server message: " +
+                        "\n1. HVAC status: " + hvacMessage.getStatus() +
+                        "\n2. Message: " + hvacMessage.getMessage());
             }
 
             @Override
@@ -57,12 +85,12 @@ public class NotifyClient {
                 System.out.println("Server streaming completed");
             }
         };
-        notificationStub.hVACNotifications(HVACResponse.newBuilder().setStatus(true).build(), notificationObserver);
+        notificationStub.hVACNotifications(HVACResponse.newBuilder().setStatus(true).build(), havcObserver);
     }
-    public static void main(String[] args) {
+
+    public static void main(String[] args) throws InterruptedException {
         NotifyClient client = new NotifyClient("localhost", 9092);
-        client.sensorNotifications();
-        client.hvacNotifications();
+        client.start();
 
         Scanner scanner = new Scanner(System.in);
         while (true) {
@@ -75,69 +103,4 @@ public class NotifyClient {
         }
     }
 
-    public void shutdown() {
-        try {
-            notifyChannel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            System.err.println("Error while shutting down client: " + e.getMessage());
-        }
-    }
-
-//        // Use sensor response data
-//        int pollutionLevel = SensorClient.pollution_level;
-//        String location;
-//        String air_quality;
-//        String message;
-//        int id = SensorClient.id;
-//        if(id == 1){
-//            location = "home";
-//        } else if (id == 2) {
-//            location = "garden";
-//        }else {
-//            location = "car";
-//        }
-//
-//        if (pollutionLevel < 2) {
-//            air_quality = "Great";
-//            message = "The air is healthy, HVAC is off";
-//        } else if (pollutionLevel == 2) {
-//            air_quality = "Moderate";
-//            message = "The air is fine. HVAC is off now, you could turn on the HVAC.";
-//        } else {
-//            air_quality = "Bad";
-//            message = "The air is harmed, HVAC is automatically on.";
-//        }
-//
-//        // create sensor Notification channel
-//        ManagedChannel sensorNotifyChannel = ManagedChannelBuilder.forAddress("localhost", 9092)
-//                .usePlaintext()
-//                .build();
-//        NotificationGrpc.NotificationBlockingStub sensorNotifyBlockingStub = NotificationGrpc.newBlockingStub(sensorNotifyChannel);
-//
-//        NotificationMessage sensorMessage = NotificationMessage.newBuilder()
-//                .setLocation(location)
-//                .setAirQuality(air_quality)
-//                .setMessage(message)
-//                .build();
-//        Date updatedTime = new Date(sensorMessage.getTimestamp().getSeconds() * 1000);
-//
-//        System.out.println("Air quality message from sensor. " +
-//                "\n1. Detected from: " + sensorMessage.getLocation() +
-//                "\n2. Air quality: " + sensorMessage.getAirQuality() +
-//                "\n3. Advice: " + sensorMessage.getMessage() +
-//                "\n4. Time: " + updatedTime);
-//
-//        // create HVAC Notification
-//        NotificationMessage hvacMessage = NotificationMessage.newBuilder()
-//                        .setLocation(location)
-//                        .setMessage(message)
-//                        .setTimestamp(timestampNow())
-//                        .build();
-//        System.out.println("\nAir quality message from HVAC. " +
-//                "\n1. Detected from: " + hvacMessage.getLocation() +
-//                "\n2. Air quality: " + sensorMessage.getAirQuality() +
-//                "\n3. Advice: " + sensorMessage.getMessage() +
-//                "\n4. Time: " + updatedTime);
-//        sensorNotifyChannel.shutdown();
-//    }
 }

@@ -5,12 +5,12 @@
 package com.chuntao.service;
 
 /**
- * Protobuf type {@code com.chuntao.service.NotificationMessage}
+ * Protobuf type {@code com.chuntao.service.HVACMessage}
  */
-public final class NotificationMessage extends
+public final class HVACMessage extends
     com.google.protobuf.GeneratedMessage implements
-    // @@protoc_insertion_point(message_implements:com.chuntao.service.NotificationMessage)
-    NotificationMessageOrBuilder {
+    // @@protoc_insertion_point(message_implements:com.chuntao.service.HVACMessage)
+    HVACMessageOrBuilder {
 private static final long serialVersionUID = 0L;
   static {
     com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
@@ -19,115 +19,46 @@ private static final long serialVersionUID = 0L;
       /* minor= */ 26,
       /* patch= */ 1,
       /* suffix= */ "",
-      NotificationMessage.class.getName());
+      HVACMessage.class.getName());
   }
-  // Use NotificationMessage.newBuilder() to construct.
-  private NotificationMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+  // Use HVACMessage.newBuilder() to construct.
+  private HVACMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
     super(builder);
   }
-  private NotificationMessage() {
-    location_ = "";
-    airQuality_ = "";
+  private HVACMessage() {
     message_ = "";
   }
 
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return com.chuntao.service.NotificationService.internal_static_com_chuntao_service_NotificationMessage_descriptor;
+    return com.chuntao.service.NotificationService.internal_static_com_chuntao_service_HVACMessage_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return com.chuntao.service.NotificationService.internal_static_com_chuntao_service_NotificationMessage_fieldAccessorTable
+    return com.chuntao.service.NotificationService.internal_static_com_chuntao_service_HVACMessage_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            com.chuntao.service.NotificationMessage.class, com.chuntao.service.NotificationMessage.Builder.class);
+            com.chuntao.service.HVACMessage.class, com.chuntao.service.HVACMessage.Builder.class);
   }
 
   private int bitField0_;
-  public static final int LOCATION_FIELD_NUMBER = 1;
-  @SuppressWarnings("serial")
-  private volatile java.lang.Object location_ = "";
+  public static final int STATUS_FIELD_NUMBER = 1;
+  private boolean status_ = false;
   /**
-   * <code>string location = 1;</code>
-   * @return The location.
+   * <code>bool status = 1;</code>
+   * @return The status.
    */
   @java.lang.Override
-  public java.lang.String getLocation() {
-    java.lang.Object ref = location_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      location_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>string location = 1;</code>
-   * @return The bytes for location.
-   */
-  @java.lang.Override
-  public com.google.protobuf.ByteString
-      getLocationBytes() {
-    java.lang.Object ref = location_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      location_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
+  public boolean getStatus() {
+    return status_;
   }
 
-  public static final int AIR_QUALITY_FIELD_NUMBER = 2;
-  @SuppressWarnings("serial")
-  private volatile java.lang.Object airQuality_ = "";
-  /**
-   * <code>string air_quality = 2;</code>
-   * @return The airQuality.
-   */
-  @java.lang.Override
-  public java.lang.String getAirQuality() {
-    java.lang.Object ref = airQuality_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      airQuality_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>string air_quality = 2;</code>
-   * @return The bytes for airQuality.
-   */
-  @java.lang.Override
-  public com.google.protobuf.ByteString
-      getAirQualityBytes() {
-    java.lang.Object ref = airQuality_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      airQuality_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int MESSAGE_FIELD_NUMBER = 3;
+  public static final int MESSAGE_FIELD_NUMBER = 2;
   @SuppressWarnings("serial")
   private volatile java.lang.Object message_ = "";
   /**
-   * <code>string message = 3;</code>
+   * <code>string message = 2;</code>
    * @return The message.
    */
   @java.lang.Override
@@ -144,7 +75,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>string message = 3;</code>
+   * <code>string message = 2;</code>
    * @return The bytes for message.
    */
   @java.lang.Override
@@ -162,10 +93,10 @@ private static final long serialVersionUID = 0L;
     }
   }
 
-  public static final int TIMESTAMP_FIELD_NUMBER = 4;
+  public static final int TIMESTAMP_FIELD_NUMBER = 3;
   private com.google.protobuf.Timestamp timestamp_;
   /**
-   * <code>.google.protobuf.Timestamp timestamp = 4;</code>
+   * <code>.google.protobuf.Timestamp timestamp = 3;</code>
    * @return Whether the timestamp field is set.
    */
   @java.lang.Override
@@ -173,7 +104,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>.google.protobuf.Timestamp timestamp = 4;</code>
+   * <code>.google.protobuf.Timestamp timestamp = 3;</code>
    * @return The timestamp.
    */
   @java.lang.Override
@@ -181,7 +112,7 @@ private static final long serialVersionUID = 0L;
     return timestamp_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : timestamp_;
   }
   /**
-   * <code>.google.protobuf.Timestamp timestamp = 4;</code>
+   * <code>.google.protobuf.Timestamp timestamp = 3;</code>
    */
   @java.lang.Override
   public com.google.protobuf.TimestampOrBuilder getTimestampOrBuilder() {
@@ -202,17 +133,14 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(location_)) {
-      com.google.protobuf.GeneratedMessage.writeString(output, 1, location_);
-    }
-    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(airQuality_)) {
-      com.google.protobuf.GeneratedMessage.writeString(output, 2, airQuality_);
+    if (status_ != false) {
+      output.writeBool(1, status_);
     }
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(message_)) {
-      com.google.protobuf.GeneratedMessage.writeString(output, 3, message_);
+      com.google.protobuf.GeneratedMessage.writeString(output, 2, message_);
     }
     if (((bitField0_ & 0x00000001) != 0)) {
-      output.writeMessage(4, getTimestamp());
+      output.writeMessage(3, getTimestamp());
     }
     getUnknownFields().writeTo(output);
   }
@@ -223,18 +151,16 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(location_)) {
-      size += com.google.protobuf.GeneratedMessage.computeStringSize(1, location_);
-    }
-    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(airQuality_)) {
-      size += com.google.protobuf.GeneratedMessage.computeStringSize(2, airQuality_);
+    if (status_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(1, status_);
     }
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(message_)) {
-      size += com.google.protobuf.GeneratedMessage.computeStringSize(3, message_);
+      size += com.google.protobuf.GeneratedMessage.computeStringSize(2, message_);
     }
     if (((bitField0_ & 0x00000001) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(4, getTimestamp());
+        .computeMessageSize(3, getTimestamp());
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -246,15 +172,13 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof com.chuntao.service.NotificationMessage)) {
+    if (!(obj instanceof com.chuntao.service.HVACMessage)) {
       return super.equals(obj);
     }
-    com.chuntao.service.NotificationMessage other = (com.chuntao.service.NotificationMessage) obj;
+    com.chuntao.service.HVACMessage other = (com.chuntao.service.HVACMessage) obj;
 
-    if (!getLocation()
-        .equals(other.getLocation())) return false;
-    if (!getAirQuality()
-        .equals(other.getAirQuality())) return false;
+    if (getStatus()
+        != other.getStatus()) return false;
     if (!getMessage()
         .equals(other.getMessage())) return false;
     if (hasTimestamp() != other.hasTimestamp()) return false;
@@ -273,10 +197,9 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + LOCATION_FIELD_NUMBER;
-    hash = (53 * hash) + getLocation().hashCode();
-    hash = (37 * hash) + AIR_QUALITY_FIELD_NUMBER;
-    hash = (53 * hash) + getAirQuality().hashCode();
+    hash = (37 * hash) + STATUS_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getStatus());
     hash = (37 * hash) + MESSAGE_FIELD_NUMBER;
     hash = (53 * hash) + getMessage().hashCode();
     if (hasTimestamp()) {
@@ -288,44 +211,44 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static com.chuntao.service.NotificationMessage parseFrom(
+  public static com.chuntao.service.HVACMessage parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.chuntao.service.NotificationMessage parseFrom(
+  public static com.chuntao.service.HVACMessage parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.chuntao.service.NotificationMessage parseFrom(
+  public static com.chuntao.service.HVACMessage parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.chuntao.service.NotificationMessage parseFrom(
+  public static com.chuntao.service.HVACMessage parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.chuntao.service.NotificationMessage parseFrom(byte[] data)
+  public static com.chuntao.service.HVACMessage parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.chuntao.service.NotificationMessage parseFrom(
+  public static com.chuntao.service.HVACMessage parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.chuntao.service.NotificationMessage parseFrom(java.io.InputStream input)
+  public static com.chuntao.service.HVACMessage parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessage
         .parseWithIOException(PARSER, input);
   }
-  public static com.chuntao.service.NotificationMessage parseFrom(
+  public static com.chuntao.service.HVACMessage parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -333,26 +256,26 @@ private static final long serialVersionUID = 0L;
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
 
-  public static com.chuntao.service.NotificationMessage parseDelimitedFrom(java.io.InputStream input)
+  public static com.chuntao.service.HVACMessage parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessage
         .parseDelimitedWithIOException(PARSER, input);
   }
 
-  public static com.chuntao.service.NotificationMessage parseDelimitedFrom(
+  public static com.chuntao.service.HVACMessage parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessage
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static com.chuntao.service.NotificationMessage parseFrom(
+  public static com.chuntao.service.HVACMessage parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessage
         .parseWithIOException(PARSER, input);
   }
-  public static com.chuntao.service.NotificationMessage parseFrom(
+  public static com.chuntao.service.HVACMessage parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -365,7 +288,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(com.chuntao.service.NotificationMessage prototype) {
+  public static Builder newBuilder(com.chuntao.service.HVACMessage prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -381,26 +304,26 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code com.chuntao.service.NotificationMessage}
+   * Protobuf type {@code com.chuntao.service.HVACMessage}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessage.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:com.chuntao.service.NotificationMessage)
-      com.chuntao.service.NotificationMessageOrBuilder {
+      // @@protoc_insertion_point(builder_implements:com.chuntao.service.HVACMessage)
+      com.chuntao.service.HVACMessageOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.chuntao.service.NotificationService.internal_static_com_chuntao_service_NotificationMessage_descriptor;
+      return com.chuntao.service.NotificationService.internal_static_com_chuntao_service_HVACMessage_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.chuntao.service.NotificationService.internal_static_com_chuntao_service_NotificationMessage_fieldAccessorTable
+      return com.chuntao.service.NotificationService.internal_static_com_chuntao_service_HVACMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.chuntao.service.NotificationMessage.class, com.chuntao.service.NotificationMessage.Builder.class);
+              com.chuntao.service.HVACMessage.class, com.chuntao.service.HVACMessage.Builder.class);
     }
 
-    // Construct using com.chuntao.service.NotificationMessage.newBuilder()
+    // Construct using com.chuntao.service.HVACMessage.newBuilder()
     private Builder() {
       maybeForceBuilderInitialization();
     }
@@ -420,8 +343,7 @@ private static final long serialVersionUID = 0L;
     public Builder clear() {
       super.clear();
       bitField0_ = 0;
-      location_ = "";
-      airQuality_ = "";
+      status_ = false;
       message_ = "";
       timestamp_ = null;
       if (timestampBuilder_ != null) {
@@ -434,17 +356,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return com.chuntao.service.NotificationService.internal_static_com_chuntao_service_NotificationMessage_descriptor;
+      return com.chuntao.service.NotificationService.internal_static_com_chuntao_service_HVACMessage_descriptor;
     }
 
     @java.lang.Override
-    public com.chuntao.service.NotificationMessage getDefaultInstanceForType() {
-      return com.chuntao.service.NotificationMessage.getDefaultInstance();
+    public com.chuntao.service.HVACMessage getDefaultInstanceForType() {
+      return com.chuntao.service.HVACMessage.getDefaultInstance();
     }
 
     @java.lang.Override
-    public com.chuntao.service.NotificationMessage build() {
-      com.chuntao.service.NotificationMessage result = buildPartial();
+    public com.chuntao.service.HVACMessage build() {
+      com.chuntao.service.HVACMessage result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -452,26 +374,23 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public com.chuntao.service.NotificationMessage buildPartial() {
-      com.chuntao.service.NotificationMessage result = new com.chuntao.service.NotificationMessage(this);
+    public com.chuntao.service.HVACMessage buildPartial() {
+      com.chuntao.service.HVACMessage result = new com.chuntao.service.HVACMessage(this);
       if (bitField0_ != 0) { buildPartial0(result); }
       onBuilt();
       return result;
     }
 
-    private void buildPartial0(com.chuntao.service.NotificationMessage result) {
+    private void buildPartial0(com.chuntao.service.HVACMessage result) {
       int from_bitField0_ = bitField0_;
       if (((from_bitField0_ & 0x00000001) != 0)) {
-        result.location_ = location_;
+        result.status_ = status_;
       }
       if (((from_bitField0_ & 0x00000002) != 0)) {
-        result.airQuality_ = airQuality_;
-      }
-      if (((from_bitField0_ & 0x00000004) != 0)) {
         result.message_ = message_;
       }
       int to_bitField0_ = 0;
-      if (((from_bitField0_ & 0x00000008) != 0)) {
+      if (((from_bitField0_ & 0x00000004) != 0)) {
         result.timestamp_ = timestampBuilder_ == null
             ? timestamp_
             : timestampBuilder_.build();
@@ -482,29 +401,22 @@ private static final long serialVersionUID = 0L;
 
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof com.chuntao.service.NotificationMessage) {
-        return mergeFrom((com.chuntao.service.NotificationMessage)other);
+      if (other instanceof com.chuntao.service.HVACMessage) {
+        return mergeFrom((com.chuntao.service.HVACMessage)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(com.chuntao.service.NotificationMessage other) {
-      if (other == com.chuntao.service.NotificationMessage.getDefaultInstance()) return this;
-      if (!other.getLocation().isEmpty()) {
-        location_ = other.location_;
-        bitField0_ |= 0x00000001;
-        onChanged();
-      }
-      if (!other.getAirQuality().isEmpty()) {
-        airQuality_ = other.airQuality_;
-        bitField0_ |= 0x00000002;
-        onChanged();
+    public Builder mergeFrom(com.chuntao.service.HVACMessage other) {
+      if (other == com.chuntao.service.HVACMessage.getDefaultInstance()) return this;
+      if (other.getStatus() != false) {
+        setStatus(other.getStatus());
       }
       if (!other.getMessage().isEmpty()) {
         message_ = other.message_;
-        bitField0_ |= 0x00000004;
+        bitField0_ |= 0x00000002;
         onChanged();
       }
       if (other.hasTimestamp()) {
@@ -536,28 +448,23 @@ private static final long serialVersionUID = 0L;
             case 0:
               done = true;
               break;
-            case 10: {
-              location_ = input.readStringRequireUtf8();
+            case 8: {
+              status_ = input.readBool();
               bitField0_ |= 0x00000001;
               break;
-            } // case 10
+            } // case 8
             case 18: {
-              airQuality_ = input.readStringRequireUtf8();
+              message_ = input.readStringRequireUtf8();
               bitField0_ |= 0x00000002;
               break;
             } // case 18
             case 26: {
-              message_ = input.readStringRequireUtf8();
-              bitField0_ |= 0x00000004;
-              break;
-            } // case 26
-            case 34: {
               input.readMessage(
                   getTimestampFieldBuilder().getBuilder(),
                   extensionRegistry);
-              bitField0_ |= 0x00000008;
+              bitField0_ |= 0x00000004;
               break;
-            } // case 34
+            } // case 26
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -575,153 +482,41 @@ private static final long serialVersionUID = 0L;
     }
     private int bitField0_;
 
-    private java.lang.Object location_ = "";
+    private boolean status_ ;
     /**
-     * <code>string location = 1;</code>
-     * @return The location.
+     * <code>bool status = 1;</code>
+     * @return The status.
      */
-    public java.lang.String getLocation() {
-      java.lang.Object ref = location_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        location_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+    @java.lang.Override
+    public boolean getStatus() {
+      return status_;
     }
     /**
-     * <code>string location = 1;</code>
-     * @return The bytes for location.
-     */
-    public com.google.protobuf.ByteString
-        getLocationBytes() {
-      java.lang.Object ref = location_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        location_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string location = 1;</code>
-     * @param value The location to set.
+     * <code>bool status = 1;</code>
+     * @param value The status to set.
      * @return This builder for chaining.
      */
-    public Builder setLocation(
-        java.lang.String value) {
-      if (value == null) { throw new NullPointerException(); }
-      location_ = value;
-      bitField0_ |= 0x00000001;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string location = 1;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearLocation() {
-      location_ = getDefaultInstance().getLocation();
-      bitField0_ = (bitField0_ & ~0x00000001);
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string location = 1;</code>
-     * @param value The bytes for location to set.
-     * @return This builder for chaining.
-     */
-    public Builder setLocationBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) { throw new NullPointerException(); }
-      checkByteStringIsUtf8(value);
-      location_ = value;
-      bitField0_ |= 0x00000001;
-      onChanged();
-      return this;
-    }
+    public Builder setStatus(boolean value) {
 
-    private java.lang.Object airQuality_ = "";
-    /**
-     * <code>string air_quality = 2;</code>
-     * @return The airQuality.
-     */
-    public java.lang.String getAirQuality() {
-      java.lang.Object ref = airQuality_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        airQuality_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
-    }
-    /**
-     * <code>string air_quality = 2;</code>
-     * @return The bytes for airQuality.
-     */
-    public com.google.protobuf.ByteString
-        getAirQualityBytes() {
-      java.lang.Object ref = airQuality_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        airQuality_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string air_quality = 2;</code>
-     * @param value The airQuality to set.
-     * @return This builder for chaining.
-     */
-    public Builder setAirQuality(
-        java.lang.String value) {
-      if (value == null) { throw new NullPointerException(); }
-      airQuality_ = value;
-      bitField0_ |= 0x00000002;
+      status_ = value;
+      bitField0_ |= 0x00000001;
       onChanged();
       return this;
     }
     /**
-     * <code>string air_quality = 2;</code>
+     * <code>bool status = 1;</code>
      * @return This builder for chaining.
      */
-    public Builder clearAirQuality() {
-      airQuality_ = getDefaultInstance().getAirQuality();
-      bitField0_ = (bitField0_ & ~0x00000002);
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string air_quality = 2;</code>
-     * @param value The bytes for airQuality to set.
-     * @return This builder for chaining.
-     */
-    public Builder setAirQualityBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) { throw new NullPointerException(); }
-      checkByteStringIsUtf8(value);
-      airQuality_ = value;
-      bitField0_ |= 0x00000002;
+    public Builder clearStatus() {
+      bitField0_ = (bitField0_ & ~0x00000001);
+      status_ = false;
       onChanged();
       return this;
     }
 
     private java.lang.Object message_ = "";
     /**
-     * <code>string message = 3;</code>
+     * <code>string message = 2;</code>
      * @return The message.
      */
     public java.lang.String getMessage() {
@@ -737,7 +532,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string message = 3;</code>
+     * <code>string message = 2;</code>
      * @return The bytes for message.
      */
     public com.google.protobuf.ByteString
@@ -754,7 +549,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string message = 3;</code>
+     * <code>string message = 2;</code>
      * @param value The message to set.
      * @return This builder for chaining.
      */
@@ -762,22 +557,22 @@ private static final long serialVersionUID = 0L;
         java.lang.String value) {
       if (value == null) { throw new NullPointerException(); }
       message_ = value;
-      bitField0_ |= 0x00000004;
+      bitField0_ |= 0x00000002;
       onChanged();
       return this;
     }
     /**
-     * <code>string message = 3;</code>
+     * <code>string message = 2;</code>
      * @return This builder for chaining.
      */
     public Builder clearMessage() {
       message_ = getDefaultInstance().getMessage();
-      bitField0_ = (bitField0_ & ~0x00000004);
+      bitField0_ = (bitField0_ & ~0x00000002);
       onChanged();
       return this;
     }
     /**
-     * <code>string message = 3;</code>
+     * <code>string message = 2;</code>
      * @param value The bytes for message to set.
      * @return This builder for chaining.
      */
@@ -786,7 +581,7 @@ private static final long serialVersionUID = 0L;
       if (value == null) { throw new NullPointerException(); }
       checkByteStringIsUtf8(value);
       message_ = value;
-      bitField0_ |= 0x00000004;
+      bitField0_ |= 0x00000002;
       onChanged();
       return this;
     }
@@ -795,14 +590,14 @@ private static final long serialVersionUID = 0L;
     private com.google.protobuf.SingleFieldBuilder<
         com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> timestampBuilder_;
     /**
-     * <code>.google.protobuf.Timestamp timestamp = 4;</code>
+     * <code>.google.protobuf.Timestamp timestamp = 3;</code>
      * @return Whether the timestamp field is set.
      */
     public boolean hasTimestamp() {
-      return ((bitField0_ & 0x00000008) != 0);
+      return ((bitField0_ & 0x00000004) != 0);
     }
     /**
-     * <code>.google.protobuf.Timestamp timestamp = 4;</code>
+     * <code>.google.protobuf.Timestamp timestamp = 3;</code>
      * @return The timestamp.
      */
     public com.google.protobuf.Timestamp getTimestamp() {
@@ -813,7 +608,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>.google.protobuf.Timestamp timestamp = 4;</code>
+     * <code>.google.protobuf.Timestamp timestamp = 3;</code>
      */
     public Builder setTimestamp(com.google.protobuf.Timestamp value) {
       if (timestampBuilder_ == null) {
@@ -824,12 +619,12 @@ private static final long serialVersionUID = 0L;
       } else {
         timestampBuilder_.setMessage(value);
       }
-      bitField0_ |= 0x00000008;
+      bitField0_ |= 0x00000004;
       onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.Timestamp timestamp = 4;</code>
+     * <code>.google.protobuf.Timestamp timestamp = 3;</code>
      */
     public Builder setTimestamp(
         com.google.protobuf.Timestamp.Builder builderForValue) {
@@ -838,16 +633,16 @@ private static final long serialVersionUID = 0L;
       } else {
         timestampBuilder_.setMessage(builderForValue.build());
       }
-      bitField0_ |= 0x00000008;
+      bitField0_ |= 0x00000004;
       onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.Timestamp timestamp = 4;</code>
+     * <code>.google.protobuf.Timestamp timestamp = 3;</code>
      */
     public Builder mergeTimestamp(com.google.protobuf.Timestamp value) {
       if (timestampBuilder_ == null) {
-        if (((bitField0_ & 0x00000008) != 0) &&
+        if (((bitField0_ & 0x00000004) != 0) &&
           timestamp_ != null &&
           timestamp_ != com.google.protobuf.Timestamp.getDefaultInstance()) {
           getTimestampBuilder().mergeFrom(value);
@@ -858,16 +653,16 @@ private static final long serialVersionUID = 0L;
         timestampBuilder_.mergeFrom(value);
       }
       if (timestamp_ != null) {
-        bitField0_ |= 0x00000008;
+        bitField0_ |= 0x00000004;
         onChanged();
       }
       return this;
     }
     /**
-     * <code>.google.protobuf.Timestamp timestamp = 4;</code>
+     * <code>.google.protobuf.Timestamp timestamp = 3;</code>
      */
     public Builder clearTimestamp() {
-      bitField0_ = (bitField0_ & ~0x00000008);
+      bitField0_ = (bitField0_ & ~0x00000004);
       timestamp_ = null;
       if (timestampBuilder_ != null) {
         timestampBuilder_.dispose();
@@ -877,15 +672,15 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.google.protobuf.Timestamp timestamp = 4;</code>
+     * <code>.google.protobuf.Timestamp timestamp = 3;</code>
      */
     public com.google.protobuf.Timestamp.Builder getTimestampBuilder() {
-      bitField0_ |= 0x00000008;
+      bitField0_ |= 0x00000004;
       onChanged();
       return getTimestampFieldBuilder().getBuilder();
     }
     /**
-     * <code>.google.protobuf.Timestamp timestamp = 4;</code>
+     * <code>.google.protobuf.Timestamp timestamp = 3;</code>
      */
     public com.google.protobuf.TimestampOrBuilder getTimestampOrBuilder() {
       if (timestampBuilder_ != null) {
@@ -896,7 +691,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>.google.protobuf.Timestamp timestamp = 4;</code>
+     * <code>.google.protobuf.Timestamp timestamp = 3;</code>
      */
     private com.google.protobuf.SingleFieldBuilder<
         com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> 
@@ -912,23 +707,23 @@ private static final long serialVersionUID = 0L;
       return timestampBuilder_;
     }
 
-    // @@protoc_insertion_point(builder_scope:com.chuntao.service.NotificationMessage)
+    // @@protoc_insertion_point(builder_scope:com.chuntao.service.HVACMessage)
   }
 
-  // @@protoc_insertion_point(class_scope:com.chuntao.service.NotificationMessage)
-  private static final com.chuntao.service.NotificationMessage DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:com.chuntao.service.HVACMessage)
+  private static final com.chuntao.service.HVACMessage DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new com.chuntao.service.NotificationMessage();
+    DEFAULT_INSTANCE = new com.chuntao.service.HVACMessage();
   }
 
-  public static com.chuntao.service.NotificationMessage getDefaultInstance() {
+  public static com.chuntao.service.HVACMessage getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<NotificationMessage>
-      PARSER = new com.google.protobuf.AbstractParser<NotificationMessage>() {
+  private static final com.google.protobuf.Parser<HVACMessage>
+      PARSER = new com.google.protobuf.AbstractParser<HVACMessage>() {
     @java.lang.Override
-    public NotificationMessage parsePartialFrom(
+    public HVACMessage parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -947,17 +742,17 @@ private static final long serialVersionUID = 0L;
     }
   };
 
-  public static com.google.protobuf.Parser<NotificationMessage> parser() {
+  public static com.google.protobuf.Parser<HVACMessage> parser() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.google.protobuf.Parser<NotificationMessage> getParserForType() {
+  public com.google.protobuf.Parser<HVACMessage> getParserForType() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.chuntao.service.NotificationMessage getDefaultInstanceForType() {
+  public com.chuntao.service.HVACMessage getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

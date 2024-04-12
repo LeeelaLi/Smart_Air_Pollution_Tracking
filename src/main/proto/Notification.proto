@@ -13,14 +13,20 @@ option java_outer_classname = "NotificationService";
 // Notification Service: monitor air index and analyse data
 service Notification {
   // Server-side streaming RPC for receiving notifications based on analyze response
-  rpc SensorNotifications(AnalyseResponse) returns (stream NotificationMessage) {}
+  rpc SensorNotifications(AnalyseResponse) returns (stream SensorMessage) {}
   // Server-side streaming RPC for receiving notifications based on HVAC response
-  rpc HVACNotifications(HVACResponse) returns (stream NotificationMessage) {}
+  rpc HVACNotifications(HVACResponse) returns (stream HVACMessage) {}
 }
 
-message NotificationMessage {
+message SensorMessage {
   string location = 1;
   string air_quality = 2;
   string message = 3;
   google.protobuf.Timestamp timestamp = 4;
+}
+
+message HVACMessage {
+  bool status = 1;
+  string message = 2;
+  google.protobuf.Timestamp timestamp = 3;
 }
