@@ -7,22 +7,24 @@ import java.util.Date;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
-public class SensorClient {
-    private final ManagedChannel sensorChannel;
-    private final SensorGrpc.SensorStub sensorStub;
+public class SmartAirPollutionClient {
+    private final ManagedChannel channel;
+    private final SmartAirPollutionGrpc.SmartAirPollutionStub stub;
 
-    public SensorClient(String host, int port) {
-        this.sensorChannel = ManagedChannelBuilder.forAddress(host, port)
+    int pollution_level;
+
+    public SmartAirPollutionClient(String host, int port) {
+        this.channel = ManagedChannelBuilder.forAddress(host, port)
                 .usePlaintext()
                 .build();
-        this.sensorStub = SensorGrpc.newStub(sensorChannel);
+        this.stub = SmartAirPollutionGrpc.newStub(channel);
     }
 
     public void GetSensorData(int sensor_id) {
         SensorRequest request = SensorRequest.newBuilder()
                 .setSensorId(sensor_id)
                 .build();
-        sensorStub.getSensorData(request, new StreamObserver<SensorResponse>() {
+        stub.getSensorData(request, new StreamObserver<SensorResponse>() {
 
             @Override
             public void onNext(SensorResponse sensorResponse) {
@@ -59,6 +61,7 @@ public class SensorClient {
                 System.out.println("3. Pollution Level: " + analyseResponse.getPollutionLevel());
                 System.out.println("4. Analyse: " + analyseResponse.getMessage());
                 System.out.println("5. Updated time: " + updatedTime);
+                pollution_level = analyseResponse.getPollutionLevel();
             }
 
             @Override
@@ -71,18 +74,87 @@ public class SensorClient {
             public void onCompleted() {
                 // Stream completed, perform any necessary cleanup or finalization
                 System.out.println("Analyse response stream completed");
+                HVACControl(sensor_id);
             }
         };
 
-        StreamObserver<SensorResponse> requestObserver = sensorStub.analyseSensorData(responseObserver);
+        StreamObserver<SensorResponse> requestObserver = stub.analyseSensorData(responseObserver);
 
         // Send the sensor ID to the server to start analysing data for that sensor
         requestObserver.onNext(SensorResponse.newBuilder().setLocation("Sensor" + sensor_id).build());
         requestObserver.onCompleted();
     }
 
+    public void HVACControl(int sensor_id) {
+        StreamObserver<HVACCommand> hvacCommandObserver = new StreamObserver<HVACCommand>() {
+            @Override
+            public void onNext(HVACCommand hvacCommand) {
+                System.out.println("\nHVAC is: " + hvacCommand.getAction());
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                System.err.println("Error in receiving HVACCommand: " + throwable.getMessage());
+            }
+
+            @Override
+            public void onCompleted() {
+                System.out.println("HVAC command stream completed");
+            }
+        };
+        StreamObserver<AnalyseResponse> analyseResponseObserver = stub.hVACControl(hvacCommandObserver);
+
+        analyseResponseObserver.onNext(AnalyseResponse.newBuilder().setPollutionLevel(sensor_id).build());
+        analyseResponseObserver.onCompleted();
+    }
+
+    public void sensorNotifications() {
+        StreamObserver<SensorMessage> sensorObserver = new StreamObserver<SensorMessage>() {
+            @Override
+            public void onNext(SensorMessage sensorMessage) {
+                System.out.println("Sensor server message: " +
+                        "\n1. Location: " + sensorMessage.getLocation() +
+                        "\n2. Air quality: " + sensorMessage.getAirQuality() +
+                        "\n3. Advice: " + sensorMessage.getMessage());
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                System.out.println("Error in server streaming: " + throwable.getMessage());
+            }
+
+            @Override
+            public void onCompleted() {
+                System.out.println("Server streaming completed");
+            }
+        };
+        stub.sensorNotifications(AnalyseResponse.newBuilder().setPollutionLevel(1).build(), sensorObserver);
+    }
+
+    public void hvacNotifications() {
+        StreamObserver<HVACMessage> havcObserver = new StreamObserver<HVACMessage>() {
+            @Override
+            public void onNext(HVACMessage hvacMessage) {
+                System.out.println("HVAC server message: " +
+                        "\n1. HVAC status: " + hvacMessage.getStatus() +
+                        "\n2. Message: " + hvacMessage.getMessage());
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                System.out.println("Error in HVAC server streaming: " + throwable.getMessage());
+            }
+
+            @Override
+            public void onCompleted() {
+                System.out.println("Server streaming completed");
+            }
+        };
+        stub.hVACNotifications(HVACResponse.newBuilder().setStatus(true).build(), havcObserver);
+    }
+
     public void shutdown() throws InterruptedException {
-        sensorChannel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
+        channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
     }
 
     public static void main(String[] args) throws InterruptedException {
@@ -94,7 +166,7 @@ public class SensorClient {
                 "\n3. Sensor 3 - Car");
         Scanner keyboard = new Scanner(System.in);
 
-        SensorClient sensorClient = new SensorClient(host, port);
+        SmartAirPollutionClient smartAirPollutionClient = new SmartAirPollutionClient(host, port);
 
         // Wait for user input to continue request or stop streaming
         while (true) {
@@ -102,7 +174,7 @@ public class SensorClient {
             if (keyboard.hasNextInt()) {
                 int sensor_id = keyboard.nextInt();
                 if (sensor_id > 0 && sensor_id < 4) {
-                    sensorClient.GetSensorData(sensor_id);
+                    smartAirPollutionClient.GetSensorData(sensor_id);
                 } else {
                     System.out.println("Invalid sensor ID. Sensor ID should be between 1 and 3.");
                 }
@@ -116,6 +188,6 @@ public class SensorClient {
             }
         }
         // Shutdown client
-        sensorClient.shutdown();
+        smartAirPollutionClient.shutdown();
     }
 }

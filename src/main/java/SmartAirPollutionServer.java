@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.concurrent.TimeUnit;
 
-public class SensorServer {
+public class SmartAirPollutionServer {
     // Sensor service implement
     private Server server;
 
@@ -22,7 +22,7 @@ public class SensorServer {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             System.out.println("Shutting down gRPC server");
             try {
-                SensorServer.this.stop();
+                SmartAirPollutionServer.this.stop();
             } catch (InterruptedException e) {
                 e.printStackTrace(System.err);
             }
@@ -40,8 +40,7 @@ public class SensorServer {
             server.awaitTermination();
         }
     }
-
-    private static class SensorImpl extends SensorGrpc.SensorImplBase {
+    private static class SensorImpl extends SmartAirPollutionGrpc.SmartAirPollutionImplBase {
         private SensorResponse sensorData;
 
         @Override
@@ -144,6 +143,121 @@ public class SensorServer {
                 }
             };
         }
+
+        public StreamObserver<AnalyseResponse> hvacControl(StreamObserver<HVACCommand> responseObserver) {
+            return new StreamObserver<AnalyseResponse>() {
+
+                @Override
+                public void onNext(AnalyseResponse analyseResponse) {
+                    int pollutionLevel = analyseResponse.getPollutionLevel();
+                    System.out.println("Received pollution level: " + pollutionLevel);
+                    String action = (pollutionLevel > 2) ? "START" : "STOP";
+                    HVACCommand hvacCommand = HVACCommand.newBuilder()
+                            .setAction(HVACCommand.Action.valueOf(action))
+                            .build();
+                    responseObserver.onNext(hvacCommand);
+                }
+
+                @Override
+                public void onError(Throwable throwable) {
+                    System.err.println("Error in HVAC control: " + throwable.getMessage());
+                }
+
+                @Override
+                public void onCompleted() {
+                    responseObserver.onCompleted();
+                }
+            };
+        }
+
+        public StreamObserver<HVACCommand> hvacSwitch(StreamObserver<HVACResponse> responseObserver) {
+            return new StreamObserver<HVACCommand>() {
+                @Override
+                public void onNext(HVACCommand hvacCommand) {
+                    HVACResponse.Builder hvacResponse = HVACResponse.newBuilder();
+                    boolean status = hvacCommand.getAction() == HVACCommand.Action.START;
+                    hvacResponse.setStatus(status).setTimestamp(timestampNow());
+                    responseObserver.onNext(hvacResponse.build());
+                }
+
+                @Override
+                public void onError(Throwable throwable) {
+                    System.err.println("Error in HVAC switch: " + throwable.getMessage());
+                }
+
+                @Override
+                public void onCompleted() {
+                    responseObserver.onCompleted();
+                }
+            };
+        }
+
+        public void sensorNotifications(AnalyseResponse analyseResponse, StreamObserver<SensorMessage> sensorObserver) {
+            Runnable streamingTask = () -> {
+                try {
+                    while (!Thread.currentThread().isInterrupted()) {
+                        int pollutionLevel = analyseResponse.getPollutionLevel();
+                        String location = analyseResponse.getLocation();
+                        String air_quality;
+                        String message;
+                        if (pollutionLevel == 1) {
+                            air_quality = "Air quality: Great";
+                            message = "The air is healthy, HVAC is off";
+                        } else if (pollutionLevel == 2) {
+                            air_quality = "Air quality: Moderate";
+                            message = "The air is fine. HVAC is off now, you could turn on the HVAC.";
+                        } else {
+                            air_quality = "Air quality: Bad";
+                            message = "The air is harmed, HVAC is automatically on.";
+                        }
+                        SensorMessage sensorMessage = SensorMessage.newBuilder()
+                                .setLocation(location)
+                                .setAirQuality(air_quality)
+                                .setMessage(message)
+                                .build();
+                        sensorObserver.onNext(sensorMessage);
+                        Thread.sleep(5000); // Stream every 5 seconds
+                    }
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                } finally {
+                    sensorObserver.onCompleted();
+                }
+            };
+
+            Thread streamingThread = new Thread(streamingTask);
+            streamingThread.start();
+        }
+
+        public void hvacNotifications(HVACResponse hvacResponse, StreamObserver<HVACMessage> hvacObserver) {
+            Runnable streamingTask = () -> {
+                try {
+                    while (!Thread.currentThread().isInterrupted()) {
+                        boolean status = hvacResponse.getStatus();
+                        String message;
+                        if (status) {
+                            message = "HVAC is on.";
+                        } else {
+                            message = "HVAC is off.";
+                        }
+                        HVACMessage hvacMessage = HVACMessage.newBuilder()
+                                .setStatus(status)
+                                .setMessage(message)
+                                .build();
+
+                        hvacObserver.onNext(hvacMessage);
+                        Thread.sleep(5000); // Stream every 5 seconds
+                    }
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                } finally {
+                    hvacObserver.onCompleted();
+                }
+            };
+
+            Thread streamingThread = new Thread(streamingTask);
+            streamingThread.start();
+        }
     }
     private static Timestamp timestampNow() {
         Instant now = Instant.now();
@@ -154,8 +268,8 @@ public class SensorServer {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        SensorServer sensorServer = new SensorServer();
-        sensorServer.start(9090);
-        sensorServer.blockUntilShutdown();
+        SmartAirPollutionServer smartAirPollutionServer = new SmartAirPollutionServer();
+        smartAirPollutionServer.start(9090);
+        smartAirPollutionServer.blockUntilShutdown();
     }
 }
