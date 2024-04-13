@@ -11,8 +11,6 @@ option java_outer_classname = "HVACService";
 
 // HVAC Service: turn on HVAC based on analyse response
 service HVAC {
-  // Client-side streaming RPC for controlling HVAC
-  rpc HVACControl(stream AnalyseResponse) returns (HVACCommand) {}
   // Bidirectional streaming RPC for HVAC switching
   rpc HVACSwitch(stream HVACCommand) returns (stream HVACResponse) {}
 }

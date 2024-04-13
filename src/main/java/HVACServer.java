@@ -10,36 +10,28 @@ import com.chuntao.service.*;
 
 public class HVACServer {
 
-    private Server server;
     public static int pollutionLevel;
+    private static final int PORT = 9091;
 
-    public void start(int port) throws IOException {
-        server = ServerBuilder.forPort(port)
+    public static void main(String[] args) throws IOException, InterruptedException {
+        Server server = ServerBuilder.forPort(PORT)
                 .addService(new HVACImpl())
-                .build()
-                .start();
-        System.out.println("HVAC server started, listening on port " + port);
+                .build();
 
+        server.start();
+        System.out.println("HVAC server started, listening on port " + PORT);
+
+        // Graceful shutdown
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             System.out.println("Shutting down gRPC server");
             try {
-                HVACServer.this.stop();
+                server.shutdown().awaitTermination(30, TimeUnit.SECONDS);
             } catch (InterruptedException e) {
                 e.printStackTrace(System.err);
             }
         }));
-    }
 
-    private void stop() throws InterruptedException {
-        if (server != null) {
-            server.shutdown().awaitTermination(30, TimeUnit.SECONDS);
-        }
-    }
-
-    public void blockUntilShutdown() throws InterruptedException {
-        if (server != null) {
-            server.awaitTermination();
-        }
+        server.awaitTermination();
     }
 
     private static class HVACImpl extends HVACGrpc.HVACImplBase {
@@ -71,6 +63,7 @@ public class HVACServer {
             };
         }
 
+        @Override
         public StreamObserver<HVACCommand> hvacSwitch(StreamObserver<HVACResponse> responseObserver) {
             return new StreamObserver<HVACCommand>() {
                 @Override
@@ -78,12 +71,12 @@ public class HVACServer {
                     System.out.println("HVAC command message: " + hvacCommand.getAction());
 
                     boolean status = hvacCommand.getAction() == HVACCommand.Action.START;
-                    HVACResponse hvacResponse1 = HVACResponse.newBuilder()
-                                    .setStatus(status)
+                    HVACResponse hvacResponse = HVACResponse.newBuilder()
+                                    .setStatus(true)
                                     .setTimestamp(timestampNow())
                                     .build();
 
-                    responseObserver.onNext(hvacResponse1);
+                    responseObserver.onNext(hvacResponse);
                 }
 
                 @Override
@@ -93,6 +86,7 @@ public class HVACServer {
 
                 @Override
                 public void onCompleted() {
+                    System.out.println("HVAC client stream completed");
                     responseObserver.onCompleted();
                 }
             };
@@ -105,11 +99,5 @@ public class HVACServer {
                 .setSeconds(now.getEpochSecond())
                 .setNanos(now.getNano())
                 .build();
-    }
-
-    public static void main(String[] args) throws IOException, InterruptedException {
-        HVACServer hvacServer = new HVACServer();
-        hvacServer.start(9091);
-        hvacServer.blockUntilShutdown();
     }
 }
