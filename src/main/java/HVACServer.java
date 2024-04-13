@@ -10,7 +10,6 @@ import com.chuntao.service.*;
 
 public class HVACServer {
 
-    public static int pollutionLevel;
     private static final int PORT = 9091;
 
     public static void main(String[] args) throws IOException, InterruptedException {
@@ -36,43 +35,24 @@ public class HVACServer {
 
     private static class HVACImpl extends HVACGrpc.HVACImplBase {
 
-        public StreamObserver<AnalyseResponse> hvacControl(StreamObserver<HVACCommand> responseObserver) {
-            return new StreamObserver<AnalyseResponse>() {
-
-                @Override
-                public void onNext(AnalyseResponse analyseResponse) {
-                    pollutionLevel = analyseResponse.getPollutionLevel();
-                    System.out.println("Received pollution level: " + pollutionLevel);
-                }
-
-                @Override
-                public void onError(Throwable throwable) {
-                    System.err.println("Error in HVAC control: " + throwable.getMessage());
-                }
-
-                @Override
-                public void onCompleted() {
-                    String action = (pollutionLevel > 2) ? "START" : "STOP";
-                    HVACCommand hvacCommand = HVACCommand.newBuilder()
-                            .setAction(HVACCommand.Action.valueOf(action))
-                            .build();
-
-                    responseObserver.onNext(hvacCommand);
-                    responseObserver.onCompleted();
-                }
-            };
-        }
-
         @Override
-        public StreamObserver<HVACCommand> hvacSwitch(StreamObserver<HVACResponse> responseObserver) {
-            return new StreamObserver<HVACCommand>() {
+        public StreamObserver<HVACRequest> hvacSwitch(StreamObserver<HVACResponse> responseObserver) {
+            return new StreamObserver<HVACRequest>() {
                 @Override
-                public void onNext(HVACCommand hvacCommand) {
-                    System.out.println("HVAC command message: " + hvacCommand.getAction());
+                public void onNext(HVACRequest hvacRequest) {
+                    System.out.println("HVAC command message: " + hvacRequest.getRequest());
 
-                    boolean status = hvacCommand.getAction() == HVACCommand.Action.START;
+                    int pollution_level = 2;
+                    HVACResponse.Action action;
+                    if (pollution_level > 2) {
+                        action = HVACResponse.Action.START;
+                    } else {
+                        action = HVACResponse.Action.STOP;
+                    }
+
                     HVACResponse hvacResponse = HVACResponse.newBuilder()
-                                    .setStatus(true)
+                                    .setAction(action)
+                                    .setPollutionLevel(pollution_level)
                                     .setTimestamp(timestampNow())
                                     .build();
 

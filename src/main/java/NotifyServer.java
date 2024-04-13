@@ -17,17 +17,17 @@ public class NotifyServer extends NotificationGrpc.NotificationImplBase {
                     String air_quality;
                     String message;
                     if (pollutionLevel == 1) {
-                        air_quality = "Air quality: Great";
+                        air_quality = "Great";
                         message = "The air is healthy, HVAC is off";
                     } else if (pollutionLevel == 2) {
-                        air_quality = "Air quality: Moderate";
+                        air_quality = "Moderate";
                         message = "The air is fine. HVAC is off now, you could turn on the HVAC.";
                     } else {
-                        air_quality = "Air quality: Bad";
+                        air_quality = "Bad";
                         message = "The air is harmed, HVAC is automatically on.";
                     }
                     SensorMessage sensorMessage = SensorMessage.newBuilder()
-                            .setLocation(location)
+//                            .setLocation(location)
                             .setAirQuality(air_quality)
                             .setMessage(message)
                             .build();
@@ -49,12 +49,15 @@ public class NotifyServer extends NotificationGrpc.NotificationImplBase {
         Runnable streamingTask = () -> {
             try {
                 while (!Thread.currentThread().isInterrupted()) {
-                   boolean status = hvacResponse.getStatus();
+                   HVACResponse.Action action = hvacResponse.getAction();
                    String message;
-                    if (status) {
+                    boolean status;
+                    if (action.equals(HVACResponse.Action.START)) {
                         message = "HVAC is on.";
+                        status = true;
                     } else {
                         message = "HVAC is off.";
+                        status = false;
                     }
                     HVACMessage hvacMessage = HVACMessage.newBuilder()
                             .setStatus(status)

@@ -2,27 +2,12 @@ import com.chuntao.service.*;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
-import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 public class HVACClient {
 
     private static final String SERVER_HOST = "localhost";
     private static final int SERVER_PORT = 9091;
-
-    private static int calculatePollutionLevel(int sensorId) {
-        switch (sensorId) {
-            case 1:
-            case 3:
-                return 3;
-            default:
-                return 1;
-        }
-    }
-
-    private static HVACCommand.Action determineHVACAction(int pollutionLevel) {
-        return pollutionLevel < 2 ? HVACCommand.Action.STOP : HVACCommand.Action.START;
-    }
 
     public static void main(String[] args) throws InterruptedException {
 
@@ -32,12 +17,14 @@ public class HVACClient {
 
         HVACGrpc.HVACStub hvacStub = HVACGrpc.newStub(channel);
 
+        // Create a response observer for the server streaming
         StreamObserver<HVACResponse> hvacResponseObserver = new StreamObserver<HVACResponse>() {
             @Override
             public void onNext(HVACResponse hvacResponse) {
                 System.out.println("HVAC server message: " +
-                        "\n1. Status: " + hvacResponse.getStatus() +
-                        "\n2. Time: " + hvacResponse.getTimestamp());
+                        "\n1. Status: " + hvacResponse.getAction() +
+                        "\n2. Pollution level" + hvacResponse.getPollutionLevel() +
+                        "\n3. Time: " + hvacResponse.getTimestamp());
             }
 
             @Override
@@ -51,20 +38,21 @@ public class HVACClient {
             }
         };
 
-        StreamObserver<HVACCommand> hvacCommandObserver = hvacStub.hVACSwitch(hvacResponseObserver);
-
+        // Create a request observer for the client streaming
+        StreamObserver<HVACRequest> hvacRequestObserver = hvacStub.hVACSwitch(hvacResponseObserver);
         try {
-            HVACCommand.Action action = determineHVACAction(1);
-            HVACCommand hvacCommand = HVACCommand.newBuilder()
-                    .setAction(action)
-                    .build();
-            System.out.println("Message to server: " +
-                    "\n1. HVAC is: " + hvacCommand.getAction());
-            hvacCommandObserver.onNext(hvacCommand);
+            for (int i = 0; i < 5; i++) {
+                String request = "Request " + i;
+                HVACRequest hvacRequest = HVACRequest.newBuilder()
+                        .setRequest(request)
+                        .build();
+                System.out.println("Message to server: " + request);
+                hvacRequestObserver.onNext(hvacRequest);
+            }
         }catch (Exception e) {
             System.err.println("Error while sending messages: " + e.getMessage());
         }
-        hvacCommandObserver.onCompleted();
+        hvacRequestObserver.onCompleted();
 
         // Shutdown the channel gracefully
         try {

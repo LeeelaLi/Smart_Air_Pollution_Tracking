@@ -48,7 +48,7 @@ public class NotifyClient {
             @Override
             public void onNext(SensorMessage sensorMessage) {
                 System.out.println("Sensor server message: " +
-                        "\n1. Location: " + sensorMessage.getLocation() +
+//                        "\n1. Location: " + sensorMessage.getLocation() +
                         "\n2. Air quality: " + sensorMessage.getAirQuality() +
                         "\n3. Advice: " + sensorMessage.getMessage());
             }
@@ -85,7 +85,7 @@ public class NotifyClient {
                 System.out.println("Server streaming completed");
             }
         };
-        notificationStub.hVACNotifications(HVACResponse.newBuilder().setStatus(true).build(), hvacObserver);
+        notificationStub.hVACNotifications(HVACResponse.newBuilder().setPollutionLevel(1).build(), hvacObserver);
     }
 
     public static void main(String[] args) throws InterruptedException {
