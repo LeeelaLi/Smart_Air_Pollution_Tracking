@@ -36,4 +36,3 @@ message AnalyseResponse {
   string message = 4;
   google.protobuf.Timestamp timestamp = 5;
 }
-
