@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package com.chuntao;
+
+import "google/protobuf/timestamp.proto";
+
+option java_multiple_files = true;
+option java_package = "com.chuntao.service";
+option java_outer_classname = "HVACService";
+
+// HVAC Service: turn on HVAC based on analyse response
+service HVAC {
+  // Bidirectional streaming RPC for HVAC switching
+  rpc HVACSwitch(stream HVACRequest) returns (stream HVACResponse) {}
+}
+
+message HVACRequest {
+  int32 pollution_level = 1;
+}
+
+message HVACResponse {
+  enum Action {
+    START = 0;
+    STOP = 1;
+  }
+  Action action = 1;
+  int32 pollution_level = 2;
+  google.protobuf.Timestamp timestamp = 3;
+}

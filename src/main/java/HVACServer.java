@@ -35,15 +35,15 @@ public class HVACServer {
 
     private static class HVACImpl extends HVACGrpc.HVACImplBase {
 
-        @Override
         public StreamObserver<HVACRequest> hvacSwitch(StreamObserver<HVACResponse> responseObserver) {
-            return new StreamObserver<HVACRequest>() {
+            StreamObserver<HVACRequest> requestObserver = new StreamObserver<HVACRequest>() {
+                HVACResponse.Action action;
+                int pollution_level;
                 @Override
                 public void onNext(HVACRequest hvacRequest) {
-                    System.out.println("HVAC command message: " + hvacRequest.getRequest());
+                    pollution_level = hvacRequest.getPollutionLevel();
+                    System.out.println("HVAC request: " + pollution_level);
 
-                    int pollution_level = 2;
-                    HVACResponse.Action action;
                     if (pollution_level > 2) {
                         action = HVACResponse.Action.START;
                     } else {
@@ -51,25 +51,28 @@ public class HVACServer {
                     }
 
                     HVACResponse hvacResponse = HVACResponse.newBuilder()
-                                    .setAction(action)
-                                    .setPollutionLevel(pollution_level)
-                                    .setTimestamp(timestampNow())
-                                    .build();
-
+                            .setAction(action)
+                            .setPollutionLevel(pollution_level)
+                            .setTimestamp(timestampNow())
+                            .build();
                     responseObserver.onNext(hvacResponse);
                 }
 
-                @Override
                 public void onError(Throwable throwable) {
                     System.err.println("Error in HVAC switch: " + throwable.getMessage());
                 }
 
-                @Override
                 public void onCompleted() {
                     System.out.println("HVAC client stream completed");
+                    responseObserver.onNext(HVACResponse.newBuilder()
+                            .setAction(action)
+                            .setPollutionLevel(pollution_level)
+                            .setTimestamp(timestampNow())
+                            .build());
                     responseObserver.onCompleted();
                 }
             };
+            return requestObserver;
         }
     }
 
