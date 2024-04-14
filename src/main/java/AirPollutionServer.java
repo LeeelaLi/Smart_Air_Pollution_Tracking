@@ -81,7 +81,7 @@ public class AirPollutionServer {
 
         @Override
         public StreamObserver<SensorResponse> analyseSensorData(StreamObserver<AnalyseResponse> responseObserver) {
-            return new StreamObserver<SensorResponse>() {
+            return new StreamObserver<>() {
 
                 @Override
                 public void onNext(SensorResponse sensorResponse) {
@@ -154,7 +154,7 @@ public class AirPollutionServer {
     private static class HVACImpl extends HVACGrpc.HVACImplBase {
 
         public StreamObserver<HVACRequest> hvacSwitch(StreamObserver<HVACResponse> responseObserver) {
-            StreamObserver<HVACRequest> requestObserver = new StreamObserver<HVACRequest>() {
+            return new StreamObserver<>() {
                 @Override
                 public void onNext(HVACRequest hvacRequest) {
                     System.out.println("HVAC request: " + pollution_level);
@@ -190,7 +190,6 @@ public class AirPollutionServer {
                     responseObserver.onCompleted();
                 }
             };
-            return requestObserver;
         }
     }
 

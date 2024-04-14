@@ -5,7 +5,6 @@ import io.grpc.stub.StreamObserver;
 
 import java.util.Date;
 import java.util.Scanner;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 public class AirPollutionClient {
@@ -89,7 +88,7 @@ public class AirPollutionClient {
         requestObserver.onCompleted();
     }
 
-    private void HVACSwitch() {
+    public void HVACSwitch() {
 
         HVACGrpc.HVACStub hvacStub = HVACGrpc.newStub(sensorChannel);
 
