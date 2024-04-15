@@ -130,6 +130,18 @@ public class AirPollutionClient {
                     status = "ON";
                     hvacResponse1.setStatus(status).build();
                 } else {
+//                    if (hvacResponse.getPollutionLevel() > 2) {
+//                        System.out.println("The air pollution is high, are you sure to turn off(1 for on, 2 for off)?");
+//                        Scanner keyboard = new Scanner(System.in);
+//                        int confirm = keyboard.nextInt();
+//                        if (confirm == 1) {
+//                            status = "OFF";
+//                        } else {
+//                            status = "ON";
+//                        }
+//                    } else {
+//                        status = "OFF";
+//                    }
                     status = "OFF";
                     hvacResponse1.setStatus(status).build();
                 }
@@ -237,7 +249,7 @@ public class AirPollutionClient {
                 int sensor_id = keyboard.nextInt();
                 if (sensor_id > 0 && sensor_id < 4) {
                     airPollutionClient.GetSensorData(sensor_id);
-                    System.out.println("Do you want to check hvac data?");
+                    System.out.println("Do you want to check hvac data(yes/other)?");
                     if (keyboard.hasNext()) {
                         String input = keyboard.next();
                         if (input.equalsIgnoreCase("yes")) {
