@@ -30,13 +30,13 @@ private static final long serialVersionUID = 0L;
 
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return com.chuntao.service.HVACService.internal_static_com_chuntao_HVACRequest_descriptor;
+    return com.chuntao.service.HVACProto.internal_static_com_chuntao_HVACRequest_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return com.chuntao.service.HVACService.internal_static_com_chuntao_HVACRequest_fieldAccessorTable
+    return com.chuntao.service.HVACProto.internal_static_com_chuntao_HVACRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
             com.chuntao.service.HVACRequest.class, com.chuntao.service.HVACRequest.Builder.class);
   }
@@ -218,13 +218,13 @@ private static final long serialVersionUID = 0L;
       com.chuntao.service.HVACRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.chuntao.service.HVACService.internal_static_com_chuntao_HVACRequest_descriptor;
+      return com.chuntao.service.HVACProto.internal_static_com_chuntao_HVACRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.chuntao.service.HVACService.internal_static_com_chuntao_HVACRequest_fieldAccessorTable
+      return com.chuntao.service.HVACProto.internal_static_com_chuntao_HVACRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               com.chuntao.service.HVACRequest.class, com.chuntao.service.HVACRequest.Builder.class);
     }
@@ -250,7 +250,7 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return com.chuntao.service.HVACService.internal_static_com_chuntao_HVACRequest_descriptor;
+      return com.chuntao.service.HVACProto.internal_static_com_chuntao_HVACRequest_descriptor;
     }
 
     @java.lang.Override

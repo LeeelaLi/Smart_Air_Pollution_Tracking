@@ -136,7 +136,7 @@ public final class HVACGrpc {
      * Client-side streaming RPC for controlling HVAC
      * </pre>
      */
-    default io.grpc.stub.StreamObserver<com.chuntao.service.HVACRequest> hvacControl(
+    default io.grpc.stub.StreamObserver<com.chuntao.service.HVACRequest> hVACControl(
         io.grpc.stub.StreamObserver<com.chuntao.service.HVACCommand> responseObserver) {
       return io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall(getHVACControlMethod(), responseObserver);
     }
@@ -146,7 +146,7 @@ public final class HVACGrpc {
      * Bidirectional streaming RPC for HVAC switching
      * </pre>
      */
-    default io.grpc.stub.StreamObserver<com.chuntao.service.HVACCommand> hvacSwitch(
+    default io.grpc.stub.StreamObserver<com.chuntao.service.HVACCommand> hVACSwitch(
         io.grpc.stub.StreamObserver<com.chuntao.service.HVACResponse> responseObserver) {
       return io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall(getHVACSwitchMethod(), responseObserver);
     }
@@ -190,7 +190,7 @@ public final class HVACGrpc {
      * Client-side streaming RPC for controlling HVAC
      * </pre>
      */
-    public io.grpc.stub.StreamObserver<com.chuntao.service.HVACRequest> hvacControl(
+    public io.grpc.stub.StreamObserver<com.chuntao.service.HVACRequest> hVACControl(
         io.grpc.stub.StreamObserver<com.chuntao.service.HVACCommand> responseObserver) {
       return io.grpc.stub.ClientCalls.asyncClientStreamingCall(
           getChannel().newCall(getHVACControlMethod(), getCallOptions()), responseObserver);
@@ -201,7 +201,7 @@ public final class HVACGrpc {
      * Bidirectional streaming RPC for HVAC switching
      * </pre>
      */
-    public io.grpc.stub.StreamObserver<com.chuntao.service.HVACCommand> hvacSwitch(
+    public io.grpc.stub.StreamObserver<com.chuntao.service.HVACCommand> hVACSwitch(
         io.grpc.stub.StreamObserver<com.chuntao.service.HVACResponse> responseObserver) {
       return io.grpc.stub.ClientCalls.asyncBidiStreamingCall(
           getChannel().newCall(getHVACSwitchMethod(), getCallOptions()), responseObserver);
@@ -279,10 +279,10 @@ public final class HVACGrpc {
         io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
         case METHODID_HVACCONTROL:
-          return (io.grpc.stub.StreamObserver<Req>) serviceImpl.hvacControl(
+          return (io.grpc.stub.StreamObserver<Req>) serviceImpl.hVACControl(
               (io.grpc.stub.StreamObserver<com.chuntao.service.HVACCommand>) responseObserver);
         case METHODID_HVACSWITCH:
-          return (io.grpc.stub.StreamObserver<Req>) serviceImpl.hvacSwitch(
+          return (io.grpc.stub.StreamObserver<Req>) serviceImpl.hVACSwitch(
               (io.grpc.stub.StreamObserver<com.chuntao.service.HVACResponse>) responseObserver);
         default:
           throw new AssertionError();
@@ -315,7 +315,7 @@ public final class HVACGrpc {
 
     @java.lang.Override
     public com.google.protobuf.Descriptors.FileDescriptor getFileDescriptor() {
-      return com.chuntao.service.HVACService.getDescriptor();
+      return com.chuntao.service.HVACProto.getDescriptor();
     }
 
     @java.lang.Override

@@ -27,19 +27,18 @@ private static final long serialVersionUID = 0L;
   }
   private AnalyseResponse() {
     analyse_ = "";
-    location_ = "";
     message_ = "";
   }
 
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return com.chuntao.service.SensorService.internal_static_com_chuntao_AnalyseResponse_descriptor;
+    return com.chuntao.service.SensorProto.internal_static_com_chuntao_AnalyseResponse_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return com.chuntao.service.SensorService.internal_static_com_chuntao_AnalyseResponse_fieldAccessorTable
+    return com.chuntao.service.SensorProto.internal_static_com_chuntao_AnalyseResponse_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
             com.chuntao.service.AnalyseResponse.class, com.chuntao.service.AnalyseResponse.Builder.class);
   }
@@ -78,45 +77,6 @@ private static final long serialVersionUID = 0L;
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
       analyse_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int LOCATION_FIELD_NUMBER = 2;
-  @SuppressWarnings("serial")
-  private volatile java.lang.Object location_ = "";
-  /**
-   * <code>string location = 2;</code>
-   * @return The location.
-   */
-  @java.lang.Override
-  public java.lang.String getLocation() {
-    java.lang.Object ref = location_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      location_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>string location = 2;</code>
-   * @return The bytes for location.
-   */
-  @java.lang.Override
-  public com.google.protobuf.ByteString
-      getLocationBytes() {
-    java.lang.Object ref = location_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      location_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
@@ -216,9 +176,6 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(analyse_)) {
       com.google.protobuf.GeneratedMessage.writeString(output, 1, analyse_);
     }
-    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(location_)) {
-      com.google.protobuf.GeneratedMessage.writeString(output, 2, location_);
-    }
     if (pollutionLevel_ != 0) {
       output.writeInt32(3, pollutionLevel_);
     }
@@ -239,9 +196,6 @@ private static final long serialVersionUID = 0L;
     size = 0;
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(analyse_)) {
       size += com.google.protobuf.GeneratedMessage.computeStringSize(1, analyse_);
-    }
-    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(location_)) {
-      size += com.google.protobuf.GeneratedMessage.computeStringSize(2, location_);
     }
     if (pollutionLevel_ != 0) {
       size += com.google.protobuf.CodedOutputStream
@@ -271,8 +225,6 @@ private static final long serialVersionUID = 0L;
 
     if (!getAnalyse()
         .equals(other.getAnalyse())) return false;
-    if (!getLocation()
-        .equals(other.getLocation())) return false;
     if (getPollutionLevel()
         != other.getPollutionLevel()) return false;
     if (!getMessage()
@@ -295,8 +247,6 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + ANALYSE_FIELD_NUMBER;
     hash = (53 * hash) + getAnalyse().hashCode();
-    hash = (37 * hash) + LOCATION_FIELD_NUMBER;
-    hash = (53 * hash) + getLocation().hashCode();
     hash = (37 * hash) + POLLUTION_LEVEL_FIELD_NUMBER;
     hash = (53 * hash) + getPollutionLevel();
     hash = (37 * hash) + MESSAGE_FIELD_NUMBER;
@@ -411,13 +361,13 @@ private static final long serialVersionUID = 0L;
       com.chuntao.service.AnalyseResponseOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.chuntao.service.SensorService.internal_static_com_chuntao_AnalyseResponse_descriptor;
+      return com.chuntao.service.SensorProto.internal_static_com_chuntao_AnalyseResponse_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.chuntao.service.SensorService.internal_static_com_chuntao_AnalyseResponse_fieldAccessorTable
+      return com.chuntao.service.SensorProto.internal_static_com_chuntao_AnalyseResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               com.chuntao.service.AnalyseResponse.class, com.chuntao.service.AnalyseResponse.Builder.class);
     }
@@ -443,7 +393,6 @@ private static final long serialVersionUID = 0L;
       super.clear();
       bitField0_ = 0;
       analyse_ = "";
-      location_ = "";
       pollutionLevel_ = 0;
       message_ = "";
       timestamp_ = null;
@@ -457,7 +406,7 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return com.chuntao.service.SensorService.internal_static_com_chuntao_AnalyseResponse_descriptor;
+      return com.chuntao.service.SensorProto.internal_static_com_chuntao_AnalyseResponse_descriptor;
     }
 
     @java.lang.Override
@@ -488,16 +437,13 @@ private static final long serialVersionUID = 0L;
         result.analyse_ = analyse_;
       }
       if (((from_bitField0_ & 0x00000002) != 0)) {
-        result.location_ = location_;
-      }
-      if (((from_bitField0_ & 0x00000004) != 0)) {
         result.pollutionLevel_ = pollutionLevel_;
       }
-      if (((from_bitField0_ & 0x00000008) != 0)) {
+      if (((from_bitField0_ & 0x00000004) != 0)) {
         result.message_ = message_;
       }
       int to_bitField0_ = 0;
-      if (((from_bitField0_ & 0x00000010) != 0)) {
+      if (((from_bitField0_ & 0x00000008) != 0)) {
         result.timestamp_ = timestampBuilder_ == null
             ? timestamp_
             : timestampBuilder_.build();
@@ -523,17 +469,12 @@ private static final long serialVersionUID = 0L;
         bitField0_ |= 0x00000001;
         onChanged();
       }
-      if (!other.getLocation().isEmpty()) {
-        location_ = other.location_;
-        bitField0_ |= 0x00000002;
-        onChanged();
-      }
       if (other.getPollutionLevel() != 0) {
         setPollutionLevel(other.getPollutionLevel());
       }
       if (!other.getMessage().isEmpty()) {
         message_ = other.message_;
-        bitField0_ |= 0x00000008;
+        bitField0_ |= 0x00000004;
         onChanged();
       }
       if (other.hasTimestamp()) {
@@ -570,26 +511,21 @@ private static final long serialVersionUID = 0L;
               bitField0_ |= 0x00000001;
               break;
             } // case 10
-            case 18: {
-              location_ = input.readStringRequireUtf8();
-              bitField0_ |= 0x00000002;
-              break;
-            } // case 18
             case 24: {
               pollutionLevel_ = input.readInt32();
-              bitField0_ |= 0x00000004;
+              bitField0_ |= 0x00000002;
               break;
             } // case 24
             case 34: {
               message_ = input.readStringRequireUtf8();
-              bitField0_ |= 0x00000008;
+              bitField0_ |= 0x00000004;
               break;
             } // case 34
             case 42: {
               input.readMessage(
                   getTimestampFieldBuilder().getBuilder(),
                   extensionRegistry);
-              bitField0_ |= 0x00000010;
+              bitField0_ |= 0x00000008;
               break;
             } // case 42
             default: {
@@ -681,78 +617,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private java.lang.Object location_ = "";
-    /**
-     * <code>string location = 2;</code>
-     * @return The location.
-     */
-    public java.lang.String getLocation() {
-      java.lang.Object ref = location_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        location_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
-    }
-    /**
-     * <code>string location = 2;</code>
-     * @return The bytes for location.
-     */
-    public com.google.protobuf.ByteString
-        getLocationBytes() {
-      java.lang.Object ref = location_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        location_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string location = 2;</code>
-     * @param value The location to set.
-     * @return This builder for chaining.
-     */
-    public Builder setLocation(
-        java.lang.String value) {
-      if (value == null) { throw new NullPointerException(); }
-      location_ = value;
-      bitField0_ |= 0x00000002;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string location = 2;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearLocation() {
-      location_ = getDefaultInstance().getLocation();
-      bitField0_ = (bitField0_ & ~0x00000002);
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string location = 2;</code>
-     * @param value The bytes for location to set.
-     * @return This builder for chaining.
-     */
-    public Builder setLocationBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) { throw new NullPointerException(); }
-      checkByteStringIsUtf8(value);
-      location_ = value;
-      bitField0_ |= 0x00000002;
-      onChanged();
-      return this;
-    }
-
     private int pollutionLevel_ ;
     /**
      * <code>int32 pollution_level = 3;</code>
@@ -770,7 +634,7 @@ private static final long serialVersionUID = 0L;
     public Builder setPollutionLevel(int value) {
 
       pollutionLevel_ = value;
-      bitField0_ |= 0x00000004;
+      bitField0_ |= 0x00000002;
       onChanged();
       return this;
     }
@@ -779,7 +643,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearPollutionLevel() {
-      bitField0_ = (bitField0_ & ~0x00000004);
+      bitField0_ = (bitField0_ & ~0x00000002);
       pollutionLevel_ = 0;
       onChanged();
       return this;
@@ -828,7 +692,7 @@ private static final long serialVersionUID = 0L;
         java.lang.String value) {
       if (value == null) { throw new NullPointerException(); }
       message_ = value;
-      bitField0_ |= 0x00000008;
+      bitField0_ |= 0x00000004;
       onChanged();
       return this;
     }
@@ -838,7 +702,7 @@ private static final long serialVersionUID = 0L;
      */
     public Builder clearMessage() {
       message_ = getDefaultInstance().getMessage();
-      bitField0_ = (bitField0_ & ~0x00000008);
+      bitField0_ = (bitField0_ & ~0x00000004);
       onChanged();
       return this;
     }
@@ -852,7 +716,7 @@ private static final long serialVersionUID = 0L;
       if (value == null) { throw new NullPointerException(); }
       checkByteStringIsUtf8(value);
       message_ = value;
-      bitField0_ |= 0x00000008;
+      bitField0_ |= 0x00000004;
       onChanged();
       return this;
     }
@@ -865,7 +729,7 @@ private static final long serialVersionUID = 0L;
      * @return Whether the timestamp field is set.
      */
     public boolean hasTimestamp() {
-      return ((bitField0_ & 0x00000010) != 0);
+      return ((bitField0_ & 0x00000008) != 0);
     }
     /**
      * <code>.google.protobuf.Timestamp timestamp = 5;</code>
@@ -890,7 +754,7 @@ private static final long serialVersionUID = 0L;
       } else {
         timestampBuilder_.setMessage(value);
       }
-      bitField0_ |= 0x00000010;
+      bitField0_ |= 0x00000008;
       onChanged();
       return this;
     }
@@ -904,7 +768,7 @@ private static final long serialVersionUID = 0L;
       } else {
         timestampBuilder_.setMessage(builderForValue.build());
       }
-      bitField0_ |= 0x00000010;
+      bitField0_ |= 0x00000008;
       onChanged();
       return this;
     }
@@ -913,7 +777,7 @@ private static final long serialVersionUID = 0L;
      */
     public Builder mergeTimestamp(com.google.protobuf.Timestamp value) {
       if (timestampBuilder_ == null) {
-        if (((bitField0_ & 0x00000010) != 0) &&
+        if (((bitField0_ & 0x00000008) != 0) &&
           timestamp_ != null &&
           timestamp_ != com.google.protobuf.Timestamp.getDefaultInstance()) {
           getTimestampBuilder().mergeFrom(value);
@@ -924,7 +788,7 @@ private static final long serialVersionUID = 0L;
         timestampBuilder_.mergeFrom(value);
       }
       if (timestamp_ != null) {
-        bitField0_ |= 0x00000010;
+        bitField0_ |= 0x00000008;
         onChanged();
       }
       return this;
@@ -933,7 +797,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Timestamp timestamp = 5;</code>
      */
     public Builder clearTimestamp() {
-      bitField0_ = (bitField0_ & ~0x00000010);
+      bitField0_ = (bitField0_ & ~0x00000008);
       timestamp_ = null;
       if (timestampBuilder_ != null) {
         timestampBuilder_.dispose();
@@ -946,7 +810,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Timestamp timestamp = 5;</code>
      */
     public com.google.protobuf.Timestamp.Builder getTimestampBuilder() {
-      bitField0_ |= 0x00000010;
+      bitField0_ |= 0x00000008;
       onChanged();
       return getTimestampFieldBuilder().getBuilder();
     }

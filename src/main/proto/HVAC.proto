@@ -7,7 +7,7 @@ import "Sensor.proto";
 
 option java_multiple_files = true;
 option java_package = "com.chuntao.service";
-option java_outer_classname = "HVACService";
+option java_outer_classname = "HVACProto";
 
 // HVAC Service: turn on HVAC based on analyse response
 service HVAC {

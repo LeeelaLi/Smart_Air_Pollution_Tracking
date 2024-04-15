@@ -4,8 +4,8 @@
 
 package com.chuntao.service;
 
-public final class HVACService {
-  private HVACService() {}
+public final class HVACProto {
+  private HVACProto() {}
   static {
     com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
       com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
@@ -13,7 +13,7 @@ public final class HVACService {
       /* minor= */ 26,
       /* patch= */ 1,
       /* suffix= */ "",
-      HVACService.class.getName());
+      HVACProto.class.getName());
   }
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistryLite registry) {
@@ -59,14 +59,14 @@ public final class HVACService {
       "\022E\n\013HVACControl\022\030.com.chuntao.HVACReques" +
       "t\032\030.com.chuntao.HVACCommand\"\000(\001\022G\n\nHVACS" +
       "witch\022\030.com.chuntao.HVACCommand\032\031.com.ch" +
-      "untao.HVACResponse\"\000(\0010\001B$\n\023com.chuntao." +
-      "serviceB\013HVACServiceP\001b\006proto3"
+      "untao.HVACResponse\"\000(\0010\001B\"\n\023com.chuntao." +
+      "serviceB\tHVACProtoP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.google.protobuf.TimestampProto.getDescriptor(),
-          com.chuntao.service.SensorService.getDescriptor(),
+          com.chuntao.service.SensorProto.getDescriptor(),
         });
     internal_static_com_chuntao_HVACRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -88,7 +88,7 @@ public final class HVACService {
         new java.lang.String[] { "Status", "PollutionLevel", "Timestamp", });
     descriptor.resolveAllFeaturesImmutable();
     com.google.protobuf.TimestampProto.getDescriptor();
-    com.chuntao.service.SensorService.getDescriptor();
+    com.chuntao.service.SensorProto.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

@@ -21,18 +21,6 @@ public interface AnalyseResponseOrBuilder extends
       getAnalyseBytes();
 
   /**
-   * <code>string location = 2;</code>
-   * @return The location.
-   */
-  java.lang.String getLocation();
-  /**
-   * <code>string location = 2;</code>
-   * @return The bytes for location.
-   */
-  com.google.protobuf.ByteString
-      getLocationBytes();
-
-  /**
    * <code>int32 pollution_level = 3;</code>
    * @return The pollutionLevel.
    */
