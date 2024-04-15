@@ -4,8 +4,8 @@
 
 package com.chuntao.service;
 
-public final class SensorProto {
-  private SensorProto() {}
+public final class SensorService {
+  private SensorService() {}
   static {
     com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
       com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
@@ -13,7 +13,7 @@ public final class SensorProto {
       /* minor= */ 26,
       /* patch= */ 1,
       /* suffix= */ "",
-      SensorProto.class.getName());
+      SensorService.class.getName());
   }
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistryLite registry) {
@@ -35,11 +35,6 @@ public final class SensorProto {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_com_chuntao_SensorResponse_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_com_chuntao_AnalyseRequest_descriptor;
-  static final 
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_com_chuntao_AnalyseRequest_fieldAccessorTable;
-  static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_chuntao_AnalyseResponse_descriptor;
   static final 
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -55,19 +50,19 @@ public final class SensorProto {
     java.lang.String[] descriptorData = {
       "\n\014Sensor.proto\022\013com.chuntao\032\037google/prot" +
       "obuf/timestamp.proto\"\"\n\rSensorRequest\022\021\n" +
-      "\tsensor_id\030\001 \001(\005\"\"\n\016SensorResponse\022\020\n\010lo" +
-      "cation\030\001 \001(\t\"^\n\016AnalyseRequest\022\014\n\004PM25\030\002" +
-      " \001(\002\022\023\n\013temperature\030\003 \001(\002\022\013\n\003VOC\030\004 \001(\002\022\020" +
-      "\n\010humidity\030\005 \001(\002\022\n\n\002CO\030\006 \001(\002\"{\n\017AnalyseR" +
-      "esponse\022\017\n\007analyse\030\001 \001(\t\022\027\n\017pollution_le" +
-      "vel\030\003 \001(\005\022\017\n\007message\030\004 \001(\t\022-\n\ttimestamp\030" +
-      "\005 \001(\0132\032.google.protobuf.Timestamp2\250\001\n\006Se" +
-      "nsor\022J\n\rGetSensorData\022\032.com.chuntao.Sens" +
-      "orRequest\032\033.com.chuntao.SensorResponse\"\000" +
-      "\022R\n\021AnalyseSensorData\022\033.com.chuntao.Sens" +
-      "orResponse\032\034.com.chuntao.AnalyseResponse" +
-      "\"\0000\001B$\n\023com.chuntao.serviceB\013SensorProto" +
-      "P\001b\006proto3"
+      "\tsensor_id\030\001 \001(\005\"p\n\016SensorResponse\022\020\n\010lo" +
+      "cation\030\001 \001(\t\022\014\n\004PM25\030\002 \001(\002\022\023\n\013temperatur" +
+      "e\030\003 \001(\002\022\013\n\003VOC\030\004 \001(\002\022\020\n\010humidity\030\005 \001(\002\022\n" +
+      "\n\002CO\030\006 \001(\002\"\215\001\n\017AnalyseResponse\022\017\n\007analys" +
+      "e\030\001 \001(\t\022\020\n\010location\030\002 \001(\t\022\027\n\017pollution_l" +
+      "evel\030\003 \001(\005\022\017\n\007message\030\004 \001(\t\022-\n\ttimestamp" +
+      "\030\005 \001(\0132\032.google.protobuf.Timestamp2\250\001\n\006S" +
+      "ensor\022J\n\rGetSensorData\022\032.com.chuntao.Sen" +
+      "sorRequest\032\033.com.chuntao.SensorResponse\"" +
+      "\000\022R\n\021AnalyseSensorData\022\033.com.chuntao.Sen" +
+      "sorResponse\032\034.com.chuntao.AnalyseRespons" +
+      "e\"\000(\001B&\n\023com.chuntao.serviceB\rSensorServ" +
+      "iceP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -85,19 +80,13 @@ public final class SensorProto {
     internal_static_com_chuntao_SensorResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_com_chuntao_SensorResponse_descriptor,
-        new java.lang.String[] { "Location", });
-    internal_static_com_chuntao_AnalyseRequest_descriptor =
-      getDescriptor().getMessageTypes().get(2);
-    internal_static_com_chuntao_AnalyseRequest_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-        internal_static_com_chuntao_AnalyseRequest_descriptor,
-        new java.lang.String[] { "PM25", "Temperature", "VOC", "Humidity", "CO", });
+        new java.lang.String[] { "Location", "PM25", "Temperature", "VOC", "Humidity", "CO", });
     internal_static_com_chuntao_AnalyseResponse_descriptor =
-      getDescriptor().getMessageTypes().get(3);
+      getDescriptor().getMessageTypes().get(2);
     internal_static_com_chuntao_AnalyseResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_com_chuntao_AnalyseResponse_descriptor,
-        new java.lang.String[] { "Analyse", "PollutionLevel", "Message", "Timestamp", });
+        new java.lang.String[] { "Analyse", "Location", "PollutionLevel", "Message", "Timestamp", });
     descriptor.resolveAllFeaturesImmutable();
     com.google.protobuf.TimestampProto.getDescriptor();
   }

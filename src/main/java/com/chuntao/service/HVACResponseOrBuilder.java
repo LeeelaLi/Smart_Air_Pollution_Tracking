@@ -9,16 +9,15 @@ public interface HVACResponseOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>string status = 1;</code>
-   * @return The status.
+   * <code>.com.chuntao.HVACResponse.Action action = 1;</code>
+   * @return The enum numeric value on the wire for action.
    */
-  java.lang.String getStatus();
+  int getActionValue();
   /**
-   * <code>string status = 1;</code>
-   * @return The bytes for status.
+   * <code>.com.chuntao.HVACResponse.Action action = 1;</code>
+   * @return The action.
    */
-  com.google.protobuf.ByteString
-      getStatusBytes();
+  com.chuntao.service.HVACResponse.Action getAction();
 
   /**
    * <code>int32 pollution_level = 2;</code>

@@ -26,60 +26,156 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private HVACResponse() {
-    status_ = "";
+    action_ = 0;
   }
 
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return com.chuntao.service.HVACProto.internal_static_com_chuntao_HVACResponse_descriptor;
+    return com.chuntao.service.HVACService.internal_static_com_chuntao_HVACResponse_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return com.chuntao.service.HVACProto.internal_static_com_chuntao_HVACResponse_fieldAccessorTable
+    return com.chuntao.service.HVACService.internal_static_com_chuntao_HVACResponse_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
             com.chuntao.service.HVACResponse.class, com.chuntao.service.HVACResponse.Builder.class);
   }
 
-  private int bitField0_;
-  public static final int STATUS_FIELD_NUMBER = 1;
-  @SuppressWarnings("serial")
-  private volatile java.lang.Object status_ = "";
   /**
-   * <code>string status = 1;</code>
-   * @return The status.
+   * Protobuf enum {@code com.chuntao.HVACResponse.Action}
    */
-  @java.lang.Override
-  public java.lang.String getStatus() {
-    java.lang.Object ref = status_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      status_ = s;
-      return s;
+  public enum Action
+      implements com.google.protobuf.ProtocolMessageEnum {
+    /**
+     * <code>START = 0;</code>
+     */
+    START(0),
+    /**
+     * <code>STOP = 1;</code>
+     */
+    STOP(1),
+    UNRECOGNIZED(-1),
+    ;
+
+    static {
+      com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+        com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+        /* major= */ 4,
+        /* minor= */ 26,
+        /* patch= */ 1,
+        /* suffix= */ "",
+        Action.class.getName());
     }
+    /**
+     * <code>START = 0;</code>
+     */
+    public static final int START_VALUE = 0;
+    /**
+     * <code>STOP = 1;</code>
+     */
+    public static final int STOP_VALUE = 1;
+
+
+    public final int getNumber() {
+      if (this == UNRECOGNIZED) {
+        throw new java.lang.IllegalArgumentException(
+            "Can't get the number of an unknown enum value.");
+      }
+      return value;
+    }
+
+    /**
+     * @param value The numeric wire value of the corresponding enum entry.
+     * @return The enum associated with the given numeric wire value.
+     * @deprecated Use {@link #forNumber(int)} instead.
+     */
+    @java.lang.Deprecated
+    public static Action valueOf(int value) {
+      return forNumber(value);
+    }
+
+    /**
+     * @param value The numeric wire value of the corresponding enum entry.
+     * @return The enum associated with the given numeric wire value.
+     */
+    public static Action forNumber(int value) {
+      switch (value) {
+        case 0: return START;
+        case 1: return STOP;
+        default: return null;
+      }
+    }
+
+    public static com.google.protobuf.Internal.EnumLiteMap<Action>
+        internalGetValueMap() {
+      return internalValueMap;
+    }
+    private static final com.google.protobuf.Internal.EnumLiteMap<
+        Action> internalValueMap =
+          new com.google.protobuf.Internal.EnumLiteMap<Action>() {
+            public Action findValueByNumber(int number) {
+              return Action.forNumber(number);
+            }
+          };
+
+    public final com.google.protobuf.Descriptors.EnumValueDescriptor
+        getValueDescriptor() {
+      if (this == UNRECOGNIZED) {
+        throw new java.lang.IllegalStateException(
+            "Can't get the descriptor of an unrecognized enum value.");
+      }
+      return getDescriptor().getValues().get(ordinal());
+    }
+    public final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptorForType() {
+      return getDescriptor();
+    }
+    public static final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptor() {
+      return com.chuntao.service.HVACResponse.getDescriptor().getEnumTypes().get(0);
+    }
+
+    private static final Action[] VALUES = values();
+
+    public static Action valueOf(
+        com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+      if (desc.getType() != getDescriptor()) {
+        throw new java.lang.IllegalArgumentException(
+          "EnumValueDescriptor is not for this type.");
+      }
+      if (desc.getIndex() == -1) {
+        return UNRECOGNIZED;
+      }
+      return VALUES[desc.getIndex()];
+    }
+
+    private final int value;
+
+    private Action(int value) {
+      this.value = value;
+    }
+
+    // @@protoc_insertion_point(enum_scope:com.chuntao.HVACResponse.Action)
+  }
+
+  private int bitField0_;
+  public static final int ACTION_FIELD_NUMBER = 1;
+  private int action_ = 0;
+  /**
+   * <code>.com.chuntao.HVACResponse.Action action = 1;</code>
+   * @return The enum numeric value on the wire for action.
+   */
+  @java.lang.Override public int getActionValue() {
+    return action_;
   }
   /**
-   * <code>string status = 1;</code>
-   * @return The bytes for status.
+   * <code>.com.chuntao.HVACResponse.Action action = 1;</code>
+   * @return The action.
    */
-  @java.lang.Override
-  public com.google.protobuf.ByteString
-      getStatusBytes() {
-    java.lang.Object ref = status_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      status_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
+  @java.lang.Override public com.chuntao.service.HVACResponse.Action getAction() {
+    com.chuntao.service.HVACResponse.Action result = com.chuntao.service.HVACResponse.Action.forNumber(action_);
+    return result == null ? com.chuntao.service.HVACResponse.Action.UNRECOGNIZED : result;
   }
 
   public static final int POLLUTION_LEVEL_FIELD_NUMBER = 2;
@@ -133,8 +229,8 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(status_)) {
-      com.google.protobuf.GeneratedMessage.writeString(output, 1, status_);
+    if (action_ != com.chuntao.service.HVACResponse.Action.START.getNumber()) {
+      output.writeEnum(1, action_);
     }
     if (pollutionLevel_ != 0) {
       output.writeInt32(2, pollutionLevel_);
@@ -151,8 +247,9 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(status_)) {
-      size += com.google.protobuf.GeneratedMessage.computeStringSize(1, status_);
+    if (action_ != com.chuntao.service.HVACResponse.Action.START.getNumber()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeEnumSize(1, action_);
     }
     if (pollutionLevel_ != 0) {
       size += com.google.protobuf.CodedOutputStream
@@ -177,8 +274,7 @@ private static final long serialVersionUID = 0L;
     }
     com.chuntao.service.HVACResponse other = (com.chuntao.service.HVACResponse) obj;
 
-    if (!getStatus()
-        .equals(other.getStatus())) return false;
+    if (action_ != other.action_) return false;
     if (getPollutionLevel()
         != other.getPollutionLevel()) return false;
     if (hasTimestamp() != other.hasTimestamp()) return false;
@@ -197,8 +293,8 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + STATUS_FIELD_NUMBER;
-    hash = (53 * hash) + getStatus().hashCode();
+    hash = (37 * hash) + ACTION_FIELD_NUMBER;
+    hash = (53 * hash) + action_;
     hash = (37 * hash) + POLLUTION_LEVEL_FIELD_NUMBER;
     hash = (53 * hash) + getPollutionLevel();
     if (hasTimestamp()) {
@@ -311,13 +407,13 @@ private static final long serialVersionUID = 0L;
       com.chuntao.service.HVACResponseOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.chuntao.service.HVACProto.internal_static_com_chuntao_HVACResponse_descriptor;
+      return com.chuntao.service.HVACService.internal_static_com_chuntao_HVACResponse_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.chuntao.service.HVACProto.internal_static_com_chuntao_HVACResponse_fieldAccessorTable
+      return com.chuntao.service.HVACService.internal_static_com_chuntao_HVACResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               com.chuntao.service.HVACResponse.class, com.chuntao.service.HVACResponse.Builder.class);
     }
@@ -342,7 +438,7 @@ private static final long serialVersionUID = 0L;
     public Builder clear() {
       super.clear();
       bitField0_ = 0;
-      status_ = "";
+      action_ = 0;
       pollutionLevel_ = 0;
       timestamp_ = null;
       if (timestampBuilder_ != null) {
@@ -355,7 +451,7 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return com.chuntao.service.HVACProto.internal_static_com_chuntao_HVACResponse_descriptor;
+      return com.chuntao.service.HVACService.internal_static_com_chuntao_HVACResponse_descriptor;
     }
 
     @java.lang.Override
@@ -383,7 +479,7 @@ private static final long serialVersionUID = 0L;
     private void buildPartial0(com.chuntao.service.HVACResponse result) {
       int from_bitField0_ = bitField0_;
       if (((from_bitField0_ & 0x00000001) != 0)) {
-        result.status_ = status_;
+        result.action_ = action_;
       }
       if (((from_bitField0_ & 0x00000002) != 0)) {
         result.pollutionLevel_ = pollutionLevel_;
@@ -410,10 +506,8 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(com.chuntao.service.HVACResponse other) {
       if (other == com.chuntao.service.HVACResponse.getDefaultInstance()) return this;
-      if (!other.getStatus().isEmpty()) {
-        status_ = other.status_;
-        bitField0_ |= 0x00000001;
-        onChanged();
+      if (other.action_ != 0) {
+        setActionValue(other.getActionValue());
       }
       if (other.getPollutionLevel() != 0) {
         setPollutionLevel(other.getPollutionLevel());
@@ -447,11 +541,11 @@ private static final long serialVersionUID = 0L;
             case 0:
               done = true;
               break;
-            case 10: {
-              status_ = input.readStringRequireUtf8();
+            case 8: {
+              action_ = input.readEnum();
               bitField0_ |= 0x00000001;
               break;
-            } // case 10
+            } // case 8
             case 16: {
               pollutionLevel_ = input.readInt32();
               bitField0_ |= 0x00000002;
@@ -481,74 +575,55 @@ private static final long serialVersionUID = 0L;
     }
     private int bitField0_;
 
-    private java.lang.Object status_ = "";
+    private int action_ = 0;
     /**
-     * <code>string status = 1;</code>
-     * @return The status.
+     * <code>.com.chuntao.HVACResponse.Action action = 1;</code>
+     * @return The enum numeric value on the wire for action.
      */
-    public java.lang.String getStatus() {
-      java.lang.Object ref = status_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        status_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+    @java.lang.Override public int getActionValue() {
+      return action_;
     }
     /**
-     * <code>string status = 1;</code>
-     * @return The bytes for status.
-     */
-    public com.google.protobuf.ByteString
-        getStatusBytes() {
-      java.lang.Object ref = status_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        status_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string status = 1;</code>
-     * @param value The status to set.
+     * <code>.com.chuntao.HVACResponse.Action action = 1;</code>
+     * @param value The enum numeric value on the wire for action to set.
      * @return This builder for chaining.
      */
-    public Builder setStatus(
-        java.lang.String value) {
-      if (value == null) { throw new NullPointerException(); }
-      status_ = value;
+    public Builder setActionValue(int value) {
+      action_ = value;
       bitField0_ |= 0x00000001;
       onChanged();
       return this;
     }
     /**
-     * <code>string status = 1;</code>
+     * <code>.com.chuntao.HVACResponse.Action action = 1;</code>
+     * @return The action.
+     */
+    @java.lang.Override
+    public com.chuntao.service.HVACResponse.Action getAction() {
+      com.chuntao.service.HVACResponse.Action result = com.chuntao.service.HVACResponse.Action.forNumber(action_);
+      return result == null ? com.chuntao.service.HVACResponse.Action.UNRECOGNIZED : result;
+    }
+    /**
+     * <code>.com.chuntao.HVACResponse.Action action = 1;</code>
+     * @param value The action to set.
      * @return This builder for chaining.
      */
-    public Builder clearStatus() {
-      status_ = getDefaultInstance().getStatus();
+    public Builder setAction(com.chuntao.service.HVACResponse.Action value) {
+      if (value == null) {
+        throw new NullPointerException();
+      }
+      bitField0_ |= 0x00000001;
+      action_ = value.getNumber();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>.com.chuntao.HVACResponse.Action action = 1;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearAction() {
       bitField0_ = (bitField0_ & ~0x00000001);
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string status = 1;</code>
-     * @param value The bytes for status to set.
-     * @return This builder for chaining.
-     */
-    public Builder setStatusBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) { throw new NullPointerException(); }
-      checkByteStringIsUtf8(value);
-      status_ = value;
-      bitField0_ |= 0x00000001;
+      action_ = 0;
       onChanged();
       return this;
     }

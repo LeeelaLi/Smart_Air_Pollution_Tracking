@@ -33,13 +33,13 @@ private static final long serialVersionUID = 0L;
 
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return com.chuntao.service.NotificationProto.internal_static_com_chuntao_service_SensorMessage_descriptor;
+    return com.chuntao.service.NotificationService.internal_static_com_chuntao_service_SensorMessage_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return com.chuntao.service.NotificationProto.internal_static_com_chuntao_service_SensorMessage_fieldAccessorTable
+    return com.chuntao.service.NotificationService.internal_static_com_chuntao_service_SensorMessage_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
             com.chuntao.service.SensorMessage.class, com.chuntao.service.SensorMessage.Builder.class);
   }
@@ -389,13 +389,13 @@ private static final long serialVersionUID = 0L;
       com.chuntao.service.SensorMessageOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.chuntao.service.NotificationProto.internal_static_com_chuntao_service_SensorMessage_descriptor;
+      return com.chuntao.service.NotificationService.internal_static_com_chuntao_service_SensorMessage_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.chuntao.service.NotificationProto.internal_static_com_chuntao_service_SensorMessage_fieldAccessorTable
+      return com.chuntao.service.NotificationService.internal_static_com_chuntao_service_SensorMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               com.chuntao.service.SensorMessage.class, com.chuntao.service.SensorMessage.Builder.class);
     }
@@ -434,7 +434,7 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return com.chuntao.service.NotificationProto.internal_static_com_chuntao_service_SensorMessage_descriptor;
+      return com.chuntao.service.NotificationService.internal_static_com_chuntao_service_SensorMessage_descriptor;
     }
 
     @java.lang.Override

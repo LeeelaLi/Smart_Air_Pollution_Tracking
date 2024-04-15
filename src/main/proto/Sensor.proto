@@ -6,14 +6,14 @@ import "google/protobuf/timestamp.proto";
 
 option java_multiple_files = true;
 option java_package = "com.chuntao.service";
-option java_outer_classname = "SensorProto";
+option java_outer_classname = "SensorService";
 
 // Sensor Service: monitor air index and analyse data
 service Sensor {
   // Simple RPC for collecting sensor data
   rpc GetSensorData(SensorRequest) returns (SensorResponse) {}
-  // Server-side streaming RPC for analysing sensor data based on sensor response
-  rpc AnalyseSensorData(SensorResponse) returns (stream AnalyseResponse) {}
+  // Client-side streaming RPC for analysing sensor data based on sensor response
+  rpc AnalyseSensorData(stream SensorResponse) returns (AnalyseResponse) {}
 }
 
 message SensorRequest {
@@ -22,9 +22,6 @@ message SensorRequest {
 
 message SensorResponse {
   string location = 1;
-}
-
-message AnalyseRequest {
   float PM25 = 2; // PM2.5 density in μg/m3 of the air
   float temperature = 3; // Air temperature in Celsius
   float VOC = 4; // VOC level in mg/m3
@@ -34,7 +31,9 @@ message AnalyseRequest {
 
 message AnalyseResponse {
   string analyse = 1;
+  string location = 2;
   int32 pollution_level = 3;
   string message = 4;
   google.protobuf.Timestamp timestamp = 5;
 }
+

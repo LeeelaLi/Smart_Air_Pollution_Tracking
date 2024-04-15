@@ -30,13 +30,13 @@ private static final long serialVersionUID = 0L;
 
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return com.chuntao.service.SensorProto.internal_static_com_chuntao_SensorRequest_descriptor;
+    return com.chuntao.service.SensorService.internal_static_com_chuntao_SensorRequest_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return com.chuntao.service.SensorProto.internal_static_com_chuntao_SensorRequest_fieldAccessorTable
+    return com.chuntao.service.SensorService.internal_static_com_chuntao_SensorRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
             com.chuntao.service.SensorRequest.class, com.chuntao.service.SensorRequest.Builder.class);
   }
@@ -218,13 +218,13 @@ private static final long serialVersionUID = 0L;
       com.chuntao.service.SensorRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.chuntao.service.SensorProto.internal_static_com_chuntao_SensorRequest_descriptor;
+      return com.chuntao.service.SensorService.internal_static_com_chuntao_SensorRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.chuntao.service.SensorProto.internal_static_com_chuntao_SensorRequest_fieldAccessorTable
+      return com.chuntao.service.SensorService.internal_static_com_chuntao_SensorRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               com.chuntao.service.SensorRequest.class, com.chuntao.service.SensorRequest.Builder.class);
     }
@@ -250,7 +250,7 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return com.chuntao.service.SensorProto.internal_static_com_chuntao_SensorRequest_descriptor;
+      return com.chuntao.service.SensorService.internal_static_com_chuntao_SensorRequest_descriptor;
     }
 
     @java.lang.Override

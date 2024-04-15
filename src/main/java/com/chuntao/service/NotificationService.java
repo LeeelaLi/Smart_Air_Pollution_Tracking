@@ -4,8 +4,8 @@
 
 package com.chuntao.service;
 
-public final class NotificationProto {
-  private NotificationProto() {}
+public final class NotificationService {
+  private NotificationService() {}
   static {
     com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
       com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
@@ -13,7 +13,7 @@ public final class NotificationProto {
       /* minor= */ 26,
       /* patch= */ 1,
       /* suffix= */ "",
-      NotificationProto.class.getName());
+      NotificationService.class.getName());
   }
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistryLite registry) {
@@ -55,16 +55,16 @@ public final class NotificationProto {
       "m.chuntao.AnalyseResponse\032\".com.chuntao." +
       "service.SensorMessage\"\0000\001\022T\n\021HVACNotific" +
       "ations\022\031.com.chuntao.HVACResponse\032 .com." +
-      "chuntao.service.HVACMessage\"\0000\001B*\n\023com.c" +
-      "huntao.serviceB\021NotificationProtoP\001b\006pro" +
-      "to3"
+      "chuntao.service.HVACMessage\"\0000\001B,\n\023com.c" +
+      "huntao.serviceB\023NotificationServiceP\001b\006p" +
+      "roto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.google.protobuf.TimestampProto.getDescriptor(),
-          com.chuntao.service.SensorProto.getDescriptor(),
-          com.chuntao.service.HVACProto.getDescriptor(),
+          com.chuntao.service.SensorService.getDescriptor(),
+          com.chuntao.service.HVACService.getDescriptor(),
         });
     internal_static_com_chuntao_service_SensorMessage_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -80,8 +80,8 @@ public final class NotificationProto {
         new java.lang.String[] { "Status", "Message", "Timestamp", });
     descriptor.resolveAllFeaturesImmutable();
     com.google.protobuf.TimestampProto.getDescriptor();
-    com.chuntao.service.SensorProto.getDescriptor();
-    com.chuntao.service.HVACProto.getDescriptor();
+    com.chuntao.service.SensorService.getDescriptor();
+    com.chuntao.service.HVACService.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

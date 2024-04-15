@@ -19,57 +19,26 @@ public final class HVACGrpc {
 
   // Static method descriptors that strictly reflect the proto.
   private static volatile io.grpc.MethodDescriptor<com.chuntao.service.HVACRequest,
-      com.chuntao.service.HVACCommand> getHVACControlMethod;
-
-  @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "HVACControl",
-      requestType = com.chuntao.service.HVACRequest.class,
-      responseType = com.chuntao.service.HVACCommand.class,
-      methodType = io.grpc.MethodDescriptor.MethodType.CLIENT_STREAMING)
-  public static io.grpc.MethodDescriptor<com.chuntao.service.HVACRequest,
-      com.chuntao.service.HVACCommand> getHVACControlMethod() {
-    io.grpc.MethodDescriptor<com.chuntao.service.HVACRequest, com.chuntao.service.HVACCommand> getHVACControlMethod;
-    if ((getHVACControlMethod = HVACGrpc.getHVACControlMethod) == null) {
-      synchronized (HVACGrpc.class) {
-        if ((getHVACControlMethod = HVACGrpc.getHVACControlMethod) == null) {
-          HVACGrpc.getHVACControlMethod = getHVACControlMethod =
-              io.grpc.MethodDescriptor.<com.chuntao.service.HVACRequest, com.chuntao.service.HVACCommand>newBuilder()
-              .setType(io.grpc.MethodDescriptor.MethodType.CLIENT_STREAMING)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "HVACControl"))
-              .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  com.chuntao.service.HVACRequest.getDefaultInstance()))
-              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  com.chuntao.service.HVACCommand.getDefaultInstance()))
-              .setSchemaDescriptor(new HVACMethodDescriptorSupplier("HVACControl"))
-              .build();
-        }
-      }
-    }
-    return getHVACControlMethod;
-  }
-
-  private static volatile io.grpc.MethodDescriptor<com.chuntao.service.HVACCommand,
       com.chuntao.service.HVACResponse> getHVACSwitchMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "HVACSwitch",
-      requestType = com.chuntao.service.HVACCommand.class,
+      requestType = com.chuntao.service.HVACRequest.class,
       responseType = com.chuntao.service.HVACResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.BIDI_STREAMING)
-  public static io.grpc.MethodDescriptor<com.chuntao.service.HVACCommand,
+  public static io.grpc.MethodDescriptor<com.chuntao.service.HVACRequest,
       com.chuntao.service.HVACResponse> getHVACSwitchMethod() {
-    io.grpc.MethodDescriptor<com.chuntao.service.HVACCommand, com.chuntao.service.HVACResponse> getHVACSwitchMethod;
+    io.grpc.MethodDescriptor<com.chuntao.service.HVACRequest, com.chuntao.service.HVACResponse> getHVACSwitchMethod;
     if ((getHVACSwitchMethod = HVACGrpc.getHVACSwitchMethod) == null) {
       synchronized (HVACGrpc.class) {
         if ((getHVACSwitchMethod = HVACGrpc.getHVACSwitchMethod) == null) {
           HVACGrpc.getHVACSwitchMethod = getHVACSwitchMethod =
-              io.grpc.MethodDescriptor.<com.chuntao.service.HVACCommand, com.chuntao.service.HVACResponse>newBuilder()
+              io.grpc.MethodDescriptor.<com.chuntao.service.HVACRequest, com.chuntao.service.HVACResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.BIDI_STREAMING)
               .setFullMethodName(generateFullMethodName(SERVICE_NAME, "HVACSwitch"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  com.chuntao.service.HVACCommand.getDefaultInstance()))
+                  com.chuntao.service.HVACRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.chuntao.service.HVACResponse.getDefaultInstance()))
               .setSchemaDescriptor(new HVACMethodDescriptorSupplier("HVACSwitch"))
@@ -133,20 +102,10 @@ public final class HVACGrpc {
 
     /**
      * <pre>
-     * Client-side streaming RPC for controlling HVAC
-     * </pre>
-     */
-    default io.grpc.stub.StreamObserver<com.chuntao.service.HVACRequest> hVACControl(
-        io.grpc.stub.StreamObserver<com.chuntao.service.HVACCommand> responseObserver) {
-      return io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall(getHVACControlMethod(), responseObserver);
-    }
-
-    /**
-     * <pre>
      * Bidirectional streaming RPC for HVAC switching
      * </pre>
      */
-    default io.grpc.stub.StreamObserver<com.chuntao.service.HVACCommand> hVACSwitch(
+    default io.grpc.stub.StreamObserver<com.chuntao.service.HVACRequest> hvacSwitch(
         io.grpc.stub.StreamObserver<com.chuntao.service.HVACResponse> responseObserver) {
       return io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall(getHVACSwitchMethod(), responseObserver);
     }
@@ -187,21 +146,10 @@ public final class HVACGrpc {
 
     /**
      * <pre>
-     * Client-side streaming RPC for controlling HVAC
-     * </pre>
-     */
-    public io.grpc.stub.StreamObserver<com.chuntao.service.HVACRequest> hVACControl(
-        io.grpc.stub.StreamObserver<com.chuntao.service.HVACCommand> responseObserver) {
-      return io.grpc.stub.ClientCalls.asyncClientStreamingCall(
-          getChannel().newCall(getHVACControlMethod(), getCallOptions()), responseObserver);
-    }
-
-    /**
-     * <pre>
      * Bidirectional streaming RPC for HVAC switching
      * </pre>
      */
-    public io.grpc.stub.StreamObserver<com.chuntao.service.HVACCommand> hVACSwitch(
+    public io.grpc.stub.StreamObserver<com.chuntao.service.HVACRequest> hvacSwitch(
         io.grpc.stub.StreamObserver<com.chuntao.service.HVACResponse> responseObserver) {
       return io.grpc.stub.ClientCalls.asyncBidiStreamingCall(
           getChannel().newCall(getHVACSwitchMethod(), getCallOptions()), responseObserver);
@@ -248,8 +196,7 @@ public final class HVACGrpc {
     }
   }
 
-  private static final int METHODID_HVACCONTROL = 0;
-  private static final int METHODID_HVACSWITCH = 1;
+  private static final int METHODID_HVACSWITCH = 0;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -278,11 +225,8 @@ public final class HVACGrpc {
     public io.grpc.stub.StreamObserver<Req> invoke(
         io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
-        case METHODID_HVACCONTROL:
-          return (io.grpc.stub.StreamObserver<Req>) serviceImpl.hVACControl(
-              (io.grpc.stub.StreamObserver<com.chuntao.service.HVACCommand>) responseObserver);
         case METHODID_HVACSWITCH:
-          return (io.grpc.stub.StreamObserver<Req>) serviceImpl.hVACSwitch(
+          return (io.grpc.stub.StreamObserver<Req>) serviceImpl.hvacSwitch(
               (io.grpc.stub.StreamObserver<com.chuntao.service.HVACResponse>) responseObserver);
         default:
           throw new AssertionError();
@@ -293,17 +237,10 @@ public final class HVACGrpc {
   public static final io.grpc.ServerServiceDefinition bindService(AsyncService service) {
     return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
         .addMethod(
-          getHVACControlMethod(),
-          io.grpc.stub.ServerCalls.asyncClientStreamingCall(
-            new MethodHandlers<
-              com.chuntao.service.HVACRequest,
-              com.chuntao.service.HVACCommand>(
-                service, METHODID_HVACCONTROL)))
-        .addMethod(
           getHVACSwitchMethod(),
           io.grpc.stub.ServerCalls.asyncBidiStreamingCall(
             new MethodHandlers<
-              com.chuntao.service.HVACCommand,
+              com.chuntao.service.HVACRequest,
               com.chuntao.service.HVACResponse>(
                 service, METHODID_HVACSWITCH)))
         .build();
@@ -315,7 +252,7 @@ public final class HVACGrpc {
 
     @java.lang.Override
     public com.google.protobuf.Descriptors.FileDescriptor getFileDescriptor() {
-      return com.chuntao.service.HVACProto.getDescriptor();
+      return com.chuntao.service.HVACService.getDescriptor();
     }
 
     @java.lang.Override
@@ -354,7 +291,6 @@ public final class HVACGrpc {
         if (result == null) {
           serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
               .setSchemaDescriptor(new HVACFileDescriptorSupplier())
-              .addMethod(getHVACControlMethod())
               .addMethod(getHVACSwitchMethod())
               .build();
         }

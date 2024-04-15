@@ -8,7 +8,7 @@ import "HVAC.proto";
 
 option java_multiple_files = true;
 option java_package = "com.chuntao.service";
-option java_outer_classname = "NotificationProto";
+option java_outer_classname = "NotificationService";
 
 // Notification Service: monitor air index and analyse data
 service Notification {

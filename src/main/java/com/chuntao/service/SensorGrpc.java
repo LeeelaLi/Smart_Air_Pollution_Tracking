@@ -56,7 +56,7 @@ public final class SensorGrpc {
       fullMethodName = SERVICE_NAME + '/' + "AnalyseSensorData",
       requestType = com.chuntao.service.SensorResponse.class,
       responseType = com.chuntao.service.AnalyseResponse.class,
-      methodType = io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
+      methodType = io.grpc.MethodDescriptor.MethodType.CLIENT_STREAMING)
   public static io.grpc.MethodDescriptor<com.chuntao.service.SensorResponse,
       com.chuntao.service.AnalyseResponse> getAnalyseSensorDataMethod() {
     io.grpc.MethodDescriptor<com.chuntao.service.SensorResponse, com.chuntao.service.AnalyseResponse> getAnalyseSensorDataMethod;
@@ -65,7 +65,7 @@ public final class SensorGrpc {
         if ((getAnalyseSensorDataMethod = SensorGrpc.getAnalyseSensorDataMethod) == null) {
           SensorGrpc.getAnalyseSensorDataMethod = getAnalyseSensorDataMethod =
               io.grpc.MethodDescriptor.<com.chuntao.service.SensorResponse, com.chuntao.service.AnalyseResponse>newBuilder()
-              .setType(io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
+              .setType(io.grpc.MethodDescriptor.MethodType.CLIENT_STREAMING)
               .setFullMethodName(generateFullMethodName(SERVICE_NAME, "AnalyseSensorData"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
@@ -143,12 +143,12 @@ public final class SensorGrpc {
 
     /**
      * <pre>
-     * Server-side streaming RPC for analysing sensor data based on sensor response
+     * Client-side streaming RPC for analysing sensor data based on sensor response
      * </pre>
      */
-    default void analyseSensorData(com.chuntao.service.SensorResponse request,
+    default io.grpc.stub.StreamObserver<com.chuntao.service.SensorResponse> analyseSensorData(
         io.grpc.stub.StreamObserver<com.chuntao.service.AnalyseResponse> responseObserver) {
-      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getAnalyseSensorDataMethod(), responseObserver);
+      return io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall(getAnalyseSensorDataMethod(), responseObserver);
     }
   }
 
@@ -198,13 +198,13 @@ public final class SensorGrpc {
 
     /**
      * <pre>
-     * Server-side streaming RPC for analysing sensor data based on sensor response
+     * Client-side streaming RPC for analysing sensor data based on sensor response
      * </pre>
      */
-    public void analyseSensorData(com.chuntao.service.SensorResponse request,
+    public io.grpc.stub.StreamObserver<com.chuntao.service.SensorResponse> analyseSensorData(
         io.grpc.stub.StreamObserver<com.chuntao.service.AnalyseResponse> responseObserver) {
-      io.grpc.stub.ClientCalls.asyncServerStreamingCall(
-          getChannel().newCall(getAnalyseSensorDataMethod(), getCallOptions()), request, responseObserver);
+      return io.grpc.stub.ClientCalls.asyncClientStreamingCall(
+          getChannel().newCall(getAnalyseSensorDataMethod(), getCallOptions()), responseObserver);
     }
   }
 
@@ -235,17 +235,6 @@ public final class SensorGrpc {
     public com.chuntao.service.SensorResponse getSensorData(com.chuntao.service.SensorRequest request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getGetSensorDataMethod(), getCallOptions(), request);
-    }
-
-    /**
-     * <pre>
-     * Server-side streaming RPC for analysing sensor data based on sensor response
-     * </pre>
-     */
-    public java.util.Iterator<com.chuntao.service.AnalyseResponse> analyseSensorData(
-        com.chuntao.service.SensorResponse request) {
-      return io.grpc.stub.ClientCalls.blockingServerStreamingCall(
-          getChannel(), getAnalyseSensorDataMethod(), getCallOptions(), request);
     }
   }
 
@@ -304,10 +293,6 @@ public final class SensorGrpc {
           serviceImpl.getSensorData((com.chuntao.service.SensorRequest) request,
               (io.grpc.stub.StreamObserver<com.chuntao.service.SensorResponse>) responseObserver);
           break;
-        case METHODID_ANALYSE_SENSOR_DATA:
-          serviceImpl.analyseSensorData((com.chuntao.service.SensorResponse) request,
-              (io.grpc.stub.StreamObserver<com.chuntao.service.AnalyseResponse>) responseObserver);
-          break;
         default:
           throw new AssertionError();
       }
@@ -318,6 +303,9 @@ public final class SensorGrpc {
     public io.grpc.stub.StreamObserver<Req> invoke(
         io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
+        case METHODID_ANALYSE_SENSOR_DATA:
+          return (io.grpc.stub.StreamObserver<Req>) serviceImpl.analyseSensorData(
+              (io.grpc.stub.StreamObserver<com.chuntao.service.AnalyseResponse>) responseObserver);
         default:
           throw new AssertionError();
       }
@@ -335,7 +323,7 @@ public final class SensorGrpc {
                 service, METHODID_GET_SENSOR_DATA)))
         .addMethod(
           getAnalyseSensorDataMethod(),
-          io.grpc.stub.ServerCalls.asyncServerStreamingCall(
+          io.grpc.stub.ServerCalls.asyncClientStreamingCall(
             new MethodHandlers<
               com.chuntao.service.SensorResponse,
               com.chuntao.service.AnalyseResponse>(
@@ -349,7 +337,7 @@ public final class SensorGrpc {
 
     @java.lang.Override
     public com.google.protobuf.Descriptors.FileDescriptor getFileDescriptor() {
-      return com.chuntao.service.SensorProto.getDescriptor();
+      return com.chuntao.service.SensorService.getDescriptor();
     }
 
     @java.lang.Override

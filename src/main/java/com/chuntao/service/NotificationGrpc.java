@@ -146,7 +146,7 @@ public final class NotificationGrpc {
      * Server-side streaming RPC for receiving notifications based on HVAC response
      * </pre>
      */
-    default void hVACNotifications(com.chuntao.service.HVACResponse request,
+    default void hvacNotifications(com.chuntao.service.HVACResponse request,
         io.grpc.stub.StreamObserver<com.chuntao.service.HVACMessage> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getHVACNotificationsMethod(), responseObserver);
     }
@@ -201,7 +201,7 @@ public final class NotificationGrpc {
      * Server-side streaming RPC for receiving notifications based on HVAC response
      * </pre>
      */
-    public void hVACNotifications(com.chuntao.service.HVACResponse request,
+    public void hvacNotifications(com.chuntao.service.HVACResponse request,
         io.grpc.stub.StreamObserver<com.chuntao.service.HVACMessage> responseObserver) {
       io.grpc.stub.ClientCalls.asyncServerStreamingCall(
           getChannel().newCall(getHVACNotificationsMethod(), getCallOptions()), request, responseObserver);
@@ -243,7 +243,7 @@ public final class NotificationGrpc {
      * Server-side streaming RPC for receiving notifications based on HVAC response
      * </pre>
      */
-    public java.util.Iterator<com.chuntao.service.HVACMessage> hVACNotifications(
+    public java.util.Iterator<com.chuntao.service.HVACMessage> hvacNotifications(
         com.chuntao.service.HVACResponse request) {
       return io.grpc.stub.ClientCalls.blockingServerStreamingCall(
           getChannel(), getHVACNotificationsMethod(), getCallOptions(), request);
@@ -295,7 +295,7 @@ public final class NotificationGrpc {
               (io.grpc.stub.StreamObserver<com.chuntao.service.SensorMessage>) responseObserver);
           break;
         case METHODID_HVACNOTIFICATIONS:
-          serviceImpl.hVACNotifications((com.chuntao.service.HVACResponse) request,
+          serviceImpl.hvacNotifications((com.chuntao.service.HVACResponse) request,
               (io.grpc.stub.StreamObserver<com.chuntao.service.HVACMessage>) responseObserver);
           break;
         default:
@@ -339,7 +339,7 @@ public final class NotificationGrpc {
 
     @java.lang.Override
     public com.google.protobuf.Descriptors.FileDescriptor getFileDescriptor() {
-      return com.chuntao.service.NotificationProto.getDescriptor();
+      return com.chuntao.service.NotificationService.getDescriptor();
     }
 
     @java.lang.Override
