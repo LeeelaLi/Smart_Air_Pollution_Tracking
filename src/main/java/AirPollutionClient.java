@@ -10,14 +10,19 @@ import java.util.concurrent.TimeUnit;
 public class AirPollutionClient {
     private final ManagedChannel sensorChannel;
     private final SensorGrpc.SensorStub sensorStub;
+    private final HVACGrpc.HVACStub hvacStub;
     private final NotificationGrpc.NotificationStub notificationStub;
     private static int pollution_level;
+    private static HVACCommand.Action action;
+    private static String status;
+    private static boolean turn_on;
 
     public AirPollutionClient(String host, int port) {
         this.sensorChannel = ManagedChannelBuilder.forAddress(host, port)
                 .usePlaintext()
                 .build();
         this.sensorStub = SensorGrpc.newStub(sensorChannel);
+        this.hvacStub = HVACGrpc.newStub(sensorChannel);
         this.notificationStub = NotificationGrpc.newStub(sensorChannel);
     }
 
@@ -88,20 +93,58 @@ public class AirPollutionClient {
         requestObserver.onCompleted();
     }
 
-    public void HVACSwitch() {
+    public void HVACControl() {
+        StreamObserver<HVACCommand> hvacCommandObserver = new StreamObserver<>() {
+            @Override
+            public void onNext(HVACCommand hvacCommand) {
+//                HVACCommand.Builder hvacCommand1 = HVACCommand.newBuilder();
+//                if (status.equalsIgnoreCase("ON")) {
+//                    action = HVACCommand.Action.START;
+//                    hvacCommand1.setAction(action);
+//                } else {
+//                    action = HVACCommand.Action.START;
+//                    hvacCommand1.setAction(action);
+//                }
+                System.out.println("\nHVAC command: " +
+                        "\n1. HVAC is now: " + hvacCommand.getAction());
+                action = hvacCommand.getAction();
+            }
 
-        HVACGrpc.HVACStub hvacStub = HVACGrpc.newStub(sensorChannel);
+            @Override
+            public void onError(Throwable throwable) {
+                System.err.println("Error in HVAC command: " + throwable.getMessage());
+            }
+
+            @Override
+            public void onCompleted() {
+                System.out.println("HVAC command completed");
+            }
+        };
+        StreamObserver<HVACRequest> hvacRequestObserver = hvacStub.hvacControl(hvacCommandObserver);
+
+        hvacRequestObserver.onNext(HVACRequest.newBuilder().setPollutionLevel(pollution_level).build());
+        hvacRequestObserver.onCompleted();
+    }
+
+    public void HVACSwitch(int turn_on) {
 
         // Create a response observer for the server streaming
         StreamObserver<HVACResponse> hvacResponseObserver = new StreamObserver<>() {
             @Override
             public void onNext(HVACResponse hvacResponse) {
+                HVACResponse.Builder  hvacResponse1 = HVACResponse.newBuilder();
                 Date responseTime = new Date(hvacResponse.getTimestamp().getSeconds() * 1000);
-                System.out.println("\nHVAC response: " +
-                        "\n1. HVAC is now: " + hvacResponse.getAction() +
+                if (turn_on == 1) {
+                    hvacResponse1.setStatus("ON").build();
+                } else {
+                    hvacResponse1.setStatus("OFF").build();
+                }
+                System.out.println("\nHVAC switch: " +
+                        "\n1. HVAC is now: " + hvacResponse1.getStatus() +
                         "\n2. Pollution level: " + hvacResponse.getPollutionLevel() +
                         "\n3. Time: " + responseTime);
                 pollution_level = hvacResponse.getPollutionLevel();
+                status = hvacResponse1.getStatus();
             }
 
             @Override
@@ -111,23 +154,23 @@ public class AirPollutionClient {
 
             @Override
             public void onCompleted() {
-                System.out.println("Server stream completed");
+                System.out.println("HVAC switch completed");
             }
         };
 
         // Create a request observer for the client streaming
-        StreamObserver<HVACRequest> hvacRequestObserver = hvacStub.hvacSwitch(hvacResponseObserver);
+        StreamObserver<HVACCommand> hvacCommandObserver = hvacStub.hvacSwitch(hvacResponseObserver);
         try {
-            HVACRequest hvacRequest = HVACRequest.newBuilder()
-                    .setPollutionLevel(pollution_level)
+            HVACCommand hvacCommand = HVACCommand.newBuilder()
+                    .setAction(action)
                     .build();
 
-            System.out.println("HVAC request:");
-            hvacRequestObserver.onNext(hvacRequest);
+            System.out.println("HVAC switch request:");
+            hvacCommandObserver.onNext(hvacCommand);
         }catch (Exception e) {
             System.err.println("Error while sending messages: " + e.getMessage());
         }
-        hvacRequestObserver.onCompleted();
+        hvacResponseObserver.onCompleted();
     }
 
     public void sensorNotifications() {
@@ -156,9 +199,17 @@ public class AirPollutionClient {
         StreamObserver<HVACMessage> hvacObserver = new StreamObserver<>() {
             @Override
             public void onNext(HVACMessage hvacMessage) {
+                HVACMessage.Builder hvacMessage1 = HVACMessage.newBuilder();
+                if (status.equalsIgnoreCase("ON")) {
+                    turn_on = true;
+                    hvacMessage1.setMessage(status).setStatus(turn_on);
+                } else {
+                    turn_on = false;
+                    hvacMessage1.setMessage(status).setStatus(turn_on);
+                }
                 System.out.println("\nHVAC notifications: " +
-                        "\n1. HVAC status: " + hvacMessage.getStatus() +
-                        "\n2. Message: " + hvacMessage.getMessage());
+                        "\n1. HVAC status: " + hvacMessage1.getStatus() +
+                        "\n2. Message: " + hvacMessage1.getMessage());
             }
 
             @Override
@@ -197,9 +248,17 @@ public class AirPollutionClient {
                     if (keyboard.hasNext()) {
                         String input = keyboard.next();
                         if (input.equalsIgnoreCase("yes")) {
-                            airPollutionClient.HVACSwitch();
-                            airPollutionClient.sensorNotifications();
-                            airPollutionClient.hvacNotifications();
+                            airPollutionClient.HVACControl();
+                            System.out.println("Do you want to turn on(1)/turn off(2)?");
+                            int turn_on = keyboard.nextInt();
+                            if(turn_on == 1) {
+                                airPollutionClient.HVACSwitch(turn_on);
+//                                airPollutionClient.sensorNotifications();
+                                airPollutionClient.hvacNotifications();
+                            }else {
+                                airPollutionClient.HVACSwitch(turn_on);
+                                airPollutionClient.hvacNotifications();
+                            }
                         }
                     }
                 } else {

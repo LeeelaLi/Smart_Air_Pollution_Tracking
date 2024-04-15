@@ -13,7 +13,8 @@ public class AirPollutionServer {
     // Sensor service implement
     private Server server;
     private static int pollution_level;
-    private static HVACResponse.Action action;
+    private static HVACCommand.Action action;
+    private static String status;
 
     public void start(int port) throws IOException {
         server = ServerBuilder.forPort(port)
@@ -129,9 +130,10 @@ public class AirPollutionServer {
                     if (pollutionItem < 2) {
                         message.append("Low pollution");
                     } else if (pollutionItem == 2) {
-                        message.append("Moderate pollution");
+                        message.append("Moderate pollution, recommend to turn on the HVAC.");
                     } else {
-                        message.append("High pollution");
+                        message.append("High pollution, HVAC is automatically on.");
+                        status = "ON";
                     }
                     // Create AnalyseResponse
                     AnalyseResponse analyseResponse = AnalyseResponse.newBuilder()
@@ -153,23 +155,57 @@ public class AirPollutionServer {
 
     private static class HVACImpl extends HVACGrpc.HVACImplBase {
 
-        public StreamObserver<HVACRequest> hvacSwitch(StreamObserver<HVACResponse> responseObserver) {
-            return new StreamObserver<>() {
+        public StreamObserver<HVACRequest> hvacControl(StreamObserver<HVACCommand> hvacCommandObserver) {
+            return new StreamObserver<HVACRequest>() {
                 @Override
                 public void onNext(HVACRequest hvacRequest) {
-                    System.out.println("HVAC request: " + pollution_level);
-
+//                    System.out.println("HVAC request: " + pollution_level);
+//                    if (status.equalsIgnoreCase("ON")) {
+//                        action = HVACCommand.Action.START;
+//                    }
                     if (pollution_level > 2) {
-                        action = HVACResponse.Action.START;
+                        action = HVACCommand.Action.START;
                     } else {
-                        action = HVACResponse.Action.STOP;
+                        action = HVACCommand.Action.STOP;
+                    }
+
+                    HVACCommand hvacCommand = HVACCommand.newBuilder()
+                                    .setAction(action)
+                                    .build();
+                    action = hvacCommand.getAction();
+                    hvacCommandObserver.onNext(hvacCommand);
+                }
+
+                @Override
+                public void onError(Throwable throwable) {
+                    System.err.println("Error in HVAC switch: " + throwable.getMessage());
+                }
+
+                @Override
+                public void onCompleted() {
+                    hvacCommandObserver.onCompleted();
+                }
+            };
+        }
+
+        public StreamObserver<HVACCommand> hvacSwitch(StreamObserver<HVACResponse> responseObserver) {
+            return new StreamObserver<>() {
+
+                @Override
+                public void onNext(HVACCommand hvacCommand) {
+                    System.out.println("HVAC command: " + hvacCommand.getAction());
+                    if (hvacCommand.getAction().equals(HVACCommand.Action.START)) {
+                        status = "ON";
+                    } else {
+                        status = "OFF";
                     }
 
                     HVACResponse hvacResponse = HVACResponse.newBuilder()
-                            .setAction(action)
+                            .setStatus(status)
                             .setPollutionLevel(pollution_level)
                             .setTimestamp(timestampNow())
                             .build();
+                    status = hvacResponse.getStatus();
                     responseObserver.onNext(hvacResponse);
                 }
 
@@ -178,15 +214,7 @@ public class AirPollutionServer {
                 }
 
                 public void onCompleted() {
-                    System.out.println("HVAC client stream completed");
-                    HVACResponse hvacResponse = HVACResponse.newBuilder()
-                            .setAction(action)
-                            .setPollutionLevel(pollution_level)
-                            .setTimestamp(timestampNow())
-                            .build();
-                    action = hvacResponse.getAction();
-
-                    responseObserver.onNext(hvacResponse);
+                    System.out.println("HVAC switch completed");
                     responseObserver.onCompleted();
                 }
             };
@@ -202,13 +230,14 @@ public class AirPollutionServer {
                         String message;
                         if (pollution_level < 2) {
                             air_quality = "Great";
-                            message = "The air is healthy, HVAC is off";
+                            message = "The air is healthy";
                         } else if (pollution_level == 2) {
                             air_quality = "Moderate";
-                            message = "The air is fine. HVAC is off now, you could turn on the HVAC.";
+                            message = "The air is fine.";
                         } else {
                             air_quality = "Bad";
                             message = "The air is harmed, HVAC is automatically on.";
+                            status = "ON";
                         }
                         SensorMessage sensorMessage = SensorMessage.newBuilder()
                                 .setAirQuality(air_quality)
@@ -232,17 +261,18 @@ public class AirPollutionServer {
             Runnable streamingTask = () -> {
                 try {
                     while (!Thread.currentThread().isInterrupted()) {
+                        boolean turn_on;
                         String message;
-                        boolean status;
-                        if (action.equals(HVACResponse.Action.START)) {
+
+                        if (status.equals("ON")) {
                             message = "HVAC is on.";
-                            status = true;
+                            turn_on = true;
                         } else {
                             message = "HVAC is off.";
-                            status = false;
+                            turn_on = false;
                         }
                         HVACMessage hvacMessage = HVACMessage.newBuilder()
-                                .setStatus(status)
+                                .setStatus(turn_on)
                                 .setMessage(message)
                                 .build();
 
