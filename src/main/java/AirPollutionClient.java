@@ -130,18 +130,6 @@ public class AirPollutionClient {
                     status = "ON";
                     hvacResponse1.setStatus(status).build();
                 } else {
-//                    if (hvacResponse.getPollutionLevel() > 2) {
-//                        System.out.println("The air pollution is high, are you sure to turn off(1 for on, 2 for off)?");
-//                        Scanner keyboard = new Scanner(System.in);
-//                        int confirm = keyboard.nextInt();
-//                        if (confirm == 1) {
-//                            status = "OFF";
-//                        } else {
-//                            status = "ON";
-//                        }
-//                    } else {
-//                        status = "OFF";
-//                    }
                     status = "OFF";
                     hvacResponse1.setStatus(status).build();
                 }
@@ -258,7 +246,6 @@ public class AirPollutionClient {
                             int turn_on = keyboard.nextInt();
                             if(turn_on == 1) {
                                 airPollutionClient.HVACSwitch(turn_on);
-//                                airPollutionClient.sensorNotifications();
                                 airPollutionClient.hvacNotifications();
                             }else {
                                 airPollutionClient.HVACSwitch(turn_on);
