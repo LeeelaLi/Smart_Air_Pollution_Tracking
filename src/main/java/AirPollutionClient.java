@@ -97,16 +97,8 @@ public class AirPollutionClient {
         StreamObserver<HVACCommand> hvacCommandObserver = new StreamObserver<>() {
             @Override
             public void onNext(HVACCommand hvacCommand) {
-//                HVACCommand.Builder hvacCommand1 = HVACCommand.newBuilder();
-//                if (status.equalsIgnoreCase("ON")) {
-//                    action = HVACCommand.Action.START;
-//                    hvacCommand1.setAction(action);
-//                } else {
-//                    action = HVACCommand.Action.START;
-//                    hvacCommand1.setAction(action);
-//                }
                 System.out.println("\nHVAC command: " +
-                        "\n1. HVAC is now: " + hvacCommand.getAction());
+                        "\n1. HVAC is: " + hvacCommand.getAction());
                 action = hvacCommand.getAction();
             }
 
@@ -135,16 +127,17 @@ public class AirPollutionClient {
                 HVACResponse.Builder  hvacResponse1 = HVACResponse.newBuilder();
                 Date responseTime = new Date(hvacResponse.getTimestamp().getSeconds() * 1000);
                 if (turn_on == 1) {
-                    hvacResponse1.setStatus("ON").build();
+                    status = "ON";
+                    hvacResponse1.setStatus(status).build();
                 } else {
-                    hvacResponse1.setStatus("OFF").build();
+                    status = "OFF";
+                    hvacResponse1.setStatus(status).build();
                 }
                 System.out.println("\nHVAC switch: " +
-                        "\n1. HVAC is now: " + hvacResponse1.getStatus() +
+                        "\n1. HVAC is changed to: " + hvacResponse1.getStatus() +
                         "\n2. Pollution level: " + hvacResponse.getPollutionLevel() +
                         "\n3. Time: " + responseTime);
                 pollution_level = hvacResponse.getPollutionLevel();
-                status = hvacResponse1.getStatus();
             }
 
             @Override
@@ -214,7 +207,7 @@ public class AirPollutionClient {
 
             @Override
             public void onError(Throwable throwable) {
-                System.out.println("Error in HVAC server streaming: " + throwable.getMessage());
+                System.out.println("Error in HVAC notification streaming: " + throwable.getMessage());
             }
 
             @Override

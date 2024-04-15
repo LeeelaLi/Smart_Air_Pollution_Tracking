@@ -159,14 +159,12 @@ public class AirPollutionServer {
             return new StreamObserver<HVACRequest>() {
                 @Override
                 public void onNext(HVACRequest hvacRequest) {
-//                    System.out.println("HVAC request: " + pollution_level);
-//                    if (status.equalsIgnoreCase("ON")) {
-//                        action = HVACCommand.Action.START;
-//                    }
                     if (pollution_level > 2) {
                         action = HVACCommand.Action.START;
+                        status = "ON";
                     } else {
                         action = HVACCommand.Action.STOP;
+                        status = "OFF";
                     }
 
                     HVACCommand hvacCommand = HVACCommand.newBuilder()
@@ -205,7 +203,6 @@ public class AirPollutionServer {
                             .setPollutionLevel(pollution_level)
                             .setTimestamp(timestampNow())
                             .build();
-                    status = hvacResponse.getStatus();
                     responseObserver.onNext(hvacResponse);
                 }
 
