@@ -22,16 +22,21 @@ public class SensorClient {
         SensorRequest request = SensorRequest.newBuilder()
                 .setSensorId(sensor_id)
                 .build();
-        sensorStub.getSensorData(request, new StreamObserver<SensorResponse>() {
+        sensorStub.getSensorData(request, new StreamObserver<>() {
 
             @Override
             public void onNext(SensorResponse sensorResponse) {
-                System.out.println("Sensor response from " + sensorResponse.getLocation() + ":" +
-                        "\n1. PM2.5 - " + sensorResponse.getPM25() + "μg/m3" +
-                        "\n2. Temperature - " + sensorResponse.getTemperature() + "°C" +
-                        "\n3. VOC - " + sensorResponse.getVOC() + "mg/m3" +
-                        "\n4. Humidity - " + sensorResponse.getHumidity() + "%" +
-                        "\n5. CO - " + sensorResponse.getCO() + "ppm");
+                String getPM25 = String.format("%.2f", sensorResponse.getPM25());
+                String getTemp = String.format("%.2f", sensorResponse.getTemperature());
+                String getVOC = String.format("%.2f", sensorResponse.getVOC());
+                String getHumi = String.format("%.2f", sensorResponse.getHumidity());
+                String getCO = String.format("%.2f", sensorResponse.getCO());
+                System.out.println("Sensor response from「" + sensorResponse.getLocation() + "」:" +
+                        "\n1. PM2.5(μg/m3): " + getPM25 +
+                        "\n2. Temperature(°C): " + getTemp +
+                        "\n3. VOC(mg/m3): " + getVOC +
+                        "\n4. Humidity(%): " + getHumi +
+                        "\n5. CO(ppm): " + getCO);
             }
 
             @Override
@@ -41,22 +46,21 @@ public class SensorClient {
 
             @Override
             public void onCompleted() {
-                System.out.println("Sensor request completed");
-//                AnalyseSensorData(sensor_id);
+                System.out.println("Sensor response completed");
             }
         });
     }
 
     public void AnalyseSensorData(int sensor_id) {
 
-        StreamObserver<SensorResponse> requestObserver = sensorStub.analyseSensorData(new StreamObserver<AnalyseResponse>() {
+        StreamObserver<SensorResponse> requestObserver = sensorStub.analyseSensorData(new StreamObserver<>() {
             @Override
             public void onNext(AnalyseResponse analyseResponse) {
                 Date updatedTime = new Date(analyseResponse.getTimestamp().getSeconds() * 1000);
 
                 // Process each AnalyseResponse received
                 System.out.println("\nAnalyse Response: ");
-                System.out.println("1. Location: " + analyseResponse.getLocation());
+                System.out.println("1. Location: 「" + analyseResponse.getLocation() + "」");
                 System.out.println("2. Polluted item(s): " + analyseResponse.getAnalyse());
                 System.out.println("3. Pollution Level: " + analyseResponse.getPollutionLevel());
                 System.out.println("4. Analyse: " + analyseResponse.getMessage());
@@ -78,11 +82,11 @@ public class SensorClient {
         try {
             SensorResponse.Builder sensorResponse = SensorResponse.newBuilder();
             if (sensor_id == 1) {
-                sensorResponse.setLocation("HOME").build();
+                sensorResponse.setLocation("Bedroom").build();
             } else if (sensor_id == 2) {
-                sensorResponse.setLocation("GARDEN").build();
+                sensorResponse.setLocation("Living room").build();
             } else {
-                sensorResponse.setLocation("CAR").build();
+                sensorResponse.setLocation("Karaoke room").build();
             }
             requestObserver.onNext(sensorResponse.build());
             Thread.sleep(5000);
@@ -99,10 +103,11 @@ public class SensorClient {
     public static void main(String[] args) throws InterruptedException {
         String host = "localhost";
         int port = 9090;
-        System.out.println("Select the sensor id you want to review:" +
-                "\n1. Sensor 1 - Home" +
-                "\n2. Sensor 2 - Garden" +
-                "\n3. Sensor 3 - Car");
+        System.out.println("""
+                Select the sensor id you want to review:
+                1. Sensor 1 - Bedroom
+                2. Sensor 2 - Living room
+                3. Sensor 3 - Karaoke room""");
         Scanner keyboard = new Scanner(System.in);
 
         SensorClient sensorClient = new SensorClient(host, port);

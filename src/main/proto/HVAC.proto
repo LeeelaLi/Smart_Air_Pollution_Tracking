@@ -16,6 +16,8 @@ service HVAC {
 
 message HVACRequest {
   int32 pollution_level = 1;
+  float temperature = 2;
+  float humidity = 3;
 }
 
 message HVACResponse {
@@ -24,6 +26,6 @@ message HVACResponse {
     STOP = 1;
   }
   Action action = 1;
-  int32 pollution_level = 2;
+  string message = 2;
   google.protobuf.Timestamp timestamp = 3;
 }

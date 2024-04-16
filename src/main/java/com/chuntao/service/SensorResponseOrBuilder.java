@@ -22,7 +22,7 @@ public interface SensorResponseOrBuilder extends
 
   /**
    * <pre>
-   * PM2.5 density in μg/m3 of the air
+   * PM2.5 density in μg/m3
    * </pre>
    *
    * <code>float PM25 = 2;</code>
@@ -32,7 +32,7 @@ public interface SensorResponseOrBuilder extends
 
   /**
    * <pre>
-   * Air temperature in Celsius
+   * Temperature in Celsius
    * </pre>
    *
    * <code>float temperature = 3;</code>

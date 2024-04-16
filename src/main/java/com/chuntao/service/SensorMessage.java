@@ -28,7 +28,7 @@ private static final long serialVersionUID = 0L;
   private SensorMessage() {
     location_ = "";
     airQuality_ = "";
-    message_ = "";
+    advice_ = "";
   }
 
   public static final com.google.protobuf.Descriptors.Descriptor
@@ -123,39 +123,39 @@ private static final long serialVersionUID = 0L;
     }
   }
 
-  public static final int MESSAGE_FIELD_NUMBER = 3;
+  public static final int ADVICE_FIELD_NUMBER = 3;
   @SuppressWarnings("serial")
-  private volatile java.lang.Object message_ = "";
+  private volatile java.lang.Object advice_ = "";
   /**
-   * <code>string message = 3;</code>
-   * @return The message.
+   * <code>string advice = 3;</code>
+   * @return The advice.
    */
   @java.lang.Override
-  public java.lang.String getMessage() {
-    java.lang.Object ref = message_;
+  public java.lang.String getAdvice() {
+    java.lang.Object ref = advice_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
-      message_ = s;
+      advice_ = s;
       return s;
     }
   }
   /**
-   * <code>string message = 3;</code>
-   * @return The bytes for message.
+   * <code>string advice = 3;</code>
+   * @return The bytes for advice.
    */
   @java.lang.Override
   public com.google.protobuf.ByteString
-      getMessageBytes() {
-    java.lang.Object ref = message_;
+      getAdviceBytes() {
+    java.lang.Object ref = advice_;
     if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
-      message_ = b;
+      advice_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
@@ -208,8 +208,8 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(airQuality_)) {
       com.google.protobuf.GeneratedMessage.writeString(output, 2, airQuality_);
     }
-    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(message_)) {
-      com.google.protobuf.GeneratedMessage.writeString(output, 3, message_);
+    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(advice_)) {
+      com.google.protobuf.GeneratedMessage.writeString(output, 3, advice_);
     }
     if (((bitField0_ & 0x00000001) != 0)) {
       output.writeMessage(4, getTimestamp());
@@ -229,8 +229,8 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(airQuality_)) {
       size += com.google.protobuf.GeneratedMessage.computeStringSize(2, airQuality_);
     }
-    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(message_)) {
-      size += com.google.protobuf.GeneratedMessage.computeStringSize(3, message_);
+    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(advice_)) {
+      size += com.google.protobuf.GeneratedMessage.computeStringSize(3, advice_);
     }
     if (((bitField0_ & 0x00000001) != 0)) {
       size += com.google.protobuf.CodedOutputStream
@@ -255,8 +255,8 @@ private static final long serialVersionUID = 0L;
         .equals(other.getLocation())) return false;
     if (!getAirQuality()
         .equals(other.getAirQuality())) return false;
-    if (!getMessage()
-        .equals(other.getMessage())) return false;
+    if (!getAdvice()
+        .equals(other.getAdvice())) return false;
     if (hasTimestamp() != other.hasTimestamp()) return false;
     if (hasTimestamp()) {
       if (!getTimestamp()
@@ -277,8 +277,8 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getLocation().hashCode();
     hash = (37 * hash) + AIR_QUALITY_FIELD_NUMBER;
     hash = (53 * hash) + getAirQuality().hashCode();
-    hash = (37 * hash) + MESSAGE_FIELD_NUMBER;
-    hash = (53 * hash) + getMessage().hashCode();
+    hash = (37 * hash) + ADVICE_FIELD_NUMBER;
+    hash = (53 * hash) + getAdvice().hashCode();
     if (hasTimestamp()) {
       hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
       hash = (53 * hash) + getTimestamp().hashCode();
@@ -422,7 +422,7 @@ private static final long serialVersionUID = 0L;
       bitField0_ = 0;
       location_ = "";
       airQuality_ = "";
-      message_ = "";
+      advice_ = "";
       timestamp_ = null;
       if (timestampBuilder_ != null) {
         timestampBuilder_.dispose();
@@ -468,7 +468,7 @@ private static final long serialVersionUID = 0L;
         result.airQuality_ = airQuality_;
       }
       if (((from_bitField0_ & 0x00000004) != 0)) {
-        result.message_ = message_;
+        result.advice_ = advice_;
       }
       int to_bitField0_ = 0;
       if (((from_bitField0_ & 0x00000008) != 0)) {
@@ -502,8 +502,8 @@ private static final long serialVersionUID = 0L;
         bitField0_ |= 0x00000002;
         onChanged();
       }
-      if (!other.getMessage().isEmpty()) {
-        message_ = other.message_;
+      if (!other.getAdvice().isEmpty()) {
+        advice_ = other.advice_;
         bitField0_ |= 0x00000004;
         onChanged();
       }
@@ -547,7 +547,7 @@ private static final long serialVersionUID = 0L;
               break;
             } // case 18
             case 26: {
-              message_ = input.readStringRequireUtf8();
+              advice_ = input.readStringRequireUtf8();
               bitField0_ |= 0x00000004;
               break;
             } // case 26
@@ -719,73 +719,73 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private java.lang.Object message_ = "";
+    private java.lang.Object advice_ = "";
     /**
-     * <code>string message = 3;</code>
-     * @return The message.
+     * <code>string advice = 3;</code>
+     * @return The advice.
      */
-    public java.lang.String getMessage() {
-      java.lang.Object ref = message_;
+    public java.lang.String getAdvice() {
+      java.lang.Object ref = advice_;
       if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        message_ = s;
+        advice_ = s;
         return s;
       } else {
         return (java.lang.String) ref;
       }
     }
     /**
-     * <code>string message = 3;</code>
-     * @return The bytes for message.
+     * <code>string advice = 3;</code>
+     * @return The bytes for advice.
      */
     public com.google.protobuf.ByteString
-        getMessageBytes() {
-      java.lang.Object ref = message_;
+        getAdviceBytes() {
+      java.lang.Object ref = advice_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        message_ = b;
+        advice_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
     /**
-     * <code>string message = 3;</code>
-     * @param value The message to set.
+     * <code>string advice = 3;</code>
+     * @param value The advice to set.
      * @return This builder for chaining.
      */
-    public Builder setMessage(
+    public Builder setAdvice(
         java.lang.String value) {
       if (value == null) { throw new NullPointerException(); }
-      message_ = value;
+      advice_ = value;
       bitField0_ |= 0x00000004;
       onChanged();
       return this;
     }
     /**
-     * <code>string message = 3;</code>
+     * <code>string advice = 3;</code>
      * @return This builder for chaining.
      */
-    public Builder clearMessage() {
-      message_ = getDefaultInstance().getMessage();
+    public Builder clearAdvice() {
+      advice_ = getDefaultInstance().getAdvice();
       bitField0_ = (bitField0_ & ~0x00000004);
       onChanged();
       return this;
     }
     /**
-     * <code>string message = 3;</code>
-     * @param value The bytes for message to set.
+     * <code>string advice = 3;</code>
+     * @param value The bytes for advice to set.
      * @return This builder for chaining.
      */
-    public Builder setMessageBytes(
+    public Builder setAdviceBytes(
         com.google.protobuf.ByteString value) {
       if (value == null) { throw new NullPointerException(); }
       checkByteStringIsUtf8(value);
-      message_ = value;
+      advice_ = value;
       bitField0_ |= 0x00000004;
       onChanged();
       return this;

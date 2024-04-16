@@ -6,6 +6,7 @@ import io.grpc.stub.StreamObserver;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class SensorServer {
@@ -47,16 +48,23 @@ public class SensorServer {
         @Override
         public void getSensorData(SensorRequest request, StreamObserver<SensorResponse> responseObserver) {
             int sensor_id = request.getSensorId();
+            Random random = new Random();
+            float pm25 = random.nextFloat() * 50;
+            float temp = random.nextFloat() * (40 - (-20)) + (-20); // set temperature between -20 and 40
+            float VOC = random.nextFloat() * 3;
+            float humidity = random.nextFloat() * 70;
+            float CO = random.nextFloat() * 100;
             SensorResponse.Builder response = SensorResponse.newBuilder();
+
             switch (sensor_id) {
                 case 1:
-                    response.setLocation("Home").setPM25(19).setTemperature(29).setVOC(10.3F).setHumidity(36).setCO(18);
+                    response.setLocation("Bedroom").setPM25(pm25).setTemperature(temp).setVOC(VOC).setHumidity(humidity).setCO(CO);
                     break;
                 case 2:
-                    response.setLocation("Garden").setPM25(10).setTemperature(19).setVOC(0.1F).setHumidity(45).setCO(14);
+                    response.setLocation("Living room").setPM25(pm25).setTemperature(temp).setVOC(VOC).setHumidity(humidity).setCO(CO);
                     break;
                 case 3:
-                    response.setLocation("Car").setPM25(13).setTemperature(20).setVOC(0.6F).setHumidity(27).setCO(11);
+                    response.setLocation("Karaoke room").setPM25(pm25).setTemperature(temp).setVOC(VOC).setHumidity(humidity).setCO(CO);
                     break;
                 default:
                     response.setLocation("Unknown");
@@ -73,7 +81,7 @@ public class SensorServer {
 
         @Override
         public StreamObserver<SensorResponse> analyseSensorData(StreamObserver<AnalyseResponse> responseObserver) {
-            return new StreamObserver<SensorResponse>() {
+            return new StreamObserver<>() {
                 int pollution_level;
 
                 @Override
@@ -83,7 +91,7 @@ public class SensorServer {
 
                 @Override
                 public void onError(Throwable throwable) {
-                    throwable.printStackTrace();
+                    System.err.println("Error in analyse data: " + throwable.getMessage());
                 }
 
                 @Override
@@ -99,25 +107,25 @@ public class SensorServer {
 
                     StringBuilder analyse = new StringBuilder();
                     StringBuilder message = new StringBuilder();
-                    if (sumPM25 > 12) {
+                    if (sumPM25 > 25) {
                         pollutionItem++;
-                        analyse.append("\n· PM2.5 is over 12μg/m3.");
+                        analyse.append("\n· PM2.5 is over 25 μg/m3.");
                     }
-                    if (sumTemp < 18 || sumTemp > 22) {
+                    if (sumTemp < 22 || sumTemp > 30) {
                         pollutionItem++;
-                        analyse.append("\n· Temperature is exceed 18-22°C.");
+                        analyse.append("\n· Temperature is exceed 22-30 °C.");
                     }
                     if (sumVOC < 0 || sumVOC > 0.5) {
                         pollutionItem++;
-                        analyse.append("\n· VOC is exceed 0-0.5mg/m3.");
+                        analyse.append("\n· VOC is exceed 0-0.5 mg/m3.");
                     }
                     if (sumHumidity < 30 || sumHumidity > 50) {
                         pollutionItem++;
-                        analyse.append("\n· Humidity is exceed 30-50%.");
+                        analyse.append("\n· Humidity is exceed 30-50 %.");
                     }
-                    if (sumCO < 0 || sumCO > 15) {
+                    if (sumCO < 0 || sumCO > 50) {
                         pollutionItem++;
-                        analyse.append("\n· CO is exceed 0-15ppm.");
+                        analyse.append("\n· CO is exceed 50 ppm.");
                     }
 
                     if (pollutionItem < 2) {
@@ -146,6 +154,7 @@ public class SensorServer {
             };
         }
     }
+
     private static Timestamp timestampNow() {
         Instant now = Instant.now();
         return Timestamp.newBuilder()

@@ -22,8 +22,8 @@ message SensorRequest {
 
 message SensorResponse {
   string location = 1;
-  float PM25 = 2; // PM2.5 density in μg/m3 of the air
-  float temperature = 3; // Air temperature in Celsius
+  float PM25 = 2; // PM2.5 density in μg/m3
+  float temperature = 3; // Temperature in Celsius
   float VOC = 4; // VOC level in mg/m3
   float humidity = 5; // Humidity in Percentage
   float CO = 6; // CO in ppm

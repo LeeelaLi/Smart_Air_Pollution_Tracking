@@ -1,35 +1,39 @@
 import com.chuntao.service.*;
+import com.google.protobuf.Timestamp;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.concurrent.TimeUnit;
 
 public class NotifyServer extends NotificationGrpc.NotificationImplBase {
+    private static int pollutionLevel;
 
     public void sensorNotifications(AnalyseResponse analyseResponse, StreamObserver<SensorMessage> sensorObserver) {
         Runnable streamingTask = () -> {
             try {
                 while (!Thread.currentThread().isInterrupted()) {
-                    int pollutionLevel = analyseResponse.getPollutionLevel();
+                    pollutionLevel = 1;
                     String location = analyseResponse.getLocation();
                     String air_quality;
-                    String message;
+                    String advice;
                     if (pollutionLevel == 1) {
                         air_quality = "Great";
-                        message = "The air is healthy, HVAC is off";
+                        advice = "The air is healthy, HVAC is off";
                     } else if (pollutionLevel == 2) {
                         air_quality = "Moderate";
-                        message = "The air is fine. HVAC is off now, you could turn on the HVAC.";
+                        advice = "The air is fine. HVAC is off now, you could turn on the HVAC.";
                     } else {
                         air_quality = "Bad";
-                        message = "The air is harmed, HVAC is automatically on.";
+                        advice = "The air is harmed, HVAC is automatically on.";
                     }
                     SensorMessage sensorMessage = SensorMessage.newBuilder()
                             .setLocation(location)
                             .setAirQuality(air_quality)
-                            .setMessage(message)
+                            .setAdvice(advice)
+                            .setTimestamp(timestampNow())
                             .build();
                     sensorObserver.onNext(sensorMessage);
                     Thread.sleep(5000); // Stream every 5 seconds
@@ -52,7 +56,7 @@ public class NotifyServer extends NotificationGrpc.NotificationImplBase {
                    HVACResponse.Action action = hvacResponse.getAction();
                    String message;
                     boolean status;
-                    if (action.equals(HVACResponse.Action.START)) {
+                    if (pollutionLevel > 2) {
                         message = "HVAC is on.";
                         status = true;
                     } else {
@@ -62,6 +66,7 @@ public class NotifyServer extends NotificationGrpc.NotificationImplBase {
                     HVACMessage hvacMessage = HVACMessage.newBuilder()
                             .setStatus(status)
                             .setMessage(message)
+                            .setTimestamp(timestampNow())
                             .build();
 
                     hvacObserver.onNext(hvacMessage);
@@ -76,6 +81,14 @@ public class NotifyServer extends NotificationGrpc.NotificationImplBase {
 
         Thread streamingThread = new Thread(streamingTask);
         streamingThread.start();
+    }
+
+    private static Timestamp timestampNow() {
+        Instant now = Instant.now();
+        return Timestamp.newBuilder()
+                .setSeconds(now.getEpochSecond())
+                .setNanos(now.getNano())
+                .build();
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {

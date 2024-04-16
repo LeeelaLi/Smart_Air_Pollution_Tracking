@@ -20,10 +20,16 @@ public interface HVACResponseOrBuilder extends
   com.chuntao.service.HVACResponse.Action getAction();
 
   /**
-   * <code>int32 pollution_level = 2;</code>
-   * @return The pollutionLevel.
+   * <code>string message = 2;</code>
+   * @return The message.
    */
-  int getPollutionLevel();
+  java.lang.String getMessage();
+  /**
+   * <code>string message = 2;</code>
+   * @return The bytes for message.
+   */
+  com.google.protobuf.ByteString
+      getMessageBytes();
 
   /**
    * <code>.google.protobuf.Timestamp timestamp = 3;</code>

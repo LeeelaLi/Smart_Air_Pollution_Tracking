@@ -45,19 +45,19 @@ public final class NotificationService {
     java.lang.String[] descriptorData = {
       "\n\022Notification.proto\022\023com.chuntao.servic" +
       "e\032\037google/protobuf/timestamp.proto\032\014Sens" +
-      "or.proto\032\nHVAC.proto\"v\n\rSensorMessage\022\020\n" +
-      "\010location\030\001 \001(\t\022\023\n\013air_quality\030\002 \001(\t\022\017\n\007" +
-      "message\030\003 \001(\t\022-\n\ttimestamp\030\004 \001(\0132\032.googl" +
-      "e.protobuf.Timestamp\"]\n\013HVACMessage\022\016\n\006s" +
-      "tatus\030\001 \001(\010\022\017\n\007message\030\002 \001(\t\022-\n\ttimestam" +
-      "p\030\003 \001(\0132\032.google.protobuf.Timestamp2\301\001\n\014" +
-      "Notification\022[\n\023SensorNotifications\022\034.co" +
-      "m.chuntao.AnalyseResponse\032\".com.chuntao." +
-      "service.SensorMessage\"\0000\001\022T\n\021HVACNotific" +
-      "ations\022\031.com.chuntao.HVACResponse\032 .com." +
-      "chuntao.service.HVACMessage\"\0000\001B,\n\023com.c" +
-      "huntao.serviceB\023NotificationServiceP\001b\006p" +
-      "roto3"
+      "or.proto\032\nHVAC.proto\"u\n\rSensorMessage\022\020\n" +
+      "\010location\030\001 \001(\t\022\023\n\013air_quality\030\002 \001(\t\022\016\n\006" +
+      "advice\030\003 \001(\t\022-\n\ttimestamp\030\004 \001(\0132\032.google" +
+      ".protobuf.Timestamp\"]\n\013HVACMessage\022\016\n\006st" +
+      "atus\030\001 \001(\010\022\017\n\007message\030\002 \001(\t\022-\n\ttimestamp" +
+      "\030\003 \001(\0132\032.google.protobuf.Timestamp2\301\001\n\014N" +
+      "otification\022[\n\023SensorNotifications\022\034.com" +
+      ".chuntao.AnalyseResponse\032\".com.chuntao.s" +
+      "ervice.SensorMessage\"\0000\001\022T\n\021HVACNotifica" +
+      "tions\022\031.com.chuntao.HVACResponse\032 .com.c" +
+      "huntao.service.HVACMessage\"\0000\001B,\n\023com.ch" +
+      "untao.serviceB\023NotificationServiceP\001b\006pr" +
+      "oto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -71,7 +71,7 @@ public final class NotificationService {
     internal_static_com_chuntao_service_SensorMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_com_chuntao_service_SensorMessage_descriptor,
-        new java.lang.String[] { "Location", "AirQuality", "Message", "Timestamp", });
+        new java.lang.String[] { "Location", "AirQuality", "Advice", "Timestamp", });
     internal_static_com_chuntao_service_HVACMessage_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_com_chuntao_service_HVACMessage_fieldAccessorTable = new

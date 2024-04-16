@@ -44,15 +44,16 @@ public final class HVACService {
   static {
     java.lang.String[] descriptorData = {
       "\n\nHVAC.proto\022\013com.chuntao\032\037google/protob" +
-      "uf/timestamp.proto\"&\n\013HVACRequest\022\027\n\017pol" +
-      "lution_level\030\001 \001(\005\"\247\001\n\014HVACResponse\0220\n\006a" +
-      "ction\030\001 \001(\0162 .com.chuntao.HVACResponse.A" +
-      "ction\022\027\n\017pollution_level\030\002 \001(\005\022-\n\ttimest" +
-      "amp\030\003 \001(\0132\032.google.protobuf.Timestamp\"\035\n" +
-      "\006Action\022\t\n\005START\020\000\022\010\n\004STOP\020\0012O\n\004HVAC\022G\n\n" +
-      "HVACSwitch\022\030.com.chuntao.HVACRequest\032\031.c" +
-      "om.chuntao.HVACResponse\"\000(\0010\001B$\n\023com.chu" +
-      "ntao.serviceB\013HVACServiceP\001b\006proto3"
+      "uf/timestamp.proto\"M\n\013HVACRequest\022\027\n\017pol" +
+      "lution_level\030\001 \001(\005\022\023\n\013temperature\030\002 \001(\002\022" +
+      "\020\n\010humidity\030\003 \001(\002\"\237\001\n\014HVACResponse\0220\n\006ac" +
+      "tion\030\001 \001(\0162 .com.chuntao.HVACResponse.Ac" +
+      "tion\022\017\n\007message\030\002 \001(\t\022-\n\ttimestamp\030\003 \001(\013" +
+      "2\032.google.protobuf.Timestamp\"\035\n\006Action\022\t" +
+      "\n\005START\020\000\022\010\n\004STOP\020\0012O\n\004HVAC\022G\n\nHVACSwitc" +
+      "h\022\030.com.chuntao.HVACRequest\032\031.com.chunta" +
+      "o.HVACResponse\"\000(\0010\001B$\n\023com.chuntao.serv" +
+      "iceB\013HVACServiceP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -64,13 +65,13 @@ public final class HVACService {
     internal_static_com_chuntao_HVACRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_com_chuntao_HVACRequest_descriptor,
-        new java.lang.String[] { "PollutionLevel", });
+        new java.lang.String[] { "PollutionLevel", "Temperature", "Humidity", });
     internal_static_com_chuntao_HVACResponse_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_com_chuntao_HVACResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_com_chuntao_HVACResponse_descriptor,
-        new java.lang.String[] { "Action", "PollutionLevel", "Timestamp", });
+        new java.lang.String[] { "Action", "Message", "Timestamp", });
     descriptor.resolveAllFeaturesImmutable();
     com.google.protobuf.TimestampProto.getDescriptor();
   }

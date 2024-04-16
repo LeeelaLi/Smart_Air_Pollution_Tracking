@@ -39,20 +39,36 @@ public class HVACServer {
             StreamObserver<HVACRequest> requestObserver = new StreamObserver<HVACRequest>() {
                 HVACResponse.Action action;
                 int pollution_level;
+                float temperature;
+                float humidity;
+                String message;
                 @Override
                 public void onNext(HVACRequest hvacRequest) {
                     pollution_level = hvacRequest.getPollutionLevel();
+                    temperature = hvacRequest.getTemperature();
+                    humidity = hvacRequest.getHumidity();
                     System.out.println("HVAC request for pollution level: " + pollution_level);
 
                     if (pollution_level > 2) {
                         action = HVACResponse.Action.START;
+                        message = "Your pollution level is over 2" +
+                                "\n\tConsidering your air quality, HVAC is ON";
+                    } else if (temperature > 28 || temperature < 20) {
+                        action = HVACResponse.Action.START;
+                        message = "Your temperature is " + temperature +
+                                "\n\tConsidering your air quality, HVAC is ON";
+                    } else if (humidity > 50 || humidity < 30) {
+                        action = HVACResponse.Action.START;
+                        message = "Your humidity is " + humidity +
+                                "\n\tConsidering your air quality, HVAC is ON";
                     } else {
                         action = HVACResponse.Action.STOP;
+                        message = "Your air quality is good, HVAC is OFF";
                     }
 
                     HVACResponse hvacResponse = HVACResponse.newBuilder()
                             .setAction(action)
-                            .setPollutionLevel(pollution_level)
+                            .setMessage(message)
                             .setTimestamp(timestampNow())
                             .build();
                     responseObserver.onNext(hvacResponse);
@@ -66,7 +82,7 @@ public class HVACServer {
                     System.out.println("HVAC client stream completed");
                     responseObserver.onNext(HVACResponse.newBuilder()
                             .setAction(action)
-                            .setPollutionLevel(pollution_level)
+                            .setMessage(message)
                             .setTimestamp(timestampNow())
                             .build());
                     responseObserver.onCompleted();

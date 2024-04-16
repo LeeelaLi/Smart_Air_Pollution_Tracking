@@ -21,7 +21,7 @@ service Notification {
 message SensorMessage {
   string location = 1;
   string air_quality = 2;
-  string message = 3;
+  string advice = 3;
   google.protobuf.Timestamp timestamp = 4;
 }
 

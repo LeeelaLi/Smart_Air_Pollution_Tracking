@@ -33,16 +33,16 @@ public interface SensorMessageOrBuilder extends
       getAirQualityBytes();
 
   /**
-   * <code>string message = 3;</code>
-   * @return The message.
+   * <code>string advice = 3;</code>
+   * @return The advice.
    */
-  java.lang.String getMessage();
+  java.lang.String getAdvice();
   /**
-   * <code>string message = 3;</code>
-   * @return The bytes for message.
+   * <code>string advice = 3;</code>
+   * @return The bytes for advice.
    */
   com.google.protobuf.ByteString
-      getMessageBytes();
+      getAdviceBytes();
 
   /**
    * <code>.google.protobuf.Timestamp timestamp = 4;</code>

@@ -52,6 +52,28 @@ private static final long serialVersionUID = 0L;
     return pollutionLevel_;
   }
 
+  public static final int TEMPERATURE_FIELD_NUMBER = 2;
+  private float temperature_ = 0F;
+  /**
+   * <code>float temperature = 2;</code>
+   * @return The temperature.
+   */
+  @java.lang.Override
+  public float getTemperature() {
+    return temperature_;
+  }
+
+  public static final int HUMIDITY_FIELD_NUMBER = 3;
+  private float humidity_ = 0F;
+  /**
+   * <code>float humidity = 3;</code>
+   * @return The humidity.
+   */
+  @java.lang.Override
+  public float getHumidity() {
+    return humidity_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -69,6 +91,12 @@ private static final long serialVersionUID = 0L;
     if (pollutionLevel_ != 0) {
       output.writeInt32(1, pollutionLevel_);
     }
+    if (java.lang.Float.floatToRawIntBits(temperature_) != 0) {
+      output.writeFloat(2, temperature_);
+    }
+    if (java.lang.Float.floatToRawIntBits(humidity_) != 0) {
+      output.writeFloat(3, humidity_);
+    }
     getUnknownFields().writeTo(output);
   }
 
@@ -81,6 +109,14 @@ private static final long serialVersionUID = 0L;
     if (pollutionLevel_ != 0) {
       size += com.google.protobuf.CodedOutputStream
         .computeInt32Size(1, pollutionLevel_);
+    }
+    if (java.lang.Float.floatToRawIntBits(temperature_) != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeFloatSize(2, temperature_);
+    }
+    if (java.lang.Float.floatToRawIntBits(humidity_) != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeFloatSize(3, humidity_);
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -99,6 +135,12 @@ private static final long serialVersionUID = 0L;
 
     if (getPollutionLevel()
         != other.getPollutionLevel()) return false;
+    if (java.lang.Float.floatToIntBits(getTemperature())
+        != java.lang.Float.floatToIntBits(
+            other.getTemperature())) return false;
+    if (java.lang.Float.floatToIntBits(getHumidity())
+        != java.lang.Float.floatToIntBits(
+            other.getHumidity())) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -112,6 +154,12 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + POLLUTION_LEVEL_FIELD_NUMBER;
     hash = (53 * hash) + getPollutionLevel();
+    hash = (37 * hash) + TEMPERATURE_FIELD_NUMBER;
+    hash = (53 * hash) + java.lang.Float.floatToIntBits(
+        getTemperature());
+    hash = (37 * hash) + HUMIDITY_FIELD_NUMBER;
+    hash = (53 * hash) + java.lang.Float.floatToIntBits(
+        getHumidity());
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -244,6 +292,8 @@ private static final long serialVersionUID = 0L;
       super.clear();
       bitField0_ = 0;
       pollutionLevel_ = 0;
+      temperature_ = 0F;
+      humidity_ = 0F;
       return this;
     }
 
@@ -280,6 +330,12 @@ private static final long serialVersionUID = 0L;
       if (((from_bitField0_ & 0x00000001) != 0)) {
         result.pollutionLevel_ = pollutionLevel_;
       }
+      if (((from_bitField0_ & 0x00000002) != 0)) {
+        result.temperature_ = temperature_;
+      }
+      if (((from_bitField0_ & 0x00000004) != 0)) {
+        result.humidity_ = humidity_;
+      }
     }
 
     @java.lang.Override
@@ -296,6 +352,12 @@ private static final long serialVersionUID = 0L;
       if (other == com.chuntao.service.HVACRequest.getDefaultInstance()) return this;
       if (other.getPollutionLevel() != 0) {
         setPollutionLevel(other.getPollutionLevel());
+      }
+      if (other.getTemperature() != 0F) {
+        setTemperature(other.getTemperature());
+      }
+      if (other.getHumidity() != 0F) {
+        setHumidity(other.getHumidity());
       }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
@@ -328,6 +390,16 @@ private static final long serialVersionUID = 0L;
               bitField0_ |= 0x00000001;
               break;
             } // case 8
+            case 21: {
+              temperature_ = input.readFloat();
+              bitField0_ |= 0x00000002;
+              break;
+            } // case 21
+            case 29: {
+              humidity_ = input.readFloat();
+              bitField0_ |= 0x00000004;
+              break;
+            } // case 29
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -373,6 +445,70 @@ private static final long serialVersionUID = 0L;
     public Builder clearPollutionLevel() {
       bitField0_ = (bitField0_ & ~0x00000001);
       pollutionLevel_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private float temperature_ ;
+    /**
+     * <code>float temperature = 2;</code>
+     * @return The temperature.
+     */
+    @java.lang.Override
+    public float getTemperature() {
+      return temperature_;
+    }
+    /**
+     * <code>float temperature = 2;</code>
+     * @param value The temperature to set.
+     * @return This builder for chaining.
+     */
+    public Builder setTemperature(float value) {
+
+      temperature_ = value;
+      bitField0_ |= 0x00000002;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>float temperature = 2;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearTemperature() {
+      bitField0_ = (bitField0_ & ~0x00000002);
+      temperature_ = 0F;
+      onChanged();
+      return this;
+    }
+
+    private float humidity_ ;
+    /**
+     * <code>float humidity = 3;</code>
+     * @return The humidity.
+     */
+    @java.lang.Override
+    public float getHumidity() {
+      return humidity_;
+    }
+    /**
+     * <code>float humidity = 3;</code>
+     * @param value The humidity to set.
+     * @return This builder for chaining.
+     */
+    public Builder setHumidity(float value) {
+
+      humidity_ = value;
+      bitField0_ |= 0x00000004;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>float humidity = 3;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearHumidity() {
+      bitField0_ = (bitField0_ & ~0x00000004);
+      humidity_ = 0F;
       onChanged();
       return this;
     }

@@ -3,6 +3,7 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 
+import java.util.Date;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
@@ -35,7 +36,7 @@ public class NotifyClient {
         }
     }
 
-    public void shutdown()  throws InterruptedException  {
+    public void shutdown() {
         try {
             notifyChannel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
@@ -44,13 +45,15 @@ public class NotifyClient {
     }
 
     public void sensorNotifications() {
-        StreamObserver<SensorMessage> sensorObserver = new StreamObserver<SensorMessage>() {
+        StreamObserver<SensorMessage> sensorObserver = new StreamObserver<>() {
             @Override
             public void onNext(SensorMessage sensorMessage) {
+                Date updatedTime = new Date(sensorMessage.getTimestamp().getSeconds() * 1000);
                 System.out.println("\nSensor message: " +
                         "\n1. Location: " + sensorMessage.getLocation() +
                         "\n2. Air quality: " + sensorMessage.getAirQuality() +
-                        "\n3. Advice: " + sensorMessage.getMessage());
+                        "\n3. Advice: " + sensorMessage.getAdvice() +
+                        "\n4. Time: " + updatedTime);
             }
 
             @Override
@@ -63,16 +66,18 @@ public class NotifyClient {
                 System.out.println("Sensor notification completed");
             }
         };
-        notificationStub.sensorNotifications(AnalyseResponse.newBuilder().setPollutionLevel(1).build(), sensorObserver);
+        notificationStub.sensorNotifications(AnalyseResponse.newBuilder().setPollutionLevel(3).build(), sensorObserver);
     }
 
     public void hvacNotifications() {
-        StreamObserver<HVACMessage> hvacObserver = new StreamObserver<HVACMessage>() {
+        StreamObserver<HVACMessage> hvacObserver = new StreamObserver<>() {
             @Override
             public void onNext(HVACMessage hvacMessage) {
+                Date updatedTime = new Date(hvacMessage.getTimestamp().getSeconds() * 1000);
                 System.out.println("\nHVAC message: " +
                         "\n1. HVAC status: " + hvacMessage.getStatus() +
-                        "\n2. Message: " + hvacMessage.getMessage());
+                        "\n2. Message: " + hvacMessage.getMessage() +
+                        "\n3. Time: " + updatedTime);
             }
 
             @Override
@@ -85,10 +90,10 @@ public class NotifyClient {
                 System.out.println("HVAC notification completed");
             }
         };
-        notificationStub.hvacNotifications(HVACResponse.newBuilder().setPollutionLevel(1).build(), hvacObserver);
+        notificationStub.hvacNotifications(HVACResponse.newBuilder().setAction(HVACResponse.Action.STOP).build(), hvacObserver);
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         NotifyClient client = new NotifyClient("localhost", 9092);
         client.start();
 
@@ -102,5 +107,4 @@ public class NotifyClient {
             }
         }
     }
-
 }

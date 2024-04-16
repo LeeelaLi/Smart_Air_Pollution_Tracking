@@ -27,6 +27,7 @@ private static final long serialVersionUID = 0L;
   }
   private HVACResponse() {
     action_ = 0;
+    message_ = "";
   }
 
   public static final com.google.protobuf.Descriptors.Descriptor
@@ -178,15 +179,43 @@ private static final long serialVersionUID = 0L;
     return result == null ? com.chuntao.service.HVACResponse.Action.UNRECOGNIZED : result;
   }
 
-  public static final int POLLUTION_LEVEL_FIELD_NUMBER = 2;
-  private int pollutionLevel_ = 0;
+  public static final int MESSAGE_FIELD_NUMBER = 2;
+  @SuppressWarnings("serial")
+  private volatile java.lang.Object message_ = "";
   /**
-   * <code>int32 pollution_level = 2;</code>
-   * @return The pollutionLevel.
+   * <code>string message = 2;</code>
+   * @return The message.
    */
   @java.lang.Override
-  public int getPollutionLevel() {
-    return pollutionLevel_;
+  public java.lang.String getMessage() {
+    java.lang.Object ref = message_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      message_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string message = 2;</code>
+   * @return The bytes for message.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getMessageBytes() {
+    java.lang.Object ref = message_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      message_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
   }
 
   public static final int TIMESTAMP_FIELD_NUMBER = 3;
@@ -232,8 +261,8 @@ private static final long serialVersionUID = 0L;
     if (action_ != com.chuntao.service.HVACResponse.Action.START.getNumber()) {
       output.writeEnum(1, action_);
     }
-    if (pollutionLevel_ != 0) {
-      output.writeInt32(2, pollutionLevel_);
+    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(message_)) {
+      com.google.protobuf.GeneratedMessage.writeString(output, 2, message_);
     }
     if (((bitField0_ & 0x00000001) != 0)) {
       output.writeMessage(3, getTimestamp());
@@ -251,9 +280,8 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(1, action_);
     }
-    if (pollutionLevel_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(2, pollutionLevel_);
+    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(message_)) {
+      size += com.google.protobuf.GeneratedMessage.computeStringSize(2, message_);
     }
     if (((bitField0_ & 0x00000001) != 0)) {
       size += com.google.protobuf.CodedOutputStream
@@ -275,8 +303,8 @@ private static final long serialVersionUID = 0L;
     com.chuntao.service.HVACResponse other = (com.chuntao.service.HVACResponse) obj;
 
     if (action_ != other.action_) return false;
-    if (getPollutionLevel()
-        != other.getPollutionLevel()) return false;
+    if (!getMessage()
+        .equals(other.getMessage())) return false;
     if (hasTimestamp() != other.hasTimestamp()) return false;
     if (hasTimestamp()) {
       if (!getTimestamp()
@@ -295,8 +323,8 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + ACTION_FIELD_NUMBER;
     hash = (53 * hash) + action_;
-    hash = (37 * hash) + POLLUTION_LEVEL_FIELD_NUMBER;
-    hash = (53 * hash) + getPollutionLevel();
+    hash = (37 * hash) + MESSAGE_FIELD_NUMBER;
+    hash = (53 * hash) + getMessage().hashCode();
     if (hasTimestamp()) {
       hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
       hash = (53 * hash) + getTimestamp().hashCode();
@@ -439,7 +467,7 @@ private static final long serialVersionUID = 0L;
       super.clear();
       bitField0_ = 0;
       action_ = 0;
-      pollutionLevel_ = 0;
+      message_ = "";
       timestamp_ = null;
       if (timestampBuilder_ != null) {
         timestampBuilder_.dispose();
@@ -482,7 +510,7 @@ private static final long serialVersionUID = 0L;
         result.action_ = action_;
       }
       if (((from_bitField0_ & 0x00000002) != 0)) {
-        result.pollutionLevel_ = pollutionLevel_;
+        result.message_ = message_;
       }
       int to_bitField0_ = 0;
       if (((from_bitField0_ & 0x00000004) != 0)) {
@@ -509,8 +537,10 @@ private static final long serialVersionUID = 0L;
       if (other.action_ != 0) {
         setActionValue(other.getActionValue());
       }
-      if (other.getPollutionLevel() != 0) {
-        setPollutionLevel(other.getPollutionLevel());
+      if (!other.getMessage().isEmpty()) {
+        message_ = other.message_;
+        bitField0_ |= 0x00000002;
+        onChanged();
       }
       if (other.hasTimestamp()) {
         mergeTimestamp(other.getTimestamp());
@@ -546,11 +576,11 @@ private static final long serialVersionUID = 0L;
               bitField0_ |= 0x00000001;
               break;
             } // case 8
-            case 16: {
-              pollutionLevel_ = input.readInt32();
+            case 18: {
+              message_ = input.readStringRequireUtf8();
               bitField0_ |= 0x00000002;
               break;
-            } // case 16
+            } // case 18
             case 26: {
               input.readMessage(
                   getTimestampFieldBuilder().getBuilder(),
@@ -628,34 +658,74 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private int pollutionLevel_ ;
+    private java.lang.Object message_ = "";
     /**
-     * <code>int32 pollution_level = 2;</code>
-     * @return The pollutionLevel.
+     * <code>string message = 2;</code>
+     * @return The message.
      */
-    @java.lang.Override
-    public int getPollutionLevel() {
-      return pollutionLevel_;
+    public java.lang.String getMessage() {
+      java.lang.Object ref = message_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        message_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
     }
     /**
-     * <code>int32 pollution_level = 2;</code>
-     * @param value The pollutionLevel to set.
+     * <code>string message = 2;</code>
+     * @return The bytes for message.
+     */
+    public com.google.protobuf.ByteString
+        getMessageBytes() {
+      java.lang.Object ref = message_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        message_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string message = 2;</code>
+     * @param value The message to set.
      * @return This builder for chaining.
      */
-    public Builder setPollutionLevel(int value) {
-
-      pollutionLevel_ = value;
+    public Builder setMessage(
+        java.lang.String value) {
+      if (value == null) { throw new NullPointerException(); }
+      message_ = value;
       bitField0_ |= 0x00000002;
       onChanged();
       return this;
     }
     /**
-     * <code>int32 pollution_level = 2;</code>
+     * <code>string message = 2;</code>
      * @return This builder for chaining.
      */
-    public Builder clearPollutionLevel() {
+    public Builder clearMessage() {
+      message_ = getDefaultInstance().getMessage();
       bitField0_ = (bitField0_ & ~0x00000002);
-      pollutionLevel_ = 0;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string message = 2;</code>
+     * @param value The bytes for message to set.
+     * @return This builder for chaining.
+     */
+    public Builder setMessageBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) { throw new NullPointerException(); }
+      checkByteStringIsUtf8(value);
+      message_ = value;
+      bitField0_ |= 0x00000002;
       onChanged();
       return this;
     }

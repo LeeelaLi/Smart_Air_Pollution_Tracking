@@ -85,7 +85,7 @@ private static final long serialVersionUID = 0L;
   private float pM25_ = 0F;
   /**
    * <pre>
-   * PM2.5 density in μg/m3 of the air
+   * PM2.5 density in μg/m3
    * </pre>
    *
    * <code>float PM25 = 2;</code>
@@ -100,7 +100,7 @@ private static final long serialVersionUID = 0L;
   private float temperature_ = 0F;
   /**
    * <pre>
-   * Air temperature in Celsius
+   * Temperature in Celsius
    * </pre>
    *
    * <code>float temperature = 3;</code>
@@ -650,7 +650,7 @@ private static final long serialVersionUID = 0L;
     private float pM25_ ;
     /**
      * <pre>
-     * PM2.5 density in μg/m3 of the air
+     * PM2.5 density in μg/m3
      * </pre>
      *
      * <code>float PM25 = 2;</code>
@@ -662,7 +662,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * PM2.5 density in μg/m3 of the air
+     * PM2.5 density in μg/m3
      * </pre>
      *
      * <code>float PM25 = 2;</code>
@@ -678,7 +678,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * PM2.5 density in μg/m3 of the air
+     * PM2.5 density in μg/m3
      * </pre>
      *
      * <code>float PM25 = 2;</code>
@@ -694,7 +694,7 @@ private static final long serialVersionUID = 0L;
     private float temperature_ ;
     /**
      * <pre>
-     * Air temperature in Celsius
+     * Temperature in Celsius
      * </pre>
      *
      * <code>float temperature = 3;</code>
@@ -706,7 +706,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Air temperature in Celsius
+     * Temperature in Celsius
      * </pre>
      *
      * <code>float temperature = 3;</code>
@@ -722,7 +722,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Air temperature in Celsius
+     * Temperature in Celsius
      * </pre>
      *
      * <code>float temperature = 3;</code>

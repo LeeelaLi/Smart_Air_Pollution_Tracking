@@ -13,4 +13,16 @@ public interface HVACRequestOrBuilder extends
    * @return The pollutionLevel.
    */
   int getPollutionLevel();
+
+  /**
+   * <code>float temperature = 2;</code>
+   * @return The temperature.
+   */
+  float getTemperature();
+
+  /**
+   * <code>float humidity = 3;</code>
+   * @return The humidity.
+   */
+  float getHumidity();
 }

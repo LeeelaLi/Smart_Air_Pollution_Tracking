@@ -4,6 +4,7 @@ import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 
 import java.util.Date;
+import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -45,7 +46,7 @@ public class HVACClient {
                 Date responseTime = new Date(hvacResponse.getTimestamp().getSeconds() * 1000);
                 System.out.println("\nHVAC response: " +
                         "\n1. HVAC is now: " + hvacResponse.getAction() +
-                        "\n2. Pollution level: " + hvacResponse.getPollutionLevel() +
+                        "\n2. HVAC status: " + hvacResponse.getMessage() +
                         "\n3. Time: " + responseTime);
             }
 
@@ -69,6 +70,8 @@ public class HVACClient {
                 String request = "" + i;
                 HVACRequest hvacRequest = HVACRequest.newBuilder()
                         .setPollutionLevel(i)
+                        .setHumidity(34.44F)
+                        .setTemperature(23.33F)
                         .build();
                 System.out.println("HVAC request for air pollution level: " + request);
                 hvacRequestObserver.onNext(hvacRequest);
