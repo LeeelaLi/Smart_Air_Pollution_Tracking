@@ -16,6 +16,7 @@ import java.util.Properties;
 public class AirPollutionServer {
     // Sensor service implement
     private Server server;
+    private static int sensor_id;
 
     private void start() throws IOException {
         /* The port on which the server should run */
@@ -97,20 +98,88 @@ public class AirPollutionServer {
 
         public void getSensorData(SensorRequest request, StreamObserver<SensorResponse> sensorResponseObserver) {
             System.out.println("Sensor id: " + request.getSensorId());
-            SensorResponse response = SensorResponse.newBuilder().setLocation("Home").build();
-            sensorResponseObserver.onNext(response);
+            sensor_id = request.getSensorId();
+            SensorResponse.Builder response = SensorResponse.newBuilder();
+
+            if(sensor_id == 1) {
+                response.setLocation("Bedroom").build();
+            } else if (sensor_id == 2) {
+                response.setLocation("Living room").build();
+            } else if (sensor_id == 3) {
+                response.setLocation("Karaoke room").build();
+            } else {
+                response.setLocation("Unknown").build();
+            }
+
+            sensorResponseObserver.onNext(response.build());
             sensorResponseObserver.onCompleted();
         }
 
-        public void analyseSensorData(AnalyseRequest request, StreamObserver<AnalyseResponse> analyseResponseObserver) {
-            AnalyseResponse response = AnalyseResponse.newBuilder()
-                    .setAnalyse("Fine")
-                    .setPollutionLevel(1)
-                    .setMessage("Low pollution")
-                    .setTimestamp(timestampNow())
-                    .build();
-            analyseResponseObserver.onNext(response);
-            analyseResponseObserver.onCompleted();
+        public StreamObserver<AnalyseRequest> analyseSensorData(StreamObserver<AnalyseResponse> analyseResponseObserver) {
+            return new StreamObserver<AnalyseRequest>() {
+                @Override
+                public void onNext(AnalyseRequest analyseRequest) {
+
+                    // Perform analysis based on the stored sensor data
+                    float sumPM25 = analyseRequest.getPM25();
+                    float sumTemp = analyseRequest.getTemperature();
+                    float sumVOC = analyseRequest.getVOC();
+                    float sumHumidity = analyseRequest.getHumidity();
+                    float sumCO = analyseRequest.getCO();
+                    int pollutionItem = 0;
+
+                    StringBuilder analyse = new StringBuilder();
+                    StringBuilder message = new StringBuilder();
+                    if (sumPM25 > 12) {
+                        pollutionItem++;
+                        analyse.append("\n· PM2.5 is over 12μg/m3.");
+                    }
+                    if (sumTemp < 18 || sumTemp > 22) {
+                        pollutionItem++;
+                        analyse.append("\n· Temperature is exceed 18-22°C.");
+                    }
+                    if (sumVOC < 0 || sumVOC > 0.5) {
+                        pollutionItem++;
+                        analyse.append("\n· VOC is exceed 0-0.5mg/m3.");
+                    }
+                    if (sumHumidity < 30 || sumHumidity > 50) {
+                        pollutionItem++;
+                        analyse.append("\n· Humidity is exceed 30-50%.");
+                    }
+                    if (sumCO < 0 || sumCO > 15) {
+                        pollutionItem++;
+                        analyse.append("\n· CO is exceed 0-15ppm.");
+                    }
+
+                    if (pollutionItem < 2) {
+                        message.append("Low pollution");
+                    } else if (pollutionItem == 2) {
+                        message.append("Moderate pollution, recommend to turn on the HVAC.");
+                    } else {
+                        message.append("High pollution, HVAC is automatically on.");
+                    }
+
+                    // Create AnalyseResponse
+                    AnalyseResponse analyseResponse = AnalyseResponse.newBuilder()
+                            .setAnalyse(analyse.toString())
+                            .setPollutionLevel(pollutionItem)
+                            .setMessage(message.toString())
+                            .setTimestamp(timestampNow())
+                            .build();
+
+                    analyseResponseObserver.onNext(analyseResponse);
+                }
+
+                @Override
+                public void onError(Throwable t) {
+
+                }
+
+                @Override
+                public void onCompleted() {
+                    analyseResponseObserver.onCompleted();
+                }
+            };
         }
     }
 
