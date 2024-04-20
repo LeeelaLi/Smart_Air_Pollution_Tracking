@@ -16,7 +16,7 @@ public class AirPollutionClient {
     private final NotificationGrpc.NotificationStub notificationStub;
     private static int pollution_level;
     private static HVACCommand.Action action;
-    private static String status;
+    private static String status = null;
     private static boolean turn_on;
     private boolean sensorNotificationsActive = false;
 
@@ -107,27 +107,20 @@ public class AirPollutionClient {
         StreamObserver<HVACCommand> hvacCommandObserver = new StreamObserver<>() {
             @Override
             public void onNext(HVACCommand hvacCommand) {
-                if (hvacCommand.getAction() != null && control == 1) {
+                if (control == 1) {
+                    HVACCommand.Builder hvacCommand1 = HVACCommand.newBuilder();
+                    hvacCommand1.setAction(HVACCommand.Action.START).build();
                     String hvacCommandMessage = "\nHVAC command: " +
-                            "\n1. HVAC is: " + hvacCommand.getAction();
-                    action = hvacCommand.getAction();
+                            "\n1. HVAC is: " + hvacCommand1.getAction();
+                    action = hvacCommand1.getAction();
                     callback.accept(hvacCommandMessage);
                 } else if (control == 2) {
-                    if (status.equalsIgnoreCase("ON")) {
-                        HVACCommand.Builder hvacCommand1 = HVACCommand.newBuilder();
-                        hvacCommand1.setAction(HVACCommand.Action.START).build();
-                        String hvacCommandMessage = "\nHVAC command: " +
-                                "\n1. HVAC is: " + hvacCommand1.getAction();
-                        action = hvacCommand1.getAction();
-                        callback.accept(hvacCommandMessage);
-                    } else {
-                        HVACCommand.Builder hvacCommand1 = HVACCommand.newBuilder();
-                        hvacCommand1.setAction(HVACCommand.Action.STOP).build();
-                        String hvacCommandMessage = "\nHVAC command: " +
-                                "\n1. HVAC is: " + hvacCommand1.getAction();
-                        action = hvacCommand1.getAction();
-                        callback.accept(hvacCommandMessage);
-                    }
+                    HVACCommand.Builder hvacCommand1 = HVACCommand.newBuilder();
+                    hvacCommand1.setAction(HVACCommand.Action.STOP).build();
+                    String hvacCommandMessage = "\nHVAC command: " +
+                            "\n1. HVAC is: " + hvacCommand1.getAction();
+                    action = hvacCommand1.getAction();
+                    callback.accept(hvacCommandMessage);
                 } else {
                     callback.accept("Sensor data is empty");
                 }

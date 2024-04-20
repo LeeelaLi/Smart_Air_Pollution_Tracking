@@ -20,7 +20,7 @@ public class AirPollutionServer {
     private Server server;
     private static int pollution_level;
     private static HVACCommand.Action action;
-    private static String status;
+    private static String status = null;
     private static String if_hvac_switch = null;
     private void registerToConsul() {
         System.out.println("Registering server to Consul...");
@@ -212,14 +212,12 @@ public class AirPollutionServer {
                     if (if_hvac_switch == null) {
                         if (pollution_level > 2) {
                             action = HVACCommand.Action.START;
-                            status = "ON";
                         } else {
                             action = HVACCommand.Action.STOP;
-                            status = "OFF";
                         }
-                    } else if (if_hvac_switch.equalsIgnoreCase("ON")) {
+                    } else if (status.equalsIgnoreCase("ON")) {
                         action = HVACCommand.Action.START;
-                    } else if (if_hvac_switch.equalsIgnoreCase("OFF")) {
+                    } else if (status.equalsIgnoreCase("OFF")) {
                         action = HVACCommand.Action.STOP;
                     }
 
@@ -259,7 +257,7 @@ public class AirPollutionServer {
                             .setPollutionLevel(pollution_level)
                             .setTimestamp(timestampNow())
                             .build();
-                    if_hvac_switch = hvacResponse.getStatus();
+                    status = hvacResponse.getStatus();
                     responseObserver.onNext(hvacResponse);
                 }
 
