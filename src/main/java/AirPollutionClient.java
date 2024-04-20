@@ -103,15 +103,31 @@ public class AirPollutionClient {
         requestObserver.onCompleted();
     }
 
-    public void HVACControl(MessagePassingQueue.Consumer<String> callback) {
+    public void HVACControl(int control, MessagePassingQueue.Consumer<String> callback) {
         StreamObserver<HVACCommand> hvacCommandObserver = new StreamObserver<>() {
             @Override
             public void onNext(HVACCommand hvacCommand) {
-                if (hvacCommand.getAction() != null) {
+                if (hvacCommand.getAction() != null && control == 1) {
                     String hvacCommandMessage = "\nHVAC command: " +
                             "\n1. HVAC is: " + hvacCommand.getAction();
                     action = hvacCommand.getAction();
                     callback.accept(hvacCommandMessage);
+                } else if (control == 2) {
+                    if (status.equalsIgnoreCase("ON")) {
+                        HVACCommand.Builder hvacCommand1 = HVACCommand.newBuilder();
+                        hvacCommand1.setAction(HVACCommand.Action.START).build();
+                        String hvacCommandMessage = "\nHVAC command: " +
+                                "\n1. HVAC is: " + hvacCommand1.getAction();
+                        action = hvacCommand1.getAction();
+                        callback.accept(hvacCommandMessage);
+                    } else {
+                        HVACCommand.Builder hvacCommand1 = HVACCommand.newBuilder();
+                        hvacCommand1.setAction(HVACCommand.Action.STOP).build();
+                        String hvacCommandMessage = "\nHVAC command: " +
+                                "\n1. HVAC is: " + hvacCommand1.getAction();
+                        action = hvacCommand1.getAction();
+                        callback.accept(hvacCommandMessage);
+                    }
                 } else {
                     callback.accept("Sensor data is empty");
                 }
@@ -154,6 +170,7 @@ public class AirPollutionClient {
                         "\n2. Pollution level: " + hvacResponse.getPollutionLevel() +
                         "\n3. Time: " + responseTime;
 
+                status = hvacResponse1.getStatus();
                 pollution_level = hvacResponse.getPollutionLevel();
                 callback.accept(hvacSwitchMessage);
             }
@@ -264,13 +281,16 @@ public class AirPollutionClient {
                         if (keyboard.hasNext()) {
                             String input = keyboard.next();
                             if (input.equalsIgnoreCase("yes")) {
-                                airPollutionClient.HVACControl(hvacCommandMessage -> {
+                                airPollutionClient.HVACControl(1, hvacCommandMessage -> {
                                     System.out.println(hvacCommandMessage); // Print sensor data
                                 });
                                 System.out.println("Do you want to turn on(1)/turn off(2)?");
                                 int turn_on = keyboard.nextInt();
                                 airPollutionClient.HVACSwitch(turn_on, hvacSwitchMessage -> {
                                     System.out.println(hvacSwitchMessage);
+                                });
+                                airPollutionClient.HVACControl(turn_on, hvacCommandMessage -> {
+                                    System.out.println(hvacCommandMessage); // Print sensor data
                                 });
                                 System.out.println("Do you want to turn on the notify(1)?");
                                 int turnOnNotify = keyboard.nextInt();
