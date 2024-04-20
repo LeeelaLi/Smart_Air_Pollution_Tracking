@@ -217,8 +217,10 @@ public class AirPollutionServer {
                         }
                     } else if (status.equalsIgnoreCase("ON")) {
                         action = HVACCommand.Action.START;
+                        status = "ON";
                     } else if (status.equalsIgnoreCase("OFF")) {
                         action = HVACCommand.Action.STOP;
+                        status = "OFF";
                     }
 
                     HVACCommand hvacCommand = HVACCommand.newBuilder()
@@ -282,13 +284,13 @@ public class AirPollutionServer {
                         String message;
                         if (pollution_level < 2) {
                             air_quality = "Great";
-                            message = "The air is healthy";
+                            message = "The air is healthy.";
                         } else if (pollution_level == 2) {
                             air_quality = "Moderate";
-                            message = "The air is fine.";
+                            message = "The air is fine, you could turn on the HVAC manually.";
                         } else {
                             air_quality = "Bad";
-                            message = "The air is harmed, please turn on the HVAC.";
+                            message = "The air is harmed, HVAC is now ON.";
                             status = "ON";
                         }
 
