@@ -344,13 +344,6 @@ public class AirPollutionServer {
                             message = "HVAC is off.";
                             turn_on = false;
 
-//                        if (status.equals("ON")) {
-//                            message = "HVAC is on.";
-//                            turn_on = true;
-//                        } else {
-//                            message = "HVAC is off.";
-//                            turn_on = false;
-//                        }
                             HVACMessage hvacMessage = HVACMessage.newBuilder()
                                     .setStatus(turn_on)
                                     .setMessage(message)
