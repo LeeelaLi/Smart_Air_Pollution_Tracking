@@ -70,7 +70,7 @@ public class AirPollutionClientGUI extends JFrame {
 
         });
 
-        analyseDataButton.addActionListener(e -> {
+       analyseDataButton.addActionListener(e -> {
             String analyseDataStr = analyseDataField.getText();
 
             if (analyseDataStr.equalsIgnoreCase("yes")) {
