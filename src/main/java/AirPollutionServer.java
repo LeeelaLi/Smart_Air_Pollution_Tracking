@@ -266,6 +266,7 @@ public class AirPollutionServer {
                             .setTimestamp(timestampNow())
                             .build();
                     status = hvacResponse.getStatus();
+                    action = hvacCommand.getAction();
                     responseObserver.onNext(hvacResponse);
                 }
 
