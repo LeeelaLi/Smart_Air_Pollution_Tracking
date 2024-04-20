@@ -227,15 +227,25 @@ public class AirPollutionClient {
                                 "\n4. Time: " + updatedTime;
                         callback.accept(sensorNotify);
                     } else {
-                        Date updatedTime = new Date(sensorMessage.getTimestamp().getSeconds() * 1000);
-                        SensorMessage.Builder sensorMessage1 = SensorMessage.newBuilder();
-                        sensorMessage1.setMessage("The air is harmed, and the HVAC is OFF now. Please turn on the HVAC.").build();
-                        String sensorNotify = "\nSensor notifications from " + location + ": " +
-                                "\n1. Air quality: " + sensorMessage.getAirQuality() +
-                                "\n2. Pollution level: " + pollution_level +
-                                "\n3. Advice: " + sensorMessage1.getMessage() +
-                                "\n4. Time: " + updatedTime;
-                        callback.accept(sensorNotify);
+                        if (status.equalsIgnoreCase("OFF")){
+                            Date updatedTime = new Date(sensorMessage.getTimestamp().getSeconds() * 1000);
+                            SensorMessage.Builder sensorMessage1 = SensorMessage.newBuilder();
+                            sensorMessage1.setMessage("The air is harmed, and the HVAC is OFF now. Please turn on the HVAC.").build();
+                            String sensorNotify = "\nSensor notifications from " + location + ": " +
+                                    "\n1. Air quality: " + sensorMessage.getAirQuality() +
+                                    "\n2. Pollution level: " + pollution_level +
+                                    "\n3. Advice: " + sensorMessage1.getMessage() +
+                                    "\n4. Time: " + updatedTime;
+                            callback.accept(sensorNotify);
+                        } else {
+                            Date updatedTime = new Date(sensorMessage.getTimestamp().getSeconds() * 1000);
+                            String sensorNotify = "\nSensor notifications from " + location + ": " +
+                                    "\n1. Air quality: " + sensorMessage.getAirQuality() +
+                                    "\n2. Pollution level: " + pollution_level +
+                                    "\n3. Advice: " + sensorMessage.getMessage() +
+                                    "\n4. Time: " + updatedTime;
+                            callback.accept(sensorNotify);
+                        }
                     }
                 } else{
                     Date updatedTime = new Date(sensorMessage.getTimestamp().getSeconds() * 1000);
