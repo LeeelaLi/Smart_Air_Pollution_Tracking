@@ -70,16 +70,18 @@ public class AirPollutionClientGUI extends JFrame {
 
         });
 
-        analyseDataButton.addActionListener(e -> {
+       analyseDataButton.addActionListener(e -> {
             String analyseDataStr = analyseDataField.getText();
 
             if (analyseDataStr.equalsIgnoreCase("yes")) {
-                airPollutionClient.AnalyseSensorData(analyseDataStr, analyseData -> {
-                    SwingUtilities.invokeLater(() -> outputArea.append("\n" + analyseData));
-                    if_analyse_data = analyseData;
-                });
-            } else if (if_get_data == null) {
-                outputArea.append("\nWarning: Sensor data is empty, please get data first.");
+                if (if_get_data != null) {
+                    airPollutionClient.AnalyseSensorData(analyseDataStr, analyseData -> {
+                        SwingUtilities.invokeLater(() -> outputArea.append("\n" + analyseData));
+                        if_analyse_data = analyseData;
+                    });
+                } else {
+                    outputArea.append("\nWarning: Sensor data is empty, please get data first.");
+                }
             } else {
                 outputArea.append("\nWarning: Invalid input, please try again.");
             }
