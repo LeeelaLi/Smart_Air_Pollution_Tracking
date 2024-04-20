@@ -82,6 +82,7 @@ public class AirPollutionClient {
                         "\n3. Pollution Level: " + analyseResponse.getPollutionLevel() +
                         "\n4. Analyse: " + analyseResponse.getMessage() +
                         "\n5. Updated time: " + updatedTime;
+                pollution_level = analyseResponse.getPollutionLevel();
                 callback.accept(analyseData);
             }
 
@@ -205,16 +206,20 @@ public class AirPollutionClient {
             @Override
             public void onNext(SensorMessage sensorMessage) {
                 if(status.equalsIgnoreCase("OFF")) {
-                    SensorMessage.Builder sensorMessage1 = SensorMessage.newBuilder();
-                    sensorMessage1.setMessage("The air is harmed and you turn off the HVAC manually. Please turn on the HVAC").build();
-                    String sensorNotify = "\nSensor notifications: " +
-                            "\n1. Air quality: " + sensorMessage.getAirQuality() +
-                            "\n2. Advice: " + sensorMessage1.getMessage();
-                    callback.accept(sensorNotify);
+                    if (pollution_level > 2) {
+                        SensorMessage.Builder sensorMessage1 = SensorMessage.newBuilder();
+                        sensorMessage1.setMessage("The air is harmed,and the HVAC is OFF now. Please turn on the HVAC").build();
+                        String sensorNotify = "\nSensor notifications: " +
+                                "\n1. Air quality: " + sensorMessage.getAirQuality() +
+                                "\n2. Pollution level: " + pollution_level +
+                                "\n3. Advice: " + sensorMessage1.getMessage();
+                        callback.accept(sensorNotify);
+                    }
                 } else {
                     String sensorNotify = "\nSensor notifications: " +
                             "\n1. Air quality: " + sensorMessage.getAirQuality() +
-                            "\n2. Advice: " + sensorMessage.getMessage();
+                            "\n2. Pollution level: " + pollution_level +
+                            "\n3. Advice: " + sensorMessage.getMessage();
                     callback.accept(sensorNotify);
                 }
             }
