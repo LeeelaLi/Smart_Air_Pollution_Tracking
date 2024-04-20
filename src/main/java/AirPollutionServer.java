@@ -107,12 +107,12 @@ public class AirPollutionServer {
         public void getSensorData(SensorRequest request, StreamObserver<SensorResponse> responseObserver) {
             int sensor_id = request.getSensorId();
             SensorResponse.Builder response = SensorResponse.newBuilder();
-            Random random = new Random();
-            float pm25 = random.nextFloat() * 12;
-            float temp = random.nextFloat() * 38;
-            float VOC = random.nextFloat() * 10;
-            float Humidity = random.nextFloat() * 78;
-            float CO = random.nextFloat() * 15;
+//            Random random = new Random();
+//            float pm25 = random.nextFloat() * 12;
+//            float temp = random.nextFloat() * 38;
+//            float VOC = random.nextFloat() * 10;
+//            float Humidity = random.nextFloat() * 78;
+//            float CO = random.nextFloat() * 15;
             switch (sensor_id) {
                 case 1:
                     response.setLocation("Home").setPM25(13).setTemperature(19).setVOC(0.2F).setHumidity(33).setCO(3);
@@ -301,6 +301,7 @@ public class AirPollutionServer {
                         }
 
                         SensorMessage sensorMessage = SensorMessage.newBuilder()
+                                .setLocation(analyseResponse.getLocation())
                                 .setAirQuality(air_quality)
                                 .setMessage(message)
                                 .build();
