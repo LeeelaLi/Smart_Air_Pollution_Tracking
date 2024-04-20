@@ -12,13 +12,13 @@ public class AirPollutionClientGUI extends JFrame {
     private JButton sensorNotificationsButton;
     private JButton hvacNotificationButton;
     private JTextArea outputArea;
-    private static int sensorId = 0;
     private static String if_get_data = null;
     private static String if_analyse_data = null;
     private static String if_hvac_control = null;
     private static String if_hvac_switch = null;
+    private static int switchInput = 0;
 
-    private AirPollutionClient airPollutionClient;
+    private final AirPollutionClient airPollutionClient;
 
     public AirPollutionClientGUI(String host, int port, String consulServiceName) {
         airPollutionClient = new AirPollutionClient(host, port, consulServiceName);
@@ -80,7 +80,12 @@ public class AirPollutionClientGUI extends JFrame {
                 outputArea.append("\nSensor data analysis is empty. Please analyse data first.");
             }
             else if (if_hvac_switch == null) {
-                airPollutionClient.HVACControl(hvacCommandMessage -> {
+                airPollutionClient.HVACControl(1, hvacCommandMessage -> {
+                    SwingUtilities.invokeLater(() -> outputArea.append("\n" + hvacCommandMessage));
+                    if_hvac_control = "hvacCommandMessage";
+                });
+            } else if (switchInput != 0) {
+                airPollutionClient.HVACControl(switchInput, hvacCommandMessage -> {
                     SwingUtilities.invokeLater(() -> outputArea.append("\n" + hvacCommandMessage));
                     if_hvac_control = "hvacCommandMessage";
                 });
@@ -95,7 +100,7 @@ public class AirPollutionClientGUI extends JFrame {
                 if (if_hvac_control == null) {
                     outputArea.append("\nHVAC control message is empty. Please get HVAC control message first.");
                 } else {
-                    int switchInput = Integer.parseInt(sensorIdStr);
+                    switchInput = Integer.parseInt(sensorIdStr);
                     if (switchInput == 1 || switchInput == 2) {
                         airPollutionClient.HVACSwitch(switchInput, hvacSwitchMessage -> {
                             SwingUtilities.invokeLater(() -> outputArea.append("\n" + hvacSwitchMessage));
