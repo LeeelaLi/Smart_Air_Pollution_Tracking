@@ -1,11 +1,17 @@
 import com.chuntao.service.*;
+import com.ecwid.consul.v1.ConsulClient;
+import com.ecwid.consul.v1.agent.model.NewService;
 import com.google.protobuf.Timestamp;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.time.Instant;
+import java.util.Properties;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -15,6 +21,50 @@ public class AirPollutionServer {
     private static int pollution_level;
     private static HVACCommand.Action action;
     private static String status;
+    private static String if_hvac_switch = null;
+    private void registerToConsul() {
+        System.out.println("Registering server to Consul...");
+
+        // Load Consul configuration from consul.properties file
+        Properties props = new Properties();
+        try (FileInputStream fis = new FileInputStream("src/main/resources/consul.properties")) {
+            props.load(fis);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        // Extract Consul configuration properties
+        String consulHost = props.getProperty("consul.host");
+        int consulPort = Integer.parseInt(props.getProperty("consul.port"));
+        String serviceName = props.getProperty("consul.service.name");
+        int servicePort = Integer.parseInt(props.getProperty("consul.service.port"));
+        String healthCheckInterval = props.getProperty("consul.service.healthCheckInterval");
+
+        // Get host address
+        String hostAddress;
+        try {
+            hostAddress = InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        // Create a Consul client
+        ConsulClient consulClient = new ConsulClient(consulHost, consulPort);
+
+        // Define service details
+        NewService newService = new NewService();
+        newService.setName(serviceName);
+        newService.setPort(servicePort);
+        newService.setAddress(hostAddress); // Set host address
+
+        // Register service with Consul
+        consulClient.agentServiceRegister(newService);
+
+        // Print registration success message
+        System.out.println("Server registered to Consul successfully. Host: " + hostAddress);
+    }
 
     public void start(int port) throws IOException {
         server = ServerBuilder.forPort(port)
@@ -24,6 +74,9 @@ public class AirPollutionServer {
                 .build()
                 .start();
         System.out.println("Sensor server started, listening on port " + port);
+
+        // Register server to Consul
+        registerToConsul();
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             System.out.println("Shutting down gRPC server");
@@ -55,17 +108,14 @@ public class AirPollutionServer {
             int sensor_id = request.getSensorId();
             SensorResponse.Builder response = SensorResponse.newBuilder();
             Random random = new Random();
-            float pm25 = random.nextFloat() * 50;
+            float pm25 = random.nextFloat() * 12;
             float temp = random.nextFloat() * 38;
+            float VOC = random.nextFloat() * 10;
+            float Humidity = random.nextFloat() * 78;
+            float CO = random.nextFloat() * 15;
             switch (sensor_id) {
                 case 1:
-                    response.setLocation("Home").setPM25(10).setTemperature(19).setVOC(10.3F).setHumidity(36).setCO(18);
-                    break;
-                case 2:
-                    response.setLocation("Garden").setPM25(34).setTemperature(50).setVOC(0.1F).setHumidity(65).setCO(14);
-                    break;
-                case 3:
-                    response.setLocation("Car").setPM25(pm25).setTemperature(temp).setVOC(0.6F).setHumidity(27).setCO(11);
+                    response.setLocation("Home").setPM25(pm25).setTemperature(temp).setVOC(VOC).setHumidity(Humidity).setCO(CO);
                     break;
                 default:
                     response.setLocation("Unknown");
@@ -128,11 +178,11 @@ public class AirPollutionServer {
                     }
 
                     if (pollutionItem < 2) {
-                        message.append("Low pollution");
+                        message.append("Low pollution.");
                     } else if (pollutionItem == 2) {
-                        message.append("Moderate pollution, recommend to turn on the HVAC.");
+                        message.append("Moderate pollution, you could turn on the HVAC manually.");
                     } else {
-                        message.append("High pollution, HVAC is automatically on.");
+                        message.append("High pollution, strongly recommend to turn on the HVAC.");
                         status = "ON";
                     }
                     // Create AnalyseResponse
@@ -159,17 +209,23 @@ public class AirPollutionServer {
             return new StreamObserver<HVACRequest>() {
                 @Override
                 public void onNext(HVACRequest hvacRequest) {
-                    if (pollution_level > 2) {
+                    if (if_hvac_switch == null) {
+                        if (pollution_level > 2) {
+                            action = HVACCommand.Action.START;
+                            status = "ON";
+                        } else {
+                            action = HVACCommand.Action.STOP;
+                            status = "OFF";
+                        }
+                    } else if (if_hvac_switch.equalsIgnoreCase("ON")) {
                         action = HVACCommand.Action.START;
-                        status = "ON";
-                    } else {
+                    } else if (if_hvac_switch.equalsIgnoreCase("OFF")) {
                         action = HVACCommand.Action.STOP;
-                        status = "OFF";
                     }
 
                     HVACCommand hvacCommand = HVACCommand.newBuilder()
-                                    .setAction(action)
-                                    .build();
+                            .setAction(action)
+                            .build();
                     action = hvacCommand.getAction();
                     hvacCommandObserver.onNext(hvacCommand);
                 }
@@ -203,6 +259,7 @@ public class AirPollutionServer {
                             .setPollutionLevel(pollution_level)
                             .setTimestamp(timestampNow())
                             .build();
+                    if_hvac_switch = hvacResponse.getStatus();
                     responseObserver.onNext(hvacResponse);
                 }
 
@@ -233,9 +290,10 @@ public class AirPollutionServer {
                             message = "The air is fine.";
                         } else {
                             air_quality = "Bad";
-                            message = "The air is harmed, HVAC is automatically on.";
+                            message = "The air is harmed, please turn on the HVAC.";
                             status = "ON";
                         }
+
                         SensorMessage sensorMessage = SensorMessage.newBuilder()
                                 .setAirQuality(air_quality)
                                 .setMessage(message)
