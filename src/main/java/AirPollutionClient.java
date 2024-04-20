@@ -1,9 +1,11 @@
 import com.chuntao.service.*;
+import com.google.protobuf.Timestamp;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.netty.shaded.io.netty.util.internal.shaded.org.jctools.queues.MessagePassingQueue;
 import io.grpc.stub.StreamObserver;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
@@ -17,9 +19,9 @@ public class AirPollutionClient {
     private static String location;
     private static int pollution_level;
     private static HVACCommand.Action action;
+    private static Date hvac_switch_updatedTime;
     private static String status = null;
     private static boolean turn_on;
-    private boolean sensorNotificationsActive = false;
 
     public AirPollutionClient(String host, int port, String consulServiceName) {
         this.sensorChannel = ManagedChannelBuilder.forAddress(host, port)
@@ -110,23 +112,33 @@ public class AirPollutionClient {
         StreamObserver<HVACCommand> hvacCommandObserver = new StreamObserver<>() {
             @Override
             public void onNext(HVACCommand hvacCommand) {
+                Date updatedTime = new Date(timestampNow().getSeconds() * 1000);
                 if (control == 1) {
                     HVACCommand.Builder hvacCommand1 = HVACCommand.newBuilder();
                     hvacCommand1.setAction(HVACCommand.Action.START).build();
                     String hvacCommandMessage = "\nHVAC Command: " +
-                            "\n1. HVAC is: " + hvacCommand1.getAction();
+                            "\n1. HVAC is: " + hvacCommand1.getAction() +
+                            "\n2. Pollution level: " + pollution_level +
+                            "\n3. Last status changing time: " + hvac_switch_updatedTime +
+                            "\n4. Time: " + updatedTime;
                     action = hvacCommand1.getAction();
                     callback.accept(hvacCommandMessage);
                 } else if (control == 2) {
                     HVACCommand.Builder hvacCommand1 = HVACCommand.newBuilder();
                     hvacCommand1.setAction(HVACCommand.Action.STOP).build();
                     String hvacCommandMessage = "\nHVAC Command: " +
-                            "\n1. HVAC is: " + hvacCommand1.getAction();
+                            "\n1. HVAC is: " + hvacCommand1.getAction() +
+                            "\n2. Pollution level: " + pollution_level +
+                            "\n3. Last status changing time: " + hvac_switch_updatedTime +
+                            "\n4. Time: " + updatedTime;
                     action = hvacCommand1.getAction();
                     callback.accept(hvacCommandMessage);
                 } else if (control == 0) {
                     String hvacCommandMessage = "\nHVAC Command: " +
-                            "\n1. HVAC is: " + hvacCommand.getAction();
+                            "\n1. HVAC is: " + hvacCommand.getAction() +
+                            "\n2. Pollution level: " + pollution_level +
+                            "\n3. Last status changing time: " + hvac_switch_updatedTime +
+                            "\n4. Time: " + updatedTime;
                     action = hvacCommand.getAction();
                     callback.accept(hvacCommandMessage);
                 } else {
@@ -173,6 +185,7 @@ public class AirPollutionClient {
 
                 status = hvacResponse1.getStatus();
                 pollution_level = hvacResponse.getPollutionLevel();
+                hvac_switch_updatedTime = responseTime;
                 callback.accept(hvacSwitchMessage);
             }
 
@@ -193,10 +206,9 @@ public class AirPollutionClient {
             HVACCommand hvacCommand = HVACCommand.newBuilder()
                     .setAction(action)
                     .build();
-
             hvacCommandObserver.onNext(hvacCommand);
         }catch (Exception e) {
-            System.err.println("Error while sending messages: " + e.getMessage());
+            System.err.println("Error while sending HVAC Command messages: " + e.getMessage());
         }
         hvacResponseObserver.onCompleted();
     }
@@ -207,25 +219,31 @@ public class AirPollutionClient {
             public void onNext(SensorMessage sensorMessage) {
                 if (pollution_level > 2) {
                     if (status == null) {
+                        Date updatedTime = new Date(sensorMessage.getTimestamp().getSeconds() * 1000);
                         String sensorNotify = "\nSensor notifications from " + location + ": " +
                                 "\n1. Air quality: " + sensorMessage.getAirQuality() +
                                 "\n2. Pollution level: " + pollution_level +
-                                "\n3. Advice: " + sensorMessage.getMessage();
+                                "\n3. Advice: " + sensorMessage.getMessage() +
+                                "\n4. Time: " + updatedTime;
                         callback.accept(sensorNotify);
                     } else {
+                        Date updatedTime = new Date(sensorMessage.getTimestamp().getSeconds() * 1000);
                         SensorMessage.Builder sensorMessage1 = SensorMessage.newBuilder();
                         sensorMessage1.setMessage("The air is harmed, and the HVAC is OFF now. Please turn on the HVAC.").build();
                         String sensorNotify = "\nSensor notifications from " + location + ": " +
                                 "\n1. Air quality: " + sensorMessage.getAirQuality() +
                                 "\n2. Pollution level: " + pollution_level +
-                                "\n3. Advice: " + sensorMessage1.getMessage();
+                                "\n3. Advice: " + sensorMessage1.getMessage() +
+                                "\n4. Time: " + updatedTime;
                         callback.accept(sensorNotify);
                     }
                 } else{
+                    Date updatedTime = new Date(sensorMessage.getTimestamp().getSeconds() * 1000);
                     String sensorNotify = "\nSensor notifications from " + location + ": " +
                             "\n1. Air quality: " + sensorMessage.getAirQuality() +
                             "\n2. Pollution level: " + pollution_level +
-                            "\n3. Advice: " + sensorMessage.getMessage();
+                            "\n3. Advice: " + sensorMessage.getMessage() +
+                            "\n4. Time: " + updatedTime;
                     callback.accept(sensorNotify);
                 }
             }
@@ -279,6 +297,14 @@ public class AirPollutionClient {
             }
         };
         notificationStub.hvacNotifications(HVACResponse.newBuilder().setPollutionLevel(1).build(), hvacObserver);
+    }
+
+    private static Timestamp timestampNow() {
+        Instant now = Instant.now();
+        return Timestamp.newBuilder()
+                .setSeconds(now.getEpochSecond())
+                .setNanos(now.getNano())
+                .build();
     }
 
     public static void main(String[] args) throws InterruptedException {

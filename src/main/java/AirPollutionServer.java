@@ -305,6 +305,7 @@ public class AirPollutionServer {
                                 .setLocation(analyseResponse.getLocation())
                                 .setAirQuality(air_quality)
                                 .setMessage(message)
+                                .setTimestamp(timestampNow())
                                 .build();
                         sensorObserver.onNext(sensorMessage);
                         Thread.sleep(5000); // Stream every 5 seconds
@@ -327,20 +328,38 @@ public class AirPollutionServer {
                         boolean turn_on;
                         String message;
 
-                        if (status.equals("ON")) {
-                            message = "HVAC is on.";
-                            turn_on = true;
+                        if (action.equals(HVACCommand.Action.START)) {
+                            if (status.equals("ON")) {
+                                message = "HVAC is on.";
+                                turn_on = true;
+                                HVACMessage hvacMessage = HVACMessage.newBuilder()
+                                        .setStatus(turn_on)
+                                        .setMessage(message)
+                                        .setTimestamp(timestampNow())
+                                        .build();
+                                hvacObserver.onNext(hvacMessage);
+                                Thread.sleep(5000); // Stream every 5 seconds
+                            }
                         } else {
                             message = "HVAC is off.";
                             turn_on = false;
-                        }
-                        HVACMessage hvacMessage = HVACMessage.newBuilder()
-                                .setStatus(turn_on)
-                                .setMessage(message)
-                                .build();
 
-                        hvacObserver.onNext(hvacMessage);
-                        Thread.sleep(5000); // Stream every 5 seconds
+//                        if (status.equals("ON")) {
+//                            message = "HVAC is on.";
+//                            turn_on = true;
+//                        } else {
+//                            message = "HVAC is off.";
+//                            turn_on = false;
+//                        }
+                            HVACMessage hvacMessage = HVACMessage.newBuilder()
+                                    .setStatus(turn_on)
+                                    .setMessage(message)
+                                    .setTimestamp(timestampNow())
+                                    .build();
+
+                            hvacObserver.onNext(hvacMessage);
+                            Thread.sleep(5000); // Stream every 5 seconds
+                        }
                     }
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
