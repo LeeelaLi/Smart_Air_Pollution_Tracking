@@ -60,14 +60,17 @@ public class AirPollutionClientGUI extends JFrame {
             String analyseDataStr = getDataField.getText();
             try {
                 int sensorId = Integer.parseInt(analyseDataStr);
-                airPollutionClient.GetSensorData(sensorId, sensorData -> {
-                    SwingUtilities.invokeLater(() -> outputArea.append("\n" + sensorData));
-                    if_get_data = sensorData;
-                });
+                if (sensorId > 0 && sensorId < 4) {
+                    airPollutionClient.GetSensorData(sensorId, sensorData -> {
+                        SwingUtilities.invokeLater(() -> outputArea.append("\n" + sensorData));
+                        if_get_data = sensorData;
+                    });
+                } else {
+                    outputArea.append("\nSensor id should be between 1-3, please try again.");
+                }
             } catch (NumberFormatException numberFormatException) {
-                outputArea.append("\nsensor id error.");
+                outputArea.append("\n.Invalid string, please try again.");
             }
-
         });
 
        analyseDataButton.addActionListener(e -> {
