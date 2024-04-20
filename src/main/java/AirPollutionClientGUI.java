@@ -70,6 +70,7 @@ public class AirPollutionClientGUI extends JFrame {
                     outputArea.append("\nWarning: Sensor id should be between 1-3, please try again.");
                 }
             } catch (NumberFormatException numberFormatException) {
+                if_get_data = null;
                 outputArea.append("\nWarning: Invalid string, please try again.");
             }
         });
