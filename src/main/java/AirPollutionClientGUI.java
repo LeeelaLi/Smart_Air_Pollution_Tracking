@@ -3,6 +3,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class AirPollutionClientGUI extends JFrame {
+    private JTextField getDataField;
     private JTextField analyseDataField;
     private JTextField hvacSwitchField;
     private JButton getDataButton;
@@ -36,6 +37,7 @@ public class AirPollutionClientGUI extends JFrame {
     private void initComponents() {
 
         // Sensor service
+        getDataField = new JTextField(15);
         getDataButton = new JButton("Get Sensor Data");
         analyseDataField = new JTextField(15);
         analyseDataButton = new JButton("Analyse Sensor Data");
@@ -54,10 +56,18 @@ public class AirPollutionClientGUI extends JFrame {
 
         getDataButton.addActionListener(e -> {
             if_analyse_data = null;
-            airPollutionClient.GetSensorData(1, sensorData -> {
-                SwingUtilities.invokeLater(() -> outputArea.append("\n" + sensorData));
-                if_get_data = sensorData;
-            });
+
+            String analyseDataStr = getDataField.getText();
+            try {
+                int sensorId = Integer.parseInt(analyseDataStr);
+                airPollutionClient.GetSensorData(sensorId, sensorData -> {
+                    SwingUtilities.invokeLater(() -> outputArea.append("\n" + sensorData));
+                    if_get_data = sensorData;
+                });
+            } catch (NumberFormatException numberFormatException) {
+                outputArea.append("\nsensor id error.");
+            }
+
         });
 
         analyseDataButton.addActionListener(e -> {
@@ -80,7 +90,7 @@ public class AirPollutionClientGUI extends JFrame {
                 outputArea.append("\nSensor data analysis is empty. Please analyse data first.");
             }
             else if (if_hvac_switch == null) {
-                airPollutionClient.HVACControl(1, hvacCommandMessage -> {
+                airPollutionClient.HVACControl(0, hvacCommandMessage -> {
                     SwingUtilities.invokeLater(() -> outputArea.append("\n" + hvacCommandMessage));
                     if_hvac_control = "hvacCommandMessage";
                 });
@@ -153,6 +163,8 @@ public class AirPollutionClientGUI extends JFrame {
         JPanel sensorColumnPanel = new JPanel();
         sensorColumnPanel.setLayout(new BoxLayout(sensorColumnPanel, BoxLayout.Y_AXIS));
 
+        sensorColumnPanel.add(new JLabel("Enter 1-3 to get sensor data:"));
+        sensorColumnPanel.add(getDataField);
         sensorColumnPanel.add(getDataButton); // get sensor data
         sensorColumnPanel.add(new JLabel("Enter 'yes' to check sensor data:")); // analyse sensor data
         sensorColumnPanel.add(analyseDataField);

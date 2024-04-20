@@ -14,6 +14,7 @@ public class AirPollutionClient {
     private final String consulServiceName;
     private final HVACGrpc.HVACStub hvacStub;
     private final NotificationGrpc.NotificationStub notificationStub;
+    private static String location;
     private static int pollution_level;
     private static HVACCommand.Action action;
     private static String status = null;
@@ -53,6 +54,7 @@ public class AirPollutionClient {
                         "\n3. VOC - " + vocValue + " mg/m3" +
                         "\n4. Humidity - " + humidValue + " %" +
                         "\n5. CO - " + coValue + " ppm";
+                location = sensorResponse.getLocation();
                 callback.accept(sensorData); // Invoke the callback with sensor data
             }
 
@@ -99,7 +101,7 @@ public class AirPollutionClient {
         StreamObserver<SensorResponse> requestObserver = sensorStub.analyseSensorData(responseObserver);
 
         // Send the sensor ID to the server to start analysing data for that sensor
-        requestObserver.onNext(SensorResponse.newBuilder().setLocation("HOME").build());
+        requestObserver.onNext(SensorResponse.newBuilder().setLocation(location).build());
         requestObserver.onCompleted();
     }
 
@@ -120,6 +122,11 @@ public class AirPollutionClient {
                     String hvacCommandMessage = "\nHVAC Command: " +
                             "\n1. HVAC is: " + hvacCommand1.getAction();
                     action = hvacCommand1.getAction();
+                    callback.accept(hvacCommandMessage);
+                } else if (control == 0) {
+                    String hvacCommandMessage = "\nHVAC Command: " +
+                            "\n1. HVAC is: " + hvacCommand.getAction();
+                    action = hvacCommand.getAction();
                     callback.accept(hvacCommandMessage);
                 } else {
                     callback.accept("Sensor data is empty");
@@ -269,7 +276,7 @@ public class AirPollutionClient {
             System.out.println("Enter '1' to get sensor data, 'q' to quit:");
             if (keyboard.hasNextInt()) {
                 int sensor_id = keyboard.nextInt();
-                if (sensor_id == 1) {
+                if (sensor_id > 0 && sensor_id < 4) {
                     airPollutionClient.GetSensorData(sensor_id, sensorData -> {
                         System.out.println(sensorData); // Print sensor data
                     });
@@ -283,7 +290,7 @@ public class AirPollutionClient {
                         if (keyboard.hasNext()) {
                             String input = keyboard.next();
                             if (input.equalsIgnoreCase("yes")) {
-                                airPollutionClient.HVACControl(1, hvacCommandMessage -> {
+                                airPollutionClient.HVACControl(0, hvacCommandMessage -> {
                                     System.out.println(hvacCommandMessage); // Print sensor data
                                 });
                                 System.out.println("Do you want to turn on(1)/turn off(2)?");
