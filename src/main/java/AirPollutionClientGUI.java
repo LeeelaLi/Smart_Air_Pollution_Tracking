@@ -60,26 +60,31 @@ public class AirPollutionClientGUI extends JFrame {
             String analyseDataStr = getDataField.getText();
             try {
                 int sensorId = Integer.parseInt(analyseDataStr);
-                airPollutionClient.GetSensorData(sensorId, sensorData -> {
-                    SwingUtilities.invokeLater(() -> outputArea.append("\n" + sensorData));
-                    if_get_data = sensorData;
-                });
+                if (sensorId > 0 && sensorId < 4) {
+                    airPollutionClient.GetSensorData(sensorId, sensorData -> {
+                        SwingUtilities.invokeLater(() -> outputArea.append("\n" + sensorData));
+                        if_get_data = sensorData;
+                    });
+                } else {
+                    outputArea.append("\nWarning: Sensor id should be between 1-3, please try again.");
+                }
             } catch (NumberFormatException numberFormatException) {
-                outputArea.append("\nsensor id error.");
+                outputArea.append("\nWarning: Invalid string, please try again.");
             }
-
         });
 
         analyseDataButton.addActionListener(e -> {
             String analyseDataStr = analyseDataField.getText();
 
             if (analyseDataStr.equalsIgnoreCase("yes")) {
-                airPollutionClient.AnalyseSensorData(analyseDataStr, analyseData -> {
-                    SwingUtilities.invokeLater(() -> outputArea.append("\n" + analyseData));
-                    if_analyse_data = analyseData;
-                });
-            } else if (if_get_data == null) {
-                outputArea.append("\nWarning: Sensor data is empty, please get data first.");
+                if (if_get_data != null) {
+                    airPollutionClient.AnalyseSensorData(analyseDataStr, analyseData -> {
+                        SwingUtilities.invokeLater(() -> outputArea.append("\n" + analyseData));
+                        if_analyse_data = analyseData;
+                    });
+                } else {
+                    outputArea.append("\nWarning: Sensor data is empty, please get data first.");
+                }
             } else {
                 outputArea.append("\nWarning: Invalid input, please try again.");
             }
@@ -87,7 +92,7 @@ public class AirPollutionClientGUI extends JFrame {
 
         hvacControlButton.addActionListener(e -> {
             if (if_analyse_data == null) {
-                outputArea.append("\nSensor data analysis is empty. Please analyse data first.");
+                outputArea.append("\nWarning: Sensor data analysis is empty. Please analyse data first.");
             }
             else if (if_hvac_switch == null) {
                 airPollutionClient.HVACControl(0, hvacCommandMessage -> {
@@ -100,7 +105,7 @@ public class AirPollutionClientGUI extends JFrame {
                     if_hvac_control = "hvacCommandMessage";
                 });
             } else {
-                outputArea.append("\n\nHVAC status has been changed. Please get the latest message from HVAC switch.");
+                outputArea.append("\nWarning.");
             }
         });
 
@@ -108,7 +113,7 @@ public class AirPollutionClientGUI extends JFrame {
             String sensorIdStr = hvacSwitchField.getText();
             try {
                 if (if_hvac_control == null) {
-                    outputArea.append("\nHVAC control message is empty. Please get HVAC control message first.");
+                    outputArea.append("\nWarning: HVAC control message is empty. Please get HVAC control message first.");
                 } else {
                     switchInput = Integer.parseInt(sensorIdStr);
                     if (switchInput == 1 || switchInput == 2) {
@@ -117,31 +122,31 @@ public class AirPollutionClientGUI extends JFrame {
                             if_hvac_switch = "hvacSwitchMessage";
                         });
                     }else {
-                        outputArea.append("\nInvalid number. It should be 1 or 2.");
+                        outputArea.append("\nWarning: Invalid number. It should be 1 or 2.");
                     }
                 }
             } catch (NumberFormatException ex){
-                outputArea.append("\nInvalid string. Please enter a valid integer.");
+                outputArea.append("\nWarning: Invalid string. Please enter a valid integer.");
             }
         });
 
         sensorNotificationsButton.addActionListener(e -> {
             try {
                 if (if_analyse_data == null) {
-                    outputArea.append("\nEmpty sensor analyse data. Please get analyse data.");
+                    outputArea.append("\nWarning: Empty sensor analyse data. Please get analyse data.");
                 } else {
                     airPollutionClient.sensorNotifications(1, sensorNotify -> {
                         SwingUtilities.invokeLater(() -> outputArea.append("\n" + sensorNotify));
                     });
                 }
             } catch (NumberFormatException ex) {
-                outputArea.append("\nInvalid sensor ID. Please enter a valid integer.");
+                outputArea.append("\nWarning: Invalid sensor ID. Please enter a valid integer.");
             }
         });
 
         hvacNotificationButton.addActionListener(e -> {
             if (if_hvac_switch == null) {
-                outputArea.append("\nEmpty hvac switch data. Please get switch data.");
+                outputArea.append("\nWarning: Empty hvac switch data. Please get switch data.");
             } else {
                 airPollutionClient.hvacNotifications(hvacNotify-> {
                     SwingUtilities.invokeLater(() -> outputArea.append("\n" + hvacNotify));
