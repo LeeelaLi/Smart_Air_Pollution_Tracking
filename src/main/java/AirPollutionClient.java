@@ -205,18 +205,24 @@ public class AirPollutionClient {
         StreamObserver<SensorMessage> sensorObserver = new StreamObserver<>() {
             @Override
             public void onNext(SensorMessage sensorMessage) {
-                if(status.equalsIgnoreCase("OFF")) {
-                    if (pollution_level > 2) {
+                if (pollution_level > 2) {
+                    if (status == null) {
+                        String sensorNotify = "\nSensor notifications from " + location + ": " +
+                                "\n1. Air quality: " + sensorMessage.getAirQuality() +
+                                "\n2. Pollution level: " + pollution_level +
+                                "\n3. Advice: " + sensorMessage.getMessage();
+                        callback.accept(sensorNotify);
+                    } else {
                         SensorMessage.Builder sensorMessage1 = SensorMessage.newBuilder();
-                        sensorMessage1.setMessage("The air is harmed,and the HVAC is OFF now. Please turn on the HVAC").build();
-                        String sensorNotify = "\nSensor notifications: " +
+                        sensorMessage1.setMessage("The air is harmed, and the HVAC is OFF now. Please turn on the HVAC").build();
+                        String sensorNotify = "\nSensor notifications from " + location + ": " +
                                 "\n1. Air quality: " + sensorMessage.getAirQuality() +
                                 "\n2. Pollution level: " + pollution_level +
                                 "\n3. Advice: " + sensorMessage1.getMessage();
                         callback.accept(sensorNotify);
                     }
-                } else {
-                    String sensorNotify = "\nSensor notifications: " +
+                } else{
+                    String sensorNotify = "\nSensor notifications from " + location + ": " +
                             "\n1. Air quality: " + sensorMessage.getAirQuality() +
                             "\n2. Pollution level: " + pollution_level +
                             "\n3. Advice: " + sensorMessage.getMessage();
@@ -234,25 +240,40 @@ public class AirPollutionClient {
                 System.out.println("Server streaming completed");
             }
         };
-        notificationStub.sensorNotifications(AnalyseResponse.newBuilder().setPollutionLevel(1).build(), sensorObserver);
+        notificationStub.sensorNotifications(AnalyseResponse.newBuilder().setPollutionLevel(pollution_level).build(), sensorObserver);
     }
 
     public void hvacNotifications(MessagePassingQueue.Consumer<String> callback) {
         StreamObserver<HVACMessage> hvacObserver = new StreamObserver<>() {
             @Override
             public void onNext(HVACMessage hvacMessage) {
-                HVACMessage.Builder hvacMessage1 = HVACMessage.newBuilder();
-                if (status.equalsIgnoreCase("ON")) {
-                    turn_on = true;
-                    hvacMessage1.setMessage(status).setStatus(turn_on);
+//                HVACMessage.Builder hvacMessage1 = HVACMessage.newBuilder();
+//                if (status.equalsIgnoreCase("ON")) {
+//                    turn_on = true;
+//                    hvacMessage1.setMessage(status).setStatus(turn_on);
+//                } else {
+//                    turn_on = false;
+//                    hvacMessage1.setMessage(status).setStatus(turn_on);
+//                }
+                if (status != null) {
+                    HVACMessage.Builder hvacMessage1 = HVACMessage.newBuilder();
+                    if (status.equalsIgnoreCase("ON")) {
+                        turn_on = true;
+                        hvacMessage1.setMessage(status).setStatus(turn_on);
+                    } else {
+                        turn_on = false;
+                        hvacMessage1.setMessage(status).setStatus(turn_on);
+                    }
+                    String hvacNotify = "\nHVAC notifications: " +
+                            "\n1. HVAC status: " + hvacMessage1.getStatus() +
+                            "\n2. Message: " + hvacMessage1.getMessage();
+                    callback.accept(hvacNotify);
                 } else {
-                    turn_on = false;
-                    hvacMessage1.setMessage(status).setStatus(turn_on);
+                    String hvacNotify = "\nHVAC notifications: " +
+                            "\n1. HVAC status: " + hvacMessage.getStatus() +
+                            "\n2. Message: " + hvacMessage.getMessage();
+                    callback.accept(hvacNotify);
                 }
-                String hvacNotify = "\nHVAC notifications: " +
-                        "\n1. HVAC status: " + hvacMessage1.getStatus() +
-                        "\n2. Message: " + hvacMessage1.getMessage();
-                callback.accept(hvacNotify);
             }
 
             @Override
