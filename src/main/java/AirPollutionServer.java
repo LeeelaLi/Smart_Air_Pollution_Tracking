@@ -115,7 +115,13 @@ public class AirPollutionServer {
             float CO = random.nextFloat() * 15;
             switch (sensor_id) {
                 case 1:
-                    response.setLocation("Home").setPM25(pm25).setTemperature(temp).setVOC(VOC).setHumidity(Humidity).setCO(CO);
+                    response.setLocation("Home").setPM25(13).setTemperature(19).setVOC(0.2F).setHumidity(33).setCO(3);
+                    break;
+                case 2:
+                    response.setLocation("Garden").setPM25(16).setTemperature(29).setVOC(0.3F).setHumidity(44).setCO(5);
+                    break;
+                case 3:
+                    response.setLocation("Car").setPM25(29).setTemperature(35).setVOC(1).setHumidity(37).setCO(9);
                     break;
                 default:
                     response.setLocation("Unknown");
