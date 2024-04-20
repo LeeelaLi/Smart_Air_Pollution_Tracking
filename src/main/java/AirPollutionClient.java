@@ -256,12 +256,12 @@ public class AirPollutionClient {
                         turn_on = false;
                         hvacMessage1.setMessage(status).setStatus(turn_on);
                     }
-                    String hvacNotify = "\nHVAC notifications: " +
+                    String hvacNotify = "\nHVAC Notifications: " +
                             "\n1. HVAC status: " + hvacMessage1.getStatus() +
                             "\n2. Message: " + hvacMessage1.getMessage();
                     callback.accept(hvacNotify);
                 } else {
-                    String hvacNotify = "\nHVAC notifications: " +
+                    String hvacNotify = "\nHVAC Notifications: " +
                             "\n1. HVAC status: " + hvacMessage.getStatus() +
                             "\n2. Message: " + hvacMessage.getMessage();
                     callback.accept(hvacNotify);
