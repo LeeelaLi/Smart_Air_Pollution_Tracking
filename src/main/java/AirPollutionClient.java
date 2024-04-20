@@ -214,7 +214,7 @@ public class AirPollutionClient {
                         callback.accept(sensorNotify);
                     } else {
                         SensorMessage.Builder sensorMessage1 = SensorMessage.newBuilder();
-                        sensorMessage1.setMessage("The air is harmed, and the HVAC is OFF now. Please turn on the HVAC").build();
+                        sensorMessage1.setMessage("The air is harmed, and the HVAC is OFF now. Please turn on the HVAC.").build();
                         String sensorNotify = "\nSensor notifications from " + location + ": " +
                                 "\n1. Air quality: " + sensorMessage.getAirQuality() +
                                 "\n2. Pollution level: " + pollution_level +
@@ -237,7 +237,7 @@ public class AirPollutionClient {
 
             @Override
             public void onCompleted() {
-                System.out.println("Server streaming completed");
+                System.out.println("Sensor Notification completed");
             }
         };
         notificationStub.sensorNotifications(AnalyseResponse.newBuilder().setPollutionLevel(pollution_level).build(), sensorObserver);
@@ -247,14 +247,6 @@ public class AirPollutionClient {
         StreamObserver<HVACMessage> hvacObserver = new StreamObserver<>() {
             @Override
             public void onNext(HVACMessage hvacMessage) {
-//                HVACMessage.Builder hvacMessage1 = HVACMessage.newBuilder();
-//                if (status.equalsIgnoreCase("ON")) {
-//                    turn_on = true;
-//                    hvacMessage1.setMessage(status).setStatus(turn_on);
-//                } else {
-//                    turn_on = false;
-//                    hvacMessage1.setMessage(status).setStatus(turn_on);
-//                }
                 if (status != null) {
                     HVACMessage.Builder hvacMessage1 = HVACMessage.newBuilder();
                     if (status.equalsIgnoreCase("ON")) {
@@ -283,7 +275,7 @@ public class AirPollutionClient {
 
             @Override
             public void onCompleted() {
-                System.out.println("Server streaming completed");
+                System.out.println("HVAC Notification completed");
             }
         };
         notificationStub.hvacNotifications(HVACResponse.newBuilder().setPollutionLevel(1).build(), hvacObserver);
