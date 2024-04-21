@@ -13,7 +13,6 @@ import java.util.concurrent.TimeUnit;
 public class AirPollutionClient {
     private final ManagedChannel sensorChannel;
     private final SensorGrpc.SensorStub sensorStub;
-    private final String consulServiceName;
     private final HVACGrpc.HVACStub hvacStub;
     private final NotificationGrpc.NotificationStub notificationStub;
     private static String location;
@@ -30,7 +29,6 @@ public class AirPollutionClient {
         this.sensorStub = SensorGrpc.newStub(sensorChannel);
         this.hvacStub = HVACGrpc.newStub(sensorChannel);
         this.notificationStub = NotificationGrpc.newStub(sensorChannel);
-        this.consulServiceName = consulServiceName;
     }
 
     public void shutdown() throws InterruptedException {
@@ -45,22 +43,25 @@ public class AirPollutionClient {
         sensorStub.getSensorData(request, new StreamObserver<>() {
             @Override
             public void onNext(SensorResponse sensorResponse) {
+                String sensorData = convertFloat(sensorResponse);
+                location = sensorResponse.getLocation(); // store the queried sensor id location
+                callback.accept(sensorData); // invoke the callback with sensor data
+            }
 
-                // keep two decimal from float
+            // create a method to keep two decimal from float
+            private static String convertFloat(SensorResponse sensorResponse) {
                 String pm25Value = String.format("%.2f", sensorResponse.getPM25());
                 String tempValue = String.format("%.2f", sensorResponse.getTemperature());
                 String vocValue = String.format("%.2f", sensorResponse.getVOC());
                 String humidValue = String.format("%.2f", sensorResponse.getHumidity());
                 String coValue = String.format("%.2f", sensorResponse.getCO());
 
-                String sensorData = "\nSensor response from " + sensorResponse.getLocation() + ":" +
+                return "\nSensor response from " + sensorResponse.getLocation() + ":" +
                         "\n1. PM2.5 - " + pm25Value + " μg/m3" +
                         "\n2. Temperature - " + tempValue + " °C" +
                         "\n3. VOC - " + vocValue + " mg/m3" +
                         "\n4. Humidity - " + humidValue + " %" +
                         "\n5. CO - " + coValue + " ppm";
-                location = sensorResponse.getLocation(); // store the queried sensor id location
-                callback.accept(sensorData); // invoke the callback with sensor data
             }
 
             @Override
@@ -236,8 +237,8 @@ public class AirPollutionClient {
                                 "\n4. Time: " + updatedTime;
                         callback.accept(sensorNotify);
                     } else {  // if HVAC status has been changed by HVAC switch
+                        Date updatedTime = new Date(sensorMessage.getTimestamp().getSeconds() * 1000);
                         if (status.equalsIgnoreCase("OFF")){ // if HVAC status has been changed to 'OFF', alert user to turn on HVAC
-                            Date updatedTime = new Date(sensorMessage.getTimestamp().getSeconds() * 1000);
                             SensorMessage.Builder sensorMessage1 = SensorMessage.newBuilder();
                             sensorMessage1.setMessage("The air is harmed, and the HVAC is OFF now. Please turn on the HVAC.").build();
                             String sensorNotify = "\nSensor notifications from " + location + ": " +
@@ -247,7 +248,6 @@ public class AirPollutionClient {
                                     "\n4. Time: " + updatedTime;
                             callback.accept(sensorNotify);
                         } else {
-                            Date updatedTime = new Date(sensorMessage.getTimestamp().getSeconds() * 1000);
                             String sensorNotify = "\nSensor notifications from " + location + ": " +
                                     "\n1. Air quality: " + sensorMessage.getAirQuality() +
                                     "\n2. Pollution level: " + pollution_level +
@@ -338,46 +338,43 @@ public class AirPollutionClient {
 
         // wait for user input to continue request or stop streaming
         while (true) {
-            System.out.println("Enter 1-3 to get sensor data, 'q' to quit:" +
-                    "\n1. Sensor 1: Home" +
-                    "\n2. Sensor 2: Garden" +
-                    "\n3. Sensor 3: Car");
+            System.out.println("""
+                    Enter 1-3 to get sensor data, 'q' to quit:
+                    1. Sensor 1: Home
+                    2. Sensor 2: Garden
+                    3. Sensor 3: Car""");
             if (keyboard.hasNextInt()) { // if user enter an integer
                 int sensor_id = keyboard.nextInt();
                 if (sensor_id > 0 && sensor_id < 4) { // if user enter between 1-3
-                    airPollutionClient.GetSensorData(sensor_id, sensorData -> { // pass user enter to get sensor data
-                        System.out.println(sensorData); // print sensor data
-                    });
+                    // pass user enter to get sensor data
+                    // print sensor data
+                    airPollutionClient.GetSensorData(sensor_id, System.out::println);
                     System.out.println("Enter 'yes' to analyse sensor data, others to go back to sensor data:");
                     String if_analyse = keyboard.next(); // allow user entering strings to confirm that analyse sensor data
                     while (if_analyse.equalsIgnoreCase("yes")) { // if user confirm to analyse sensor data
-                        airPollutionClient.AnalyseSensorData(if_analyse, analyseData -> {
-                            System.out.println(analyseData); // print sensor data analysis
-                        });
+                        // print sensor data analysis
+                        airPollutionClient.AnalyseSensorData(if_analyse, System.out::println);
                         System.out.println("Enter 'yes' to check HVAC status:"); // allow user entering strings to confirm that getting HVAC status
                         if (keyboard.hasNext()) {
                             String input = keyboard.next();
                             if (input.equalsIgnoreCase("yes")) { // if user confirm to check HVAC status
-                                airPollutionClient.HVACControl(0, hvacCommandMessage -> {
-                                    System.out.println(hvacCommandMessage); // print HVAC status
-                                });
+                                // print HVAC status
+                                airPollutionClient.HVACControl(0, System.out::println);
                                 System.out.println("Do you want to turn on(1)/turn off(2)?"); // allow user entering integers to turn on HVAC or not
                                 int turn_on = keyboard.nextInt();
-                                airPollutionClient.HVACSwitch(turn_on, hvacSwitchMessage -> { // pass user choice to switch HVAC, '1' for turning on, '2' for turning off
-                                    System.out.println(hvacSwitchMessage); // print HVAC switch result
-                                });
-                                airPollutionClient.HVACControl(turn_on, hvacCommandMessage -> { // pass the same rules of switching HVAC to update HVAC status
-                                    System.out.println(hvacCommandMessage); // print HVAC latest status
-                                });
+                                // pass user choice to switch HVAC, '1' for turning on, '2' for turning off
+                                // print HVAC switch result
+                                airPollutionClient.HVACSwitch(turn_on, System.out::println);
+                                // pass the same rules of switching HVAC to update HVAC status
+                                // print HVAC latest status
+                                airPollutionClient.HVACControl(turn_on, System.out::println);
                                 System.out.println("Do you want to turn on the sensor and HVAC notifications(1)?"); // allow user entering integers to turn on notifications or not
                                 int turnOnNotify = keyboard.nextInt();
                                 if (turnOnNotify == 1) { // if user want to turn on notifications
-                                    airPollutionClient.sensorNotifications(turnOnNotify, sensorNotify -> {
-                                        System.out.println(sensorNotify); // print sensor notifications
-                                    });
-                                    airPollutionClient.hvacNotifications(hvacNotify -> {
-                                        System.out.println(hvacNotify); // print HVAC notifications
-                                    });
+                                    // print sensor notifications
+                                    airPollutionClient.sensorNotifications(turnOnNotify, System.out::println);
+                                    // print HVAC notifications
+                                    airPollutionClient.hvacNotifications(System.out::println);
                                 }
                             }
                         }

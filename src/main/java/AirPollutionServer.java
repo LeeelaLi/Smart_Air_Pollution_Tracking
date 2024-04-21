@@ -12,7 +12,6 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.time.Instant;
 import java.util.Properties;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class AirPollutionServer {
@@ -332,16 +331,14 @@ public class AirPollutionServer {
             Runnable streamingTask = () -> {
                 try {
                     while (!Thread.currentThread().isInterrupted()) {
-                        boolean turn_on;
                         String message;
 
                         // check the latest HVAC status
                         if (action.equals(HVACCommand.Action.START)) {
                             if (status.equals("ON")) {
                                 message = "HVAC is on.";
-                                turn_on = true;
                                 HVACMessage hvacMessage = HVACMessage.newBuilder()
-                                        .setStatus(turn_on)
+                                        .setStatus(true)
                                         .setMessage(message)
                                         .setTimestamp(timestampNow())
                                         .build();
@@ -350,10 +347,9 @@ public class AirPollutionServer {
                             }
                         } else {
                             message = "HVAC is off.";
-                            turn_on = false;
 
                             HVACMessage hvacMessage = HVACMessage.newBuilder()
-                                    .setStatus(turn_on)
+                                    .setStatus(false)
                                     .setMessage(message)
                                     .setTimestamp(timestampNow())
                                     .build();
