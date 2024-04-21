@@ -18,10 +18,12 @@ import java.util.concurrent.TimeUnit;
 public class AirPollutionServer {
     // Sensor service implement
     private Server server;
-    private static int pollution_level;
-    private static HVACCommand.Action action;
-    private static String status = null;
-    private static String if_hvac_switch = null;
+    private static int pollution_level; // store pollution level to send through the whole system
+    private static HVACCommand.Action action; // store HVAC action
+    private static String status = null; // store HVAC status
+    private static String if_hvac_switch = null; // store if HVAC has been changed
+
+    // Register to consul
     private void registerToConsul() {
         System.out.println("Registering server to Consul...");
 
@@ -39,7 +41,6 @@ public class AirPollutionServer {
         int consulPort = Integer.parseInt(props.getProperty("consul.port"));
         String serviceName = props.getProperty("consul.service.name");
         int servicePort = Integer.parseInt(props.getProperty("consul.service.port"));
-        String healthCheckInterval = props.getProperty("consul.service.healthCheckInterval");
 
         // Get host address
         String hostAddress;
@@ -68,18 +69,18 @@ public class AirPollutionServer {
 
     public void start(int port) throws IOException {
         server = ServerBuilder.forPort(port)
-                .addService(new SensorImpl())
-                .addService(new HVACImpl())
-                .addService(new NotifyImpl())
+                .addService(new SensorImpl()) // add sensor service
+                .addService(new HVACImpl()) // add HVAC service
+                .addService(new NotifyImpl()) // add notification service
                 .build()
                 .start();
-        System.out.println("Sensor server started, listening on port " + port);
+        System.out.println("Air-Pollution-Tracking server started, listening on port " + port);
 
         // Register server to Consul
         registerToConsul();
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            System.out.println("Shutting down gRPC server");
+            System.out.println("Shutting down Air-Pollution-Tracking server");
             try {
                 AirPollutionServer.this.stop();
             } catch (InterruptedException e) {
@@ -100,27 +101,23 @@ public class AirPollutionServer {
         }
     }
 
+    // Sensor service
     private static class SensorImpl extends SensorGrpc.SensorImplBase {
-        private SensorResponse sensorData;
+        private SensorResponse sensorData; // declare this variable to store sensor data
 
         @Override
+        // get sensor data
         public void getSensorData(SensorRequest request, StreamObserver<SensorResponse> responseObserver) {
             int sensor_id = request.getSensorId();
             SensorResponse.Builder response = SensorResponse.newBuilder();
-//            Random random = new Random();
-//            float pm25 = random.nextFloat() * 12;
-//            float temp = random.nextFloat() * 38;
-//            float VOC = random.nextFloat() * 10;
-//            float Humidity = random.nextFloat() * 78;
-//            float CO = random.nextFloat() * 15;
             switch (sensor_id) {
-                case 1:
+                case 1: // set up 'home' sensor data
                     response.setLocation("Home").setPM25(13).setTemperature(19).setVOC(0.2F).setHumidity(33).setCO(3);
                     break;
-                case 2:
+                case 2: // set up 'garden' sensor data
                     response.setLocation("Garden").setPM25(16).setTemperature(29).setVOC(0.3F).setHumidity(44).setCO(5);
                     break;
-                case 3:
+                case 3: // set up 'car' sensor data
                     response.setLocation("Car").setPM25(29).setTemperature(35).setVOC(1).setHumidity(37).setCO(9);
                     break;
                 default:
@@ -128,15 +125,16 @@ public class AirPollutionServer {
                     break;
             }
 
-            // Store the sensor data for analysis
+            // store the sensor data for analysis
             sensorData = response.build();
 
-            // Send response to client
+            // send response to client
             responseObserver.onNext(sensorData);
             responseObserver.onCompleted();
         }
 
         @Override
+        // analyse based on sensor data
         public StreamObserver<SensorResponse> analyseSensorData(StreamObserver<AnalyseResponse> responseObserver) {
             return new StreamObserver<>() {
 
@@ -146,52 +144,53 @@ public class AirPollutionServer {
 
                 @Override
                 public void onError(Throwable throwable) {
-                    // Handle error
+                    System.err.println("Error in sensor analysis: " + throwable.getMessage());
                 }
 
                 @Override
                 public void onCompleted() {
 
-                    // Perform analysis based on the stored sensor data
+                    // perform analysis based on the stored sensor data
                     float sumPM25 = sensorData.getPM25();
                     float sumTemp = sensorData.getTemperature();
                     float sumVOC = sensorData.getVOC();
                     float sumHumidity = sensorData.getHumidity();
                     float sumCO = sensorData.getCO();
-                    int pollutionItem = 0;
+                    int pollutionItem = 0; // record polluted items number
 
-                    StringBuilder analyse = new StringBuilder();
-                    StringBuilder message = new StringBuilder();
-                    if (sumPM25 > 12) {
+                    StringBuilder analyse = new StringBuilder(); // analyse data based on polluted items number
+                    StringBuilder message = new StringBuilder(); // give suggests based on polluted items number
+                    if (sumPM25 > 12) { // pm2.5 > 12 is referred to pollution
                         pollutionItem++;
                         analyse.append("\n· PM2.5 is over 12μg/m3.");
                     }
-                    if (sumTemp < 18 || sumTemp > 22) {
+                    if (sumTemp < 18 || sumTemp > 28) { // 18 > temperature < 28 is referred to pollution
                         pollutionItem++;
-                        analyse.append("\n· Temperature is exceed 18-22°C.");
+                        analyse.append("\n· Temperature is exceed 18-28°C.");
                     }
-                    if (sumVOC < 0 || sumVOC > 0.5) {
+                    if (sumVOC < 0 || sumVOC > 0.5) { // 0.5 > VOC < 0 is referred to pollution
                         pollutionItem++;
                         analyse.append("\n· VOC is exceed 0-0.5mg/m3.");
                     }
-                    if (sumHumidity < 30 || sumHumidity > 50) {
+                    if (sumHumidity < 30 || sumHumidity > 50) { // 50 > humidity < 30 is referred to pollution
                         pollutionItem++;
                         analyse.append("\n· Humidity is exceed 30-50%.");
                     }
-                    if (sumCO < 0 || sumCO > 15) {
+                    if (sumCO < 0 || sumCO > 15) { // 15 > CO < 0 is referred to pollution
                         pollutionItem++;
                         analyse.append("\n· CO is exceed 0-15ppm.");
                     }
 
-                    if (pollutionItem < 2) {
+                    // set up pollution level based on pollution items
+                    if (pollutionItem < 2) { // if pollution items are less than 2
                         message.append("Low pollution.");
-                    } else if (pollutionItem == 2) {
+                    } else if (pollutionItem == 2) { // if pollution items are 2
                         message.append("Moderate pollution, you could turn on the HVAC manually.");
-                    } else {
-                        message.append("High pollution, strongly recommend to turn on the HVAC.");
-                        status = "ON";
+                    } else { // if pollution items are greater than 2
+                        message.append("High pollution, automatically turn on the HVAC.");
+                        status = "ON"; // automatically turn on HVAC
                     }
-                    // Create AnalyseResponse
+                    // create AnalyseResponse
                     AnalyseResponse analyseResponse = AnalyseResponse.newBuilder()
                             .setLocation(sensorData.getLocation())
                             .setAnalyse(analyse.toString())
@@ -199,9 +198,9 @@ public class AirPollutionServer {
                             .setMessage(message.toString())
                             .setTimestamp(timestampNow())
                             .build();
-                    pollution_level = pollutionItem;
+                    pollution_level = pollutionItem; // pass pollution items value to pollution level
 
-                    // Send response to client
+                    // send response to client
                     responseObserver.onNext(analyseResponse);
                     responseObserver.onCompleted();
                 }
@@ -209,30 +208,31 @@ public class AirPollutionServer {
         }
     }
 
+    // HVAC service
     private static class HVACImpl extends HVACGrpc.HVACImplBase {
 
+        // get HVAC status
         public StreamObserver<HVACRequest> hvacControl(StreamObserver<HVACCommand> hvacCommandObserver) {
-            return new StreamObserver<HVACRequest>() {
+            return new StreamObserver<>() {
                 @Override
                 public void onNext(HVACRequest hvacRequest) {
-                    if (if_hvac_switch == null) {
-                        if (pollution_level > 2) {
-                            action = HVACCommand.Action.START;
+                    if (if_hvac_switch == null) { // check if HVAC status hasn't been changed
+                        if (pollution_level > 2) { // if pollution level is greater than 2
+                            action = HVACCommand.Action.START; // automatically turn on HVAC
                         } else {
                             action = HVACCommand.Action.STOP;
                         }
-                    } else if (status.equalsIgnoreCase("ON")) {
-                        action = HVACCommand.Action.START;
-                        status = "ON";
-                    } else if (status.equalsIgnoreCase("OFF")) {
-                        action = HVACCommand.Action.STOP;
-                        status = "OFF";
+                    } else if (status.equalsIgnoreCase("ON")) { // if HVAC status has been changed to 'ON'
+                        action = HVACCommand.Action.START; // change action to 'START'
+                    } else if (status.equalsIgnoreCase("OFF")) { // if HVAC status has been changed to 'OFF'
+                        action = HVACCommand.Action.STOP; // change action to 'STOP'
                     }
 
                     HVACCommand hvacCommand = HVACCommand.newBuilder()
                             .setAction(action)
                             .build();
-                    action = hvacCommand.getAction();
+
+                    action = hvacCommand.getAction(); // store latest HVAC action
                     hvacCommandObserver.onNext(hvacCommand);
                 }
 
@@ -243,21 +243,23 @@ public class AirPollutionServer {
 
                 @Override
                 public void onCompleted() {
+                    System.out.println("HVAC control completed");
                     hvacCommandObserver.onCompleted();
                 }
             };
         }
 
+        // switch HVAC status
         public StreamObserver<HVACCommand> hvacSwitch(StreamObserver<HVACResponse> responseObserver) {
             return new StreamObserver<>() {
 
                 @Override
                 public void onNext(HVACCommand hvacCommand) {
                     System.out.println("HVAC command: " + hvacCommand.getAction());
-                    if (hvacCommand.getAction().equals(HVACCommand.Action.START)) {
-                        status = "ON";
+                    if (hvacCommand.getAction().equals(HVACCommand.Action.START)) { // check if the latest HVAC action is 'START'
+                        status = "ON"; // turn on the HVAC
                     } else {
-                        status = "OFF";
+                        status = "OFF"; // turn off the HVAC
                     }
 
                     HVACResponse hvacResponse = HVACResponse.newBuilder()
@@ -265,8 +267,9 @@ public class AirPollutionServer {
                             .setPollutionLevel(pollution_level)
                             .setTimestamp(timestampNow())
                             .build();
-                    status = hvacResponse.getStatus();
-                    action = hvacCommand.getAction();
+
+                    status = hvacResponse.getStatus(); // store the latest HVAC status
+                    action = hvacCommand.getAction(); // store the latest HVAC action
                     responseObserver.onNext(hvacResponse);
                 }
 
@@ -282,13 +285,16 @@ public class AirPollutionServer {
         }
     }
 
+    // Notification service
     private static class NotifyImpl extends NotificationGrpc.NotificationImplBase {
+        // get sensor notification
         public void sensorNotifications(AnalyseResponse analyseResponse, StreamObserver<SensorMessage> sensorObserver) {
             Runnable streamingTask = () -> {
                 try {
                     while (!Thread.currentThread().isInterrupted()) {
                         String air_quality;
                         String message;
+                        // generate air quality and advice based on pollution level
                         if (pollution_level < 2) {
                             air_quality = "Great";
                             message = "The air is healthy.";
@@ -308,7 +314,7 @@ public class AirPollutionServer {
                                 .setTimestamp(timestampNow())
                                 .build();
                         sensorObserver.onNext(sensorMessage);
-                        Thread.sleep(5000); // Stream every 5 seconds
+                        Thread.sleep(5000); // stream every 5 seconds
                     }
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
@@ -321,6 +327,7 @@ public class AirPollutionServer {
             streamingThread.start();
         }
 
+        // get HVAC notification
         public void hvacNotifications(HVACResponse hvacResponse, StreamObserver<HVACMessage> hvacObserver) {
             Runnable streamingTask = () -> {
                 try {
@@ -328,6 +335,7 @@ public class AirPollutionServer {
                         boolean turn_on;
                         String message;
 
+                        // check the latest HVAC status
                         if (action.equals(HVACCommand.Action.START)) {
                             if (status.equals("ON")) {
                                 message = "HVAC is on.";
@@ -366,6 +374,7 @@ public class AirPollutionServer {
         }
     }
 
+    // Get current time
     private static Timestamp timestampNow() {
         Instant now = Instant.now();
         return Timestamp.newBuilder()
