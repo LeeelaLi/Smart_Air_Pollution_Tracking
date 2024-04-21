@@ -3,21 +3,25 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class AirPollutionClientGUI extends JFrame {
+
+    // Allow user to enter their choice
     private JTextField getDataField;
     private JTextField analyseDataField;
     private JTextField hvacSwitchField;
+    // Allow user to click the button to get corresponded data
     private JButton getDataButton;
     private JButton analyseDataButton;
     private JButton hvacSwitchButton;
     private JButton hvacControlButton;
     private JButton sensorNotificationsButton;
     private JButton hvacNotificationButton;
+    // Print the result
     private JTextArea outputArea;
-    private static String if_get_data = null;
-    private static String if_analyse_data = null;
-    private static String if_hvac_control = null;
-    private static String if_hvac_switch = null;
-    private static int switchInput = 0;
+    private static String if_get_data = null; // check if sensor data is successfully obtained
+    private static String if_analyse_data = null; // check if sensor data is successfully analysed
+    private static String if_hvac_control = null; // check if HVAC status is successfully obtained
+    private static String if_hvac_switch = null; // check if HVAC status has been changed by HVAC switch
+    private static int switchInput = 0; // store user input in HVAC switch method
 
     private final AirPollutionClient airPollutionClient;
 
@@ -201,7 +205,7 @@ public class AirPollutionClientGUI extends JFrame {
         inputPanel.add(notificationPanel);
 
         JScrollPane inputScrollPane = new JScrollPane(inputPanel); // wrap inputPanel in a JScrollPane
-        inputScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED); // enable horizontal scrolling
+        inputScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED); // enable horizontal scrolling when interface has been zoomed in or out
 
         JScrollPane outputScrollPane = new JScrollPane(outputArea);
 
