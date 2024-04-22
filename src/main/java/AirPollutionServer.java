@@ -20,7 +20,7 @@ public class AirPollutionServer {
     private static int pollution_level; // store pollution level to send through the whole system
     private static HvacCommand.Action action; // store HVAC action
     private static String status = null; // store HVAC status
-    private static String if_hvac_switch = null; // store if HVAC has been changed
+    private static String ifHvacSwitch = null; // store if HVAC has been changed
     private static StringBuilder sensorAlert = null;
     private static float sumPM25;
     private static float sumTemp;
@@ -234,12 +234,9 @@ public class AirPollutionServer {
             return new StreamObserver<>() {
                 @Override
                 public void onNext(HvacRequest hvacRequest) {
-                    if (if_hvac_switch == null) { // check if HVAC status hasn't been changed
-                        if (pollution_level > 2) { // if pollution level is greater than 2
-                            action = HvacCommand.Action.START; // automatically turn on HVAC
-                        } else {
-                            action = HvacCommand.Action.STOP;
-                        }
+                    if (ifHvacSwitch == null) { // check if HVAC status hasn't been changed
+                        // if pollution level is greater than 2, automatically turn on HVAC
+                        action = pollution_level > 2 ? HvacCommand.Action.START : HvacCommand.Action.STOP;
                     } else if (status.equalsIgnoreCase("ON")) { // if HVAC status has been changed to 'ON'
                         action = HvacCommand.Action.START; // change action to 'START'
                     } else if (status.equalsIgnoreCase("OFF")) { // if HVAC status has been changed to 'OFF'
