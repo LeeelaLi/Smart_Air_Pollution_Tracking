@@ -388,7 +388,6 @@ public class AirPollutionClient {
                 }
             } else { // if user enter strings
                 String input = keyboard.next();
-                System.out.println("Invalid input."); // throw an error when user enter strings except 'q'
                 if (input.equalsIgnoreCase("q")) { // if user enter 'q', then quit the application
                     break;
                 }

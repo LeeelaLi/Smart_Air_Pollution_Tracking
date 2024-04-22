@@ -8,13 +8,14 @@ public class AirPollutionClientGUI extends JFrame {
     private JTextField getDataField;
     private JTextField analyseDataField;
     private JTextField hvacSwitchField;
-    // Allow user to click the button to get corresponded data
+    // Allow user to click the button to implement corresponded function
     private JButton getDataButton;
     private JButton analyseDataButton;
     private JButton hvacSwitchButton;
     private JButton hvacControlButton;
     private JButton sensorNotificationsButton;
     private JButton hvacNotificationButton;
+    private JButton quitButton;
     // Print the result
     private JTextArea outputArea;
     private static String if_get_data = null; // check if sensor data is successfully obtained
@@ -42,18 +43,19 @@ public class AirPollutionClientGUI extends JFrame {
 
         // Sensor service
         getDataField = new JTextField(15);
-        getDataButton = new JButton("Get Sensor Data"); // set up get sensor data button
+        getDataButton = new JButton("Get Sensor Data"); // set get sensor data button name
         analyseDataField = new JTextField(15); // set up sensor id enter field
-        analyseDataButton = new JButton("Analyse Sensor Data"); // set up analyse sensor data button
+        analyseDataButton = new JButton("Analyse Sensor Data"); // set analyse sensor data button name
 
         // HVAC service
-        hvacControlButton = new JButton("HVAC Control"); // set up get HVAC status button
+        hvacControlButton = new JButton("HVAC Control"); // set HVAC status button name
         hvacSwitchField = new JTextField(15); // set up HVAC switch enter field
-        hvacSwitchButton = new JButton("HVAC Switch"); // set up HVAC switch button
+        hvacSwitchButton = new JButton("HVAC Switch"); // set HVAC switch button name
 
         // Notification service
-        sensorNotificationsButton = new JButton("Sensor Notifications"); // set up sensor notification button
-        hvacNotificationButton = new JButton("HVAC Notifications"); // set up HVAC notification button
+        sensorNotificationsButton = new JButton("Sensor Notifications"); // set sensor notification button name
+        hvacNotificationButton = new JButton("HVAC Notifications"); // set HVAC notification button name
+        quitButton = new JButton("Quit"); // set quit button name
 
         outputArea = new JTextArea(25, 30); // set up output area
         outputArea.setEditable(false);
@@ -165,6 +167,13 @@ public class AirPollutionClientGUI extends JFrame {
                 airPollutionClient.hvacNotifications(hvacNotify-> SwingUtilities.invokeLater(() -> outputArea.append("\n" + hvacNotify)));
             }
         });
+
+        // Quit button
+        quitButton.addActionListener(e -> {
+            // Close the application when Quit button is clicked
+            dispose(); // Close the JFrame
+            System.exit(0); // Terminate the application
+        });
     }
 
     private void addComponents() {
@@ -204,6 +213,7 @@ public class AirPollutionClientGUI extends JFrame {
 
         notificationPanel.add(sensorNotificationsButton); // turn on sensor notification
         notificationPanel.add(hvacNotificationButton); // turn on HVAC notification
+        notificationPanel.add(quitButton);
         notificationPanel.setBorder(new EmptyBorder(10, 15, 0, 0)); // Add left padding
 
         inputPanel.add(sensorPanel);
