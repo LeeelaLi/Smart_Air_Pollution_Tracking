@@ -1,6 +1,7 @@
 import com.chuntao.service.*;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.netty.shaded.io.netty.util.internal.shaded.org.jctools.queues.MessagePassingQueue;
 import io.grpc.stub.StreamObserver;
@@ -96,7 +97,9 @@ public class AirPollutionClient {
                 }
             });
         } catch (StatusRuntimeException e) {
-            System.err.println("Error in gRPC call to get sensor data: " + e.getStatus());
+            // catch more specific exceptions
+            Status status = e.getStatus();
+            System.err.println("Error in gRPC call to get sensor data: " + status.getCode() + ": " + status.getDescription());
             System.err.println("Please try again later or contact support for assistance.");
         } catch (Exception e) {
             System.err.println("Unexpected error in getting sensor data: " + e.getMessage());
@@ -404,9 +407,14 @@ public class AirPollutionClient {
                 } else { // if user enter strings
                     String input = keyboard.next();
                     if (input.equalsIgnoreCase("q")) { // if user enter 'q', then quit the application
-                        break;
+                        System.out.println("Are you sure you want to quit?(yes/other)");
+                        String confirmQuit = keyboard.next();
+                        if(confirmQuit.equalsIgnoreCase("yes")) {
+                            airPollutionClient.shutdown();
+                            break;
+                        }
                     } else {
-                        System.out.println("Invalid input. Please enter a number between 1 and 3.");
+                        continue;
                     }
                 }
             }

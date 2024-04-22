@@ -175,9 +175,12 @@ public class AirPollutionClientGUI extends JFrame {
 
         // Quit button
         quitButton.addActionListener(e -> {
-            // terminate the application when quit button is clicked
-            dispose(); // close the JFrame
-            System.exit(0); // terminate the application
+            int option = JOptionPane.showConfirmDialog(this, "Do you want to quit the application?", "Quit", JOptionPane.YES_NO_OPTION);
+            if (option == JOptionPane.YES_OPTION) {
+                // If user confirms, terminate the application
+                dispose(); // Close the JFrame
+                System.exit(0); // Terminate the application
+            }
         });
     }
 
