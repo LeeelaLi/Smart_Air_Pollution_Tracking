@@ -21,6 +21,14 @@ public class AirPollutionServer {
     private static HVACCommand.Action action; // store HVAC action
     private static String status = null; // store HVAC status
     private static String if_hvac_switch = null; // store if HVAC has been changed
+    private static StringBuilder sensorAlert = null;
+    private static StringBuilder hvacComponentStatus = null;
+    private static float sumPM25;
+    private static float sumTemp;
+    private static float sumVOC;
+    private static float sumHumidity;
+    private static float sumCO;
+
 
     // Register to consul
     private void registerToConsul() {
@@ -111,13 +119,13 @@ public class AirPollutionServer {
             SensorResponse.Builder response = SensorResponse.newBuilder();
             switch (sensor_id) {
                 case 1: // set up 'home' sensor data
-                    response.setLocation("Home").setPM25(13).setTemperature(19).setVOC(0.2F).setHumidity(33).setCO(3);
+                    response.setLocation("Bedroom").setPM25(13).setTemperature(19).setVOC(0.2F).setHumidity(33).setCO(3);
                     break;
                 case 2: // set up 'garden' sensor data
-                    response.setLocation("Garden").setPM25(16).setTemperature(29).setVOC(0.3F).setHumidity(44).setCO(5);
+                    response.setLocation("Living room").setPM25(16).setTemperature(29).setVOC(0.3F).setHumidity(44).setCO(5);
                     break;
                 case 3: // set up 'car' sensor data
-                    response.setLocation("Car").setPM25(29).setTemperature(35).setVOC(1).setHumidity(37).setCO(9);
+                    response.setLocation("Karaoke room").setPM25(29).setTemperature(35).setVOC(1).setHumidity(55).setCO(9);
                     break;
                 default:
                     response.setLocation("Unknown");
@@ -150,15 +158,17 @@ public class AirPollutionServer {
                 public void onCompleted() {
 
                     // perform analysis based on the stored sensor data
-                    float sumPM25 = sensorData.getPM25();
-                    float sumTemp = sensorData.getTemperature();
-                    float sumVOC = sensorData.getVOC();
-                    float sumHumidity = sensorData.getHumidity();
-                    float sumCO = sensorData.getCO();
+                    sumPM25 = sensorData.getPM25();
+                    sumTemp = sensorData.getTemperature();
+                    sumVOC = sensorData.getVOC();
+                    sumHumidity = sensorData.getHumidity();
+                    sumCO = sensorData.getCO();
                     int pollutionItem = 0; // record polluted items number
 
                     StringBuilder analyse = new StringBuilder(); // analyse data based on polluted items number
                     StringBuilder message = new StringBuilder(); // give suggests based on polluted items number
+                    StringBuilder tempAlert = new StringBuilder();
+
                     if (sumPM25 > 12) { // pm2.5 > 12 is referred to pollution
                         pollutionItem++;
                         analyse.append("\n· PM2.5 is over 12μg/m3.");
@@ -166,6 +176,11 @@ public class AirPollutionServer {
                     if (sumTemp < 18 || sumTemp > 28) { // 18 > temperature < 28 is referred to pollution
                         pollutionItem++;
                         analyse.append("\n· Temperature is exceed 18-28°C.");
+                        if (sumTemp < 18) {
+                            tempAlert.append("\n· Low temperature warning!");
+                        } else {
+                            tempAlert.append("\n· High temperature warning!");
+                        }
                     }
                     if (sumVOC < 0 || sumVOC > 0.5) { // 0.5 > VOC < 0 is referred to pollution
                         pollutionItem++;
@@ -174,6 +189,9 @@ public class AirPollutionServer {
                     if (sumHumidity < 30 || sumHumidity > 50) { // 50 > humidity < 30 is referred to pollution
                         pollutionItem++;
                         analyse.append("\n· Humidity is exceed 30-50%.");
+                        if (sumHumidity > 50) {
+                            tempAlert.append("\n· Mould risk warning!");
+                        }
                     }
                     if (sumCO < 0 || sumCO > 15) { // 15 > CO < 0 is referred to pollution
                         pollutionItem++;
@@ -197,7 +215,9 @@ public class AirPollutionServer {
                             .setMessage(message.toString())
                             .setTimestamp(timestampNow())
                             .build();
+
                     pollution_level = pollutionItem; // pass pollution items value to pollution level
+                    sensorAlert = tempAlert;
 
                     // send response to client
                     responseObserver.onNext(analyseResponse);
@@ -229,6 +249,7 @@ public class AirPollutionServer {
 
                     HVACCommand hvacCommand = HVACCommand.newBuilder()
                             .setAction(action)
+                            .setUpdatedTime(timestampNow())
                             .build();
 
                     action = hvacCommand.getAction(); // store latest HVAC action
@@ -264,7 +285,7 @@ public class AirPollutionServer {
                     HVACResponse hvacResponse = HVACResponse.newBuilder()
                             .setStatus(status)
                             .setPollutionLevel(pollution_level)
-                            .setTimestamp(timestampNow())
+                            .setUpdatedTime(timestampNow())
                             .build();
 
                     status = hvacResponse.getStatus(); // store the latest HVAC status
@@ -309,7 +330,8 @@ public class AirPollutionServer {
                         SensorMessage sensorMessage = SensorMessage.newBuilder()
                                 .setLocation(analyseResponse.getLocation())
                                 .setAirQuality(air_quality)
-                                .setMessage(message)
+                                .setAlert(sensorAlert.toString())
+                                .setAdvice(message)
                                 .setTimestamp(timestampNow())
                                 .build();
                         sensorObserver.onNext(sensorMessage);
@@ -340,7 +362,7 @@ public class AirPollutionServer {
                                 HVACMessage hvacMessage = HVACMessage.newBuilder()
                                         .setStatus(true)
                                         .setMessage(message)
-                                        .setTimestamp(timestampNow())
+                                        .setUpdatedTime(timestampNow())
                                         .build();
                                 hvacObserver.onNext(hvacMessage);
                                 Thread.sleep(5000); // Stream every 5 seconds
@@ -351,7 +373,7 @@ public class AirPollutionServer {
                             HVACMessage hvacMessage = HVACMessage.newBuilder()
                                     .setStatus(false)
                                     .setMessage(message)
-                                    .setTimestamp(timestampNow())
+                                    .setUpdatedTime(timestampNow())
                                     .build();
 
                             hvacObserver.onNext(hvacMessage);

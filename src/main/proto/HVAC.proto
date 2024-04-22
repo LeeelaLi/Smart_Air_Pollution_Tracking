@@ -27,10 +27,11 @@ message HVACCommand {
     STOP = 1;
   }
   Action action = 1;
+  google.protobuf.Timestamp updated_time = 2;
 }
 
 message HVACResponse {
   string status = 1;
   int32 pollution_level = 2;
-  google.protobuf.Timestamp timestamp = 3;
+  google.protobuf.Timestamp updated_time = 3;
 }

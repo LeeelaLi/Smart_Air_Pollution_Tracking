@@ -21,12 +21,13 @@ service Notification {
 message SensorMessage {
   string location = 1;
   string air_quality = 2;
-  string message = 3;
-  google.protobuf.Timestamp timestamp = 4;
+  string alert = 3;
+  string advice = 4;
+  google.protobuf.Timestamp timestamp = 5;
 }
 
 message HVACMessage {
   bool status = 1;
   string message = 2;
-  google.protobuf.Timestamp timestamp = 3;
+  google.protobuf.Timestamp updated_time = 3;
 }
