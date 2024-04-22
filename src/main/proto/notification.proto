@@ -10,24 +10,26 @@ option java_multiple_files = true;
 option java_package = "com.chuntao.service";
 option java_outer_classname = "NotificationService";
 
-// Notification Service: monitor air index and analyse data
+// Notification Service: monitor sensor and HVAC status
 service Notification {
-  // Server-side streaming RPC for receiving notifications based on analyze response
+  // Server-side streaming RPC for receiving notifications based on sensor data analysis
   rpc SensorNotifications(AnalyseResponse) returns (stream SensorMessage) {}
-  // Server-side streaming RPC for receiving notifications based on HVAC response
+  // Server-side streaming RPC for receiving notifications based on HVAC status
   rpc HvacNotifications(HvacResponse) returns (stream HvacMessage) {}
 }
 
+// Message structure for sensor notification
 message SensorMessage {
-  string location = 1;
-  string air_quality = 2;
-  string alert = 3;
-  string advice = 4;
-  google.protobuf.Timestamp timestamp = 5;
+  string location = 1;                      // location of the sensor
+  string air_quality = 2;                   // air quality based on data analysis
+  string alert = 3;                         // alert user the potential risk
+  string advice = 4;                        // advice for HVAC based on AnalyseResponse
+  google.protobuf.Timestamp timestamp = 5;  // timestamp of the sensor message
 }
 
+// Message structure for HVAC notification
 message HvacMessage {
-  bool status = 1;
-  string message = 2;
-  google.protobuf.Timestamp updated_time = 3;
+  bool status = 1;                          // status of HVAC
+  string message = 2;                       // message for the combination of HVAC status and pollution level
+  google.protobuf.Timestamp updated_time = 3; // timestamp of the HVAC message
 }

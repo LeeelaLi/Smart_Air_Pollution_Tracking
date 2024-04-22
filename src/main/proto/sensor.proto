@@ -8,31 +8,34 @@ option java_multiple_files = true;
 option java_package = "com.chuntao.service";
 option java_outer_classname = "SensorService";
 
-// Sensor Service: monitor air index and analyse data
+// Sensor Service: monitor sensor data and analyse data
 service Sensor {
-  // Simple RPC for collecting sensor data
+  // Simple RPC for collecting sensor data based on sensor id that user input
   rpc GetSensorData(SensorRequest) returns (SensorResponse) {}
-  // Client-side streaming RPC for analysing sensor data based on sensor response
+  // Client-side streaming RPC for analysing sensor data based on sensor data
   rpc AnalyseSensorData(stream SensorResponse) returns (AnalyseResponse) {}
 }
 
+// Message structure for requesting sensor data
 message SensorRequest {
-  int32 sensor_id = 1;
+  int32 sensor_id = 1;      // unique identifier of the sensor
 }
 
+// Message structure for sensor response data
 message SensorResponse {
-  string location = 1;
-  float pm25 = 2; // PM2.5 density in μg/m3 of the air
-  float temperature = 3; // Air temperature in Celsius
-  float voc = 4; // VOC level in mg/m3
-  float humidity = 5; // Humidity in Percentage
-  float co = 6; // CO in ppm
+  string location = 1;      // location where the sensor data was collected
+  float pm25 = 2;           // pm2.5 density in μg/m3 of the air
+  float temperature = 3;    // air temperature in Celsius
+  float voc = 4;            // voc level in mg/m3
+  float humidity = 5;       // humidity in Percentage
+  float co = 6;             // co in ppm
 }
 
+// Message structure for analysis response
 message AnalyseResponse {
-  string analyse = 1;
-  string location = 2;
-  int32 pollution_level = 3;
-  string message = 4;
-  google.protobuf.Timestamp timestamp = 5;
+  string analyse = 1;         // analyse result
+  string location = 2;        // location of the sensor
+  int32 pollution_level = 3;  // generate pollution level based on SensorResponse
+  string message = 4;         // pollution situation and advice for hvac
+  google.protobuf.Timestamp timestamp = 5; // timestamp of the analysis result
 }

@@ -4,6 +4,7 @@ import com.ecwid.consul.v1.agent.model.NewService;
 import com.google.protobuf.Timestamp;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
+import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 
 import java.io.FileInputStream;
@@ -14,7 +15,14 @@ import java.time.Instant;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class AirPollutionServer {
+    private static final Logger logger = LoggerFactory.getLogger(AirPollutionServer.class);
+    private static final Logger loggerSensor = LoggerFactory.getLogger(SensorImpl.class);
+    private static final Logger loggerHVAC = LoggerFactory.getLogger(HVACImpl.class);
+    private static final Logger loggerNotification = LoggerFactory.getLogger(NotifyImpl.class);
     // Sensor service implement
     private Server server;
     private static int pollution_level; // store pollution level to send through the whole system
@@ -31,6 +39,7 @@ public class AirPollutionServer {
 
     // Register to consul
     private void registerToConsul() {
+        logger.info("Registering server to Consul...");
         System.out.println("Registering server to Consul...");
 
         // Load Consul configuration from consul.properties file
@@ -74,6 +83,7 @@ public class AirPollutionServer {
     }
 
     public void start(int port) throws IOException {
+        logger.info("Starting Air-Pollution-Tracking server on port {}", port);
         server = ServerBuilder.forPort(port)
                 .addService(new SensorImpl()) // add sensor service
                 .addService(new HVACImpl()) // add HVAC service
@@ -116,27 +126,47 @@ public class AirPollutionServer {
         public void getSensorData(SensorRequest request, StreamObserver<SensorResponse> responseObserver) {
             int sensor_id = request.getSensorId();
             SensorResponse.Builder response = SensorResponse.newBuilder();
-            switch (sensor_id) {
-                case 1: // set up 'home' sensor data
-                    response.setLocation("Bedroom").setPm25(13).setTemperature(19).setVoc(0.2F).setHumidity(33).setCo(3);
-                    break;
-                case 2: // set up 'garden' sensor data
-                    response.setLocation("Living room").setPm25(16).setTemperature(29).setVoc(0.3F).setHumidity(44).setCo(5);
-                    break;
-                case 3: // set up 'car' sensor data
-                    response.setLocation("Karaoke room").setPm25(29).setTemperature(35).setVoc(1).setHumidity(55).setCo(9);
-                    break;
-                default:
-                    response.setLocation("Unknown");
-                    break;
+            try {
+                // logging service invocation
+                loggerSensor.info("Received GetSensorData request with sensor ID {}", request.getSensorId());
+
+                if (request.getSensorId() <= 0 || request.getSensorId() >= 4) {
+                    // invalid sensor ID, return an error to the client
+                    throw new IllegalArgumentException("Invalid sensor ID");
+                } else {
+                    switch (sensor_id) {
+                        case 1: // set up 'home' sensor data
+                            response.setLocation("Bedroom").setPm25(13).setTemperature(19).setVoc(0.2F).setHumidity(33).setCo(3);
+                            break;
+                        case 2: // set up 'garden' sensor data
+                            response.setLocation("Living room").setPm25(16).setTemperature(29).setVoc(0.3F).setHumidity(44).setCo(5);
+                            break;
+                        case 3: // set up 'car' sensor data
+                            response.setLocation("Karaoke room").setPm25(29).setTemperature(35).setVoc(1).setHumidity(55).setCo(9);
+                            break;
+                        default:
+                            response.setLocation("Unknown");
+                            break;
+                    }
+                }
+
+                // store the sensor data for analysis
+                sensorData = response.build();
+
+                // send response to client
+                responseObserver.onNext(sensorData);
+                responseObserver.onCompleted();
+            } catch (IllegalArgumentException e) {
+                // logging error
+                loggerSensor.error("Error processing GetSensorData request: {}", e.getMessage(), e);
+                // handle invalid argument error
+                responseObserver.onError(Status.INVALID_ARGUMENT.withDescription("Invalid sensor ID").asException());
+            } catch (Exception e) {
+                // logging error
+                loggerSensor.error("Error processing GetSensorData request: {}", e.getMessage(), e);
+                // handle other exceptions
+                responseObserver.onError(Status.INTERNAL.withDescription("Internal server error").asException());
             }
-
-            // store the sensor data for analysis
-            sensorData = response.build();
-
-            // send response to client
-            responseObserver.onNext(sensorData);
-            responseObserver.onCompleted();
         }
 
         @Override
@@ -150,7 +180,9 @@ public class AirPollutionServer {
 
                 @Override
                 public void onError(Throwable throwable) {
-                    System.err.println("Error in sensor analysis: " + throwable.getMessage());
+                    // logging error
+                    loggerSensor.error("Error in sensor analysis: {}", throwable.getMessage(), throwable);
+//                    System.err.println("Error in sensor analysis: " + throwable.getMessage());
                 }
 
                 @Override
@@ -206,6 +238,7 @@ public class AirPollutionServer {
                         message.append("High pollution, automatically turn on the HVAC.");
                         status = "ON"; // automatically turn on HVAC
                     }
+
                     // create AnalyseResponse
                     AnalyseResponse analyseResponse = AnalyseResponse.newBuilder()
                             .setLocation(sensorData.getLocation())
@@ -234,27 +267,34 @@ public class AirPollutionServer {
             return new StreamObserver<>() {
                 @Override
                 public void onNext(HvacRequest hvacRequest) {
-                    if (ifHvacSwitch == null) { // check if HVAC status hasn't been changed
-                        // if pollution level is greater than 2, automatically turn on HVAC
-                        action = pollution_level > 2 ? HvacCommand.Action.START : HvacCommand.Action.STOP;
-                    } else if (status.equalsIgnoreCase("ON")) { // if HVAC status has been changed to 'ON'
-                        action = HvacCommand.Action.START; // change action to 'START'
-                    } else if (status.equalsIgnoreCase("OFF")) { // if HVAC status has been changed to 'OFF'
-                        action = HvacCommand.Action.STOP; // change action to 'STOP'
+                    try {
+                        if (ifHvacSwitch == null) { // check if HVAC status hasn't been changed
+                            // if pollution level is greater than 2, automatically turn on HVAC
+                            action = pollution_level > 2 ? HvacCommand.Action.START : HvacCommand.Action.STOP;
+                        } else if (status.equalsIgnoreCase("ON")) { // if HVAC status has been changed to 'ON'
+                            action = HvacCommand.Action.START; // change action to 'START'
+                        } else if (status.equalsIgnoreCase("OFF")) { // if HVAC status has been changed to 'OFF'
+                            action = HvacCommand.Action.STOP; // change action to 'STOP'
+                        }
+
+                        HvacCommand hvacCommand = HvacCommand.newBuilder()
+                                .setAction(action)
+                                .setUpdatedTime(timestampNow())
+                                .build();
+
+                        action = hvacCommand.getAction(); // store latest HVAC action
+                        hvacCommandObserver.onNext(hvacCommand);
+                    } catch (Exception e) {
+                        // handle other exceptions
+                        hvacCommandObserver.onError(Status.INTERNAL.withDescription("Internal server error").asException());
                     }
-
-                    HvacCommand hvacCommand = HvacCommand.newBuilder()
-                            .setAction(action)
-                            .setUpdatedTime(timestampNow())
-                            .build();
-
-                    action = hvacCommand.getAction(); // store latest HVAC action
-                    hvacCommandObserver.onNext(hvacCommand);
                 }
 
                 @Override
                 public void onError(Throwable throwable) {
-                    System.err.println("Error in HVAC switch: " + throwable.getMessage());
+                    // logging error
+                    loggerHVAC.error("Error in HVAC control: {}", throwable.getMessage(), throwable);
+//                    System.err.println("Error in HVAC control: " + throwable.getMessage());
                 }
 
                 @Override
@@ -271,26 +311,33 @@ public class AirPollutionServer {
 
                 @Override
                 public void onNext(HvacCommand hvacCommand) {
-                    System.out.println("HVAC command: " + hvacCommand.getAction());
-                    if (hvacCommand.getAction().equals(HvacCommand.Action.START)) { // check if the latest HVAC action is 'START'
-                        status = "ON"; // turn on the HVAC
-                    } else {
-                        status = "OFF"; // turn off the HVAC
+                    try {
+                        System.out.println("HVAC command: " + hvacCommand.getAction());
+                        if (hvacCommand.getAction().equals(HvacCommand.Action.START)) { // check if the latest HVAC action is 'START'
+                            status = "ON"; // turn on the HVAC
+                        } else {
+                            status = "OFF"; // turn off the HVAC
+                        }
+
+                        HvacResponse hvacResponse = HvacResponse.newBuilder()
+                                .setStatus(status)
+                                .setPollutionLevel(pollution_level)
+                                .setUpdatedTime(timestampNow())
+                                .build();
+
+                        status = hvacResponse.getStatus(); // store the latest HVAC status
+                        action = hvacCommand.getAction(); // store the latest HVAC action
+                        responseObserver.onNext(hvacResponse);
+                    } catch (Exception e) {
+                        // handle other exceptions
+                        responseObserver.onError(Status.INTERNAL.withDescription("Internal server error").asException());
                     }
-
-                    HvacResponse hvacResponse = HvacResponse.newBuilder()
-                            .setStatus(status)
-                            .setPollutionLevel(pollution_level)
-                            .setUpdatedTime(timestampNow())
-                            .build();
-
-                    status = hvacResponse.getStatus(); // store the latest HVAC status
-                    action = hvacCommand.getAction(); // store the latest HVAC action
-                    responseObserver.onNext(hvacResponse);
                 }
 
                 public void onError(Throwable throwable) {
-                    System.err.println("Error in HVAC switch: " + throwable.getMessage());
+                    // logging error
+                    loggerHVAC.error("Error in HVAC switch: {}", throwable.getMessage(), throwable);
+//                    System.err.println("Error in HVAC switch: " + throwable.getMessage());
                 }
 
                 public void onCompleted() {
@@ -336,6 +383,11 @@ public class AirPollutionServer {
                     }
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
+                } catch (Exception e) {
+                    // logging error
+                    loggerNotification.error("Error occurred while processing sensorNotifications", e);
+                    // handle other exceptions
+                    sensorObserver.onError(Status.INTERNAL.withDescription("Internal server error").asException());
                 } finally {
                     sensorObserver.onCompleted();
                 }
@@ -362,7 +414,7 @@ public class AirPollutionServer {
                                         .setUpdatedTime(timestampNow())
                                         .build();
                                 hvacObserver.onNext(hvacMessage);
-                                Thread.sleep(5000); // Stream every 5 seconds
+                                Thread.sleep(5000); // stream every 5 seconds
                             }
                         } else {
                             message = "HVAC is off.";
@@ -374,11 +426,16 @@ public class AirPollutionServer {
                                     .build();
 
                             hvacObserver.onNext(hvacMessage);
-                            Thread.sleep(5000); // Stream every 5 seconds
+                            Thread.sleep(5000); // stream every 5 seconds
                         }
                     }
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
+                } catch (Exception e) {
+                    // logging error
+                    loggerNotification.error("Error occurred while processing hvacNotifications", e);
+                    // handle other exceptions
+                    hvacObserver.onError(Status.INTERNAL.withDescription("Internal server error").asException());
                 } finally {
                     hvacObserver.onCompleted();
                 }
