@@ -54,7 +54,7 @@ public class AirPollutionClient {
                 String humidValue = String.format("%.2f", sensorResponse.getHumidity());
                 String coValue = String.format("%.2f", sensorResponse.getCo());
 
-                return "\nSensor response from " + sensorResponse.getLocation() + ":" +
+                return "\nSensor response from 「" + sensorResponse.getLocation() + "」:" +
                         "\n1. PM2.5 - " + pm25Value + " μg/m3" +
                         "\n2. Temperature - " + tempValue + " °C" +
                         "\n3. VOC - " + vocValue + " mg/m3" +
@@ -83,7 +83,7 @@ public class AirPollutionClient {
                 Date updatedTime = new Date(analyseResponse.getTimestamp().getSeconds() * 1000);
                 // Process each AnalyseResponse received
                 String analyseData = "\nAnalyse Response: " +
-                        "\n1. Location: " + analyseResponse.getLocation() +
+                        "\n1. Location: 「" + analyseResponse.getLocation() + "」" +
                         "\n2. Polluted item(s): " + analyseResponse.getAnalyse() +
                         "\n3. Pollution Level: " + analyseResponse.getPollutionLevel() +
                         "\n4. Analyse: " + analyseResponse.getMessage() +
