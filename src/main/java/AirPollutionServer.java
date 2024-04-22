@@ -18,7 +18,7 @@ public class AirPollutionServer {
     // Sensor service implement
     private Server server;
     private static int pollution_level; // store pollution level to send through the whole system
-    private static HVACCommand.Action action; // store HVAC action
+    private static HvacCommand.Action action; // store HVAC action
     private static String status = null; // store HVAC status
     private static String if_hvac_switch = null; // store if HVAC has been changed
     private static StringBuilder sensorAlert = null;
@@ -118,13 +118,13 @@ public class AirPollutionServer {
             SensorResponse.Builder response = SensorResponse.newBuilder();
             switch (sensor_id) {
                 case 1: // set up 'home' sensor data
-                    response.setLocation("Bedroom").setPM25(13).setTemperature(19).setVOC(0.2F).setHumidity(33).setCO(3);
+                    response.setLocation("Bedroom").setPm25(13).setTemperature(19).setVoc(0.2F).setHumidity(33).setCo(3);
                     break;
                 case 2: // set up 'garden' sensor data
-                    response.setLocation("Living room").setPM25(16).setTemperature(29).setVOC(0.3F).setHumidity(44).setCO(5);
+                    response.setLocation("Living room").setPm25(16).setTemperature(29).setVoc(0.3F).setHumidity(44).setCo(5);
                     break;
                 case 3: // set up 'car' sensor data
-                    response.setLocation("Karaoke room").setPM25(29).setTemperature(35).setVOC(1).setHumidity(55).setCO(9);
+                    response.setLocation("Karaoke room").setPm25(29).setTemperature(35).setVoc(1).setHumidity(55).setCo(9);
                     break;
                 default:
                     response.setLocation("Unknown");
@@ -157,11 +157,11 @@ public class AirPollutionServer {
                 public void onCompleted() {
 
                     // perform analysis based on the stored sensor data
-                    sumPM25 = sensorData.getPM25();
+                    sumPM25 = sensorData.getPm25();
                     sumTemp = sensorData.getTemperature();
-                    sumVOC = sensorData.getVOC();
+                    sumVOC = sensorData.getVoc();
                     sumHumidity = sensorData.getHumidity();
-                    sumCO = sensorData.getCO();
+                    sumCO = sensorData.getCo();
                     int pollutionItem = 0; // record polluted items number
 
                     StringBuilder analyse = new StringBuilder(); // analyse data based on polluted items number
@@ -230,23 +230,23 @@ public class AirPollutionServer {
     private static class HVACImpl extends HVACGrpc.HVACImplBase {
 
         // get HVAC status
-        public StreamObserver<HVACRequest> hvacControl(StreamObserver<HVACCommand> hvacCommandObserver) {
+        public StreamObserver<HvacRequest> hvacControl(StreamObserver<HvacCommand> hvacCommandObserver) {
             return new StreamObserver<>() {
                 @Override
-                public void onNext(HVACRequest hvacRequest) {
+                public void onNext(HvacRequest hvacRequest) {
                     if (if_hvac_switch == null) { // check if HVAC status hasn't been changed
                         if (pollution_level > 2) { // if pollution level is greater than 2
-                            action = HVACCommand.Action.START; // automatically turn on HVAC
+                            action = HvacCommand.Action.START; // automatically turn on HVAC
                         } else {
-                            action = HVACCommand.Action.STOP;
+                            action = HvacCommand.Action.STOP;
                         }
                     } else if (status.equalsIgnoreCase("ON")) { // if HVAC status has been changed to 'ON'
-                        action = HVACCommand.Action.START; // change action to 'START'
+                        action = HvacCommand.Action.START; // change action to 'START'
                     } else if (status.equalsIgnoreCase("OFF")) { // if HVAC status has been changed to 'OFF'
-                        action = HVACCommand.Action.STOP; // change action to 'STOP'
+                        action = HvacCommand.Action.STOP; // change action to 'STOP'
                     }
 
-                    HVACCommand hvacCommand = HVACCommand.newBuilder()
+                    HvacCommand hvacCommand = HvacCommand.newBuilder()
                             .setAction(action)
                             .setUpdatedTime(timestampNow())
                             .build();
@@ -269,19 +269,19 @@ public class AirPollutionServer {
         }
 
         // switch HVAC status
-        public StreamObserver<HVACCommand> hvacSwitch(StreamObserver<HVACResponse> responseObserver) {
+        public StreamObserver<HvacCommand> hvacSwitch(StreamObserver<HvacResponse> responseObserver) {
             return new StreamObserver<>() {
 
                 @Override
-                public void onNext(HVACCommand hvacCommand) {
+                public void onNext(HvacCommand hvacCommand) {
                     System.out.println("HVAC command: " + hvacCommand.getAction());
-                    if (hvacCommand.getAction().equals(HVACCommand.Action.START)) { // check if the latest HVAC action is 'START'
+                    if (hvacCommand.getAction().equals(HvacCommand.Action.START)) { // check if the latest HVAC action is 'START'
                         status = "ON"; // turn on the HVAC
                     } else {
                         status = "OFF"; // turn off the HVAC
                     }
 
-                    HVACResponse hvacResponse = HVACResponse.newBuilder()
+                    HvacResponse hvacResponse = HvacResponse.newBuilder()
                             .setStatus(status)
                             .setPollutionLevel(pollution_level)
                             .setUpdatedTime(timestampNow())
@@ -319,11 +319,12 @@ public class AirPollutionServer {
                             message = "The air is healthy.";
                         } else if (pollution_level == 2) {
                             air_quality = "Moderate";
-                            message = "The air is fine, you could turn on the HVAC manually.";
+                            message = "The air is fine.";
                         } else {
                             air_quality = "Bad";
                             message = "The air is harmed, HVAC is now ON.";
                             status = "ON";
+                            action = HvacCommand.Action.START;
                         }
 
                         SensorMessage sensorMessage = SensorMessage.newBuilder()
@@ -348,17 +349,17 @@ public class AirPollutionServer {
         }
 
         // get HVAC notification
-        public void hvacNotifications(HVACResponse hvacResponse, StreamObserver<HVACMessage> hvacObserver) {
+        public void hvacNotifications(HvacResponse hvacResponse, StreamObserver<HvacMessage> hvacObserver) {
             Runnable streamingTask = () -> {
                 try {
                     while (!Thread.currentThread().isInterrupted()) {
                         String message;
 
                         // check the latest HVAC status
-                        if (action.equals(HVACCommand.Action.START)) {
+                        if (action.equals(HvacCommand.Action.START)) {
                             if (status.equals("ON")) {
                                 message = "HVAC is on.";
-                                HVACMessage hvacMessage = HVACMessage.newBuilder()
+                                HvacMessage hvacMessage = HvacMessage.newBuilder()
                                         .setStatus(true)
                                         .setMessage(message)
                                         .setUpdatedTime(timestampNow())
@@ -369,7 +370,7 @@ public class AirPollutionServer {
                         } else {
                             message = "HVAC is off.";
 
-                            HVACMessage hvacMessage = HVACMessage.newBuilder()
+                            HvacMessage hvacMessage = HvacMessage.newBuilder()
                                     .setStatus(false)
                                     .setMessage(message)
                                     .setUpdatedTime(timestampNow())
