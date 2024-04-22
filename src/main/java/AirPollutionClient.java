@@ -118,7 +118,7 @@ public class AirPollutionClient {
         StreamObserver<HVACCommand> hvacCommandObserver = new StreamObserver<>() {
             @Override
             public void onNext(HVACCommand hvacCommand) {
-                Date updatedTime = new Date(timestampNow().getSeconds() * 1000);
+                Date updatedTime = new Date(hvacCommand.getUpdatedTime().getSeconds() * 1000);
                 // variable 'control' is for getting the latest status by HVAC switch
                 if (control == 1) { // if HVAC switch already turn on the HVAC('1' as in turning on HVAC in HVACSwitch method)
                     HVACCommand.Builder hvacCommand1 = HVACCommand.newBuilder();
@@ -177,7 +177,7 @@ public class AirPollutionClient {
             @Override
             public void onNext(HVACResponse hvacResponse) {
                 HVACResponse.Builder  hvacResponse1 = HVACResponse.newBuilder();
-                Date responseTime = new Date(hvacResponse.getTimestamp().getSeconds() * 1000);
+                Date responseTime = new Date(hvacResponse.getUpdatedTime().getSeconds() * 1000);
 
                 // allow use to enter '1' for turning on, '2' for turning off
                 if (turn_on == 1) {
@@ -233,26 +233,29 @@ public class AirPollutionClient {
                         String sensorNotify = "\nSensor notifications from " + location + ": " +
                                 "\n1. Air quality: " + sensorMessage.getAirQuality() +
                                 "\n2. Pollution level: " + pollution_level +
-                                "\n3. Advice: " + sensorMessage.getMessage() +
-                                "\n4. Time: " + updatedTime;
+                                "\n3. Alert: " + sensorMessage.getAlert() +
+                                "\n4. Advice: " + sensorMessage.getAdvice() +
+                                "\n5. Time: " + updatedTime;
                         callback.accept(sensorNotify);
                     } else {  // if HVAC status has been changed by HVAC switch
                         Date updatedTime = new Date(sensorMessage.getTimestamp().getSeconds() * 1000);
                         if (status.equalsIgnoreCase("OFF")){ // if HVAC status has been changed to 'OFF', alert user to turn on HVAC
                             SensorMessage.Builder sensorMessage1 = SensorMessage.newBuilder();
-                            sensorMessage1.setMessage("The air is harmed, and the HVAC is OFF now. Please turn on the HVAC.").build();
+                            sensorMessage1.setAdvice("The air is harmed, and the HVAC is OFF now. Please turn on the HVAC.").build();
                             String sensorNotify = "\nSensor notifications from " + location + ": " +
                                     "\n1. Air quality: " + sensorMessage.getAirQuality() +
                                     "\n2. Pollution level: " + pollution_level +
-                                    "\n3. Advice: " + sensorMessage1.getMessage() +
-                                    "\n4. Time: " + updatedTime;
+                                    "\n3. Alert: " + sensorMessage.getAlert() +
+                                    "\n4. Advice: " + sensorMessage1.getAdvice() +
+                                    "\n5. Time: " + updatedTime;
                             callback.accept(sensorNotify);
                         } else {
                             String sensorNotify = "\nSensor notifications from " + location + ": " +
                                     "\n1. Air quality: " + sensorMessage.getAirQuality() +
                                     "\n2. Pollution level: " + pollution_level +
-                                    "\n3. Advice: " + sensorMessage.getMessage() +
-                                    "\n4. Time: " + updatedTime;
+                                    "\n3. Alert: " + sensorMessage.getAlert() +
+                                    "\n4. Advice: " + sensorMessage.getAdvice() +
+                                    "\n5. Time: " + updatedTime;
                             callback.accept(sensorNotify);
                         }
                     }
@@ -261,7 +264,8 @@ public class AirPollutionClient {
                     String sensorNotify = "\nSensor notifications from " + location + ": " +
                             "\n1. Air quality: " + sensorMessage.getAirQuality() +
                             "\n2. Pollution level: " + pollution_level +
-                            "\n3. Advice: " + sensorMessage.getMessage() +
+                            "\nAlert: " + sensorMessage.getAlert() +
+                            "\n3. Advice: " + sensorMessage.getAdvice() +
                             "\n4. Time: " + updatedTime;
                     callback.accept(sensorNotify);
                 }
@@ -340,9 +344,9 @@ public class AirPollutionClient {
         while (true) {
             System.out.println("""
                     Enter 1-3 to get sensor data, 'q' to quit:
-                    1. Sensor 1: Home
-                    2. Sensor 2: Garden
-                    3. Sensor 3: Car""");
+                    1. Sensor 1: Bedroom
+                    2. Sensor 2: Living room
+                    3. Sensor 3: Karaoke room""");
             if (keyboard.hasNextInt()) { // if user enter an integer
                 int sensor_id = keyboard.nextInt();
                 if (sensor_id > 0 && sensor_id < 4) { // if user enter between 1-3

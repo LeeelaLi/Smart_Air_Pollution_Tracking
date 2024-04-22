@@ -58,6 +58,11 @@ public class AirPollutionClientGUI extends JFrame {
         outputArea = new JTextArea(25, 30); // set up output area
         outputArea.setEditable(false);
 
+        outputArea.append("""
+                    1. Sensor 1: Bedroom
+                    2. Sensor 2: Living room
+                    3. Sensor 3: Karaoke room""");
+
         // Get sensor data
         getDataButton.addActionListener(e -> {
             if_analyse_data = null; // reset analysis every time making a sensor id new query
@@ -80,7 +85,7 @@ public class AirPollutionClientGUI extends JFrame {
         });
 
         // Analyse sensor data
-       analyseDataButton.addActionListener(e -> {
+        analyseDataButton.addActionListener(e -> {
             String analyseDataStr = analyseDataField.getText();
 
             if (analyseDataStr.equalsIgnoreCase("yes")) {
@@ -97,8 +102,8 @@ public class AirPollutionClientGUI extends JFrame {
             }
         });
 
-       // Get HVAC status
-       hvacControlButton.addActionListener(e -> {
+        // Get HVAC status
+        hvacControlButton.addActionListener(e -> {
             if (if_analyse_data == null) { // if there's no data analysis, unable to get pollution level to know the HVAC status
                 outputArea.append("\nWarning: Sensor data analysis is empty. Please analyse data first.");
             }
@@ -115,9 +120,9 @@ public class AirPollutionClientGUI extends JFrame {
             } else {
                 outputArea.append("\nWarning: HVAC status has been changed. Please get the latest message from HVAC switch.");
             }
-       });
+        });
 
-       // Switch the HVAC button
+        // Switch the HVAC button
         hvacSwitchButton.addActionListener(e -> {
             String sensorIdStr = hvacSwitchField.getText();
             try {
