@@ -264,7 +264,7 @@ public class AirPollutionClient {
                     String sensorNotify = "\nSensor notifications from " + location + ": " +
                             "\n1. Air quality: " + sensorMessage.getAirQuality() +
                             "\n2. Pollution level: " + pollution_level +
-                            "\nAlert: " + sensorMessage.getAlert() +
+                            "\n3. Alert: " + sensorMessage.getAlert() +
                             "\n3. Advice: " + sensorMessage.getAdvice() +
                             "\n4. Time: " + updatedTime;
                     callback.accept(sensorNotify);
@@ -323,15 +323,6 @@ public class AirPollutionClient {
         notificationStub.hvacNotifications(HVACResponse.newBuilder().setPollutionLevel(1).build(), hvacObserver);
     }
 
-    // Get current time ·
-    private static Timestamp timestampNow() {
-        Instant now = Instant.now();
-        return Timestamp.newBuilder()
-                .setSeconds(now.getEpochSecond())
-                .setNanos(now.getNano())
-                .build();
-    }
-
     public static void main(String[] args) throws InterruptedException {
         String host = "localhost";
         int port = 9090;
@@ -353,33 +344,41 @@ public class AirPollutionClient {
                     // pass user enter to get sensor data
                     // print sensor data
                     airPollutionClient.GetSensorData(sensor_id, System.out::println);
-                    System.out.println("Enter 'yes' to analyse sensor data, others to go back to sensor data:");
+                    System.out.println("Enter 'yes' to analyse sensor data, 'q' to quit:");
                     String if_analyse = keyboard.next(); // allow user entering strings to confirm that analyse sensor data
                     while (if_analyse.equalsIgnoreCase("yes")) { // if user confirm to analyse sensor data
                         // print sensor data analysis
                         airPollutionClient.AnalyseSensorData(if_analyse, System.out::println);
-                        System.out.println("Enter 'yes' to check HVAC status:"); // allow user entering strings to confirm that getting HVAC status
+                        System.out.println("Enter 'yes' to check HVAC status, 'q' to quit:"); // allow user entering strings to confirm that getting HVAC status
                         if (keyboard.hasNext()) {
                             String input = keyboard.next();
                             if (input.equalsIgnoreCase("yes")) { // if user confirm to check HVAC status
                                 // print HVAC status
                                 airPollutionClient.HVACControl(0, System.out::println);
-                                System.out.println("Do you want to turn on(1)/turn off(2)?"); // allow user entering integers to turn on HVAC or not
-                                int turn_on = keyboard.nextInt();
+                                System.out.println("Enter '1' to turn on, '2' to turn off, 'q' to quit:"); // allow user entering integers to turn on HVAC or not
+                                String turn_on = keyboard.next();
                                 // pass user choice to switch HVAC, '1' for turning on, '2' for turning off
                                 // print HVAC switch result
-                                airPollutionClient.HVACSwitch(turn_on, System.out::println);
-                                // pass the same rules of switching HVAC to update HVAC status
-                                // print HVAC latest status
-                                airPollutionClient.HVACControl(turn_on, System.out::println);
-                                System.out.println("Do you want to turn on the sensor and HVAC notifications(1)?"); // allow user entering integers to turn on notifications or not
-                                int turnOnNotify = keyboard.nextInt();
-                                if (turnOnNotify == 1) { // if user want to turn on notifications
+                                if (turn_on.equalsIgnoreCase("1") || turn_on.equalsIgnoreCase("2")) {
+                                    airPollutionClient.HVACSwitch(Integer.parseInt(turn_on), System.out::println);
+                                    // pass the same rules of switching HVAC to update HVAC status
+                                    // print HVAC latest status
+                                    airPollutionClient.HVACControl(Integer.parseInt(turn_on), System.out::println);
+                                } else if (turn_on.equalsIgnoreCase("q")) {
+                                    break;
+                                }
+                                System.out.println("Enter '1' to turn on the sensor and HVAC notifications, 'q' to go back to enter a new sensor id:"); // allow user entering integers to turn on notifications or not
+                                String turnOnNotify = keyboard.next();
+                                if (turnOnNotify.equalsIgnoreCase("q")) {
+                                    break;
+                                } else if (Integer.parseInt(turnOnNotify) == 1) { // if user want to turn on notifications
                                     // print sensor notifications
-                                    airPollutionClient.sensorNotifications(turnOnNotify, System.out::println);
+                                    airPollutionClient.sensorNotifications(Integer.parseInt(turnOnNotify), System.out::println);
                                     // print HVAC notifications
                                     airPollutionClient.hvacNotifications(System.out::println);
                                 }
+                            } else if (input.equalsIgnoreCase("q")) {
+                                break;
                             }
                         }
                     }

@@ -22,7 +22,6 @@ public class AirPollutionServer {
     private static String status = null; // store HVAC status
     private static String if_hvac_switch = null; // store if HVAC has been changed
     private static StringBuilder sensorAlert = null;
-    private static StringBuilder hvacComponentStatus = null;
     private static float sumPM25;
     private static float sumTemp;
     private static float sumVOC;

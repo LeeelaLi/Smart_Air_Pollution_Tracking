@@ -67,8 +67,8 @@ public class AirPollutionClientGUI extends JFrame {
 
         // Get sensor data
         getDataButton.addActionListener(e -> {
-            if_analyse_data = null; // reset analysis every time making a sensor id new query
             if_get_data = null;  // reset sensor data every time making a sensor id new query
+            if_analyse_data = null; // reset analysis every time making a sensor id new query
 
             String analyseDataStr = getDataField.getText();
             try {
@@ -119,8 +119,6 @@ public class AirPollutionClientGUI extends JFrame {
                     SwingUtilities.invokeLater(() -> outputArea.append("\n" + hvacCommandMessage));
                     if_hvac_control = "hvacCommandMessage"; // ensure HVAC status is not null
                 });
-            } else {
-                outputArea.append("\nWarning: HVAC status has been changed. Please get the latest message from HVAC switch.");
             }
         });
 
@@ -148,14 +146,10 @@ public class AirPollutionClientGUI extends JFrame {
 
         // Get sensor notification
         sensorNotificationsButton.addActionListener(e -> {
-            try {
-                if (if_analyse_data == null) { // if didn't analyse data
-                    outputArea.append("\nWarning: Empty sensor analyse data. Please get analyse data.");
-                } else {
-                    airPollutionClient.sensorNotifications(1, sensorNotify -> SwingUtilities.invokeLater(() -> outputArea.append("\n" + sensorNotify)));
-                }
-            } catch (NumberFormatException ex) {
-                outputArea.append("\nWarning: Invalid sensor ID. Please enter a valid integer.");
+            if (if_analyse_data == null) { // if didn't analyse data
+                outputArea.append("\nWarning: Empty sensor analyse data. Please get analyse data.");
+            } else {
+                airPollutionClient.sensorNotifications(1, sensorNotify -> SwingUtilities.invokeLater(() -> outputArea.append("\n" + sensorNotify)));
             }
         });
 
@@ -170,9 +164,9 @@ public class AirPollutionClientGUI extends JFrame {
 
         // Quit button
         quitButton.addActionListener(e -> {
-            // Close the application when Quit button is clicked
-            dispose(); // Close the JFrame
-            System.exit(0); // Terminate the application
+            // terminate the application when quit button is clicked
+            dispose(); // close the JFrame
+            System.exit(0); // terminate the application
         });
     }
 
