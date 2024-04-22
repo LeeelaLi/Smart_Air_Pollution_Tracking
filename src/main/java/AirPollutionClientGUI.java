@@ -60,7 +60,8 @@ public class AirPollutionClientGUI extends JFrame {
 
         // Get sensor data
         getDataButton.addActionListener(e -> {
-            if_analyse_data = null; // reset analyse data every time making a sensor id new query
+            if_analyse_data = null; // reset analysis every time making a sensor id new query
+            if_get_data = null;  // reset sensor data every time making a sensor id new query
 
             String analyseDataStr = getDataField.getText();
             try {
