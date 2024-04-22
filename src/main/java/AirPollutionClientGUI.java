@@ -4,12 +4,11 @@ import java.awt.*;
 
 public class AirPollutionClientGUI extends JFrame {
 
-    // Allow user to enter their choice
-    private JTextField getDataField;
+    // Declare GUI components
+    private JTextField getDataField; // Allow user to enter their choice
     private JTextField analyseDataField;
     private JTextField hvacSwitchField;
-    // Allow user to click the button to implement corresponded function
-    private JButton getDataButton;
+    private JButton getDataButton; // Allow user to click the button to implement corresponded function
     private JButton analyseDataButton;
     private JButton hvacSwitchButton;
     private JButton hvacControlButton;
@@ -18,47 +17,55 @@ public class AirPollutionClientGUI extends JFrame {
     private JButton quitButton;
     // Print the result
     private JTextArea outputArea;
+    // Flags to track state
     private static String if_get_data = null; // check if sensor data is successfully obtained
     private static String if_analyse_data = null; // check if sensor data is successfully analysed
     private static String if_hvac_control = null; // check if HVAC status is successfully obtained
     private static String if_hvac_switch = null; // check if HVAC status has been changed by HVAC switch
     private static int switchInput = 0; // store user input in HVAC switch method
+    Font boldFont = new Font("Arial", Font.ITALIC, 14);
 
     private final AirPollutionClient airPollutionClient;
 
+    // Constructor to initialize the AirPollutionClientGUI
     public AirPollutionClientGUI(String host, int port, String consulServiceName) {
         airPollutionClient = new AirPollutionClient(host, port, consulServiceName);
 
+        // Set up GUI
         setTitle("Air Pollution Tracking System"); // set up GUI title - project name
         setSize(800, 600); // set up GUI area
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
+        // Initialize GUI components
         initComponents();
         addComponents();
 
         setVisible(true);
     }
 
+    // Initialize the components of the GUI
     private void initComponents() {
 
         // Sensor service
         getDataField = new JTextField(15);
-        getDataButton = new JButton("Get Sensor Data"); // set get sensor data button name
         analyseDataField = new JTextField(15); // set up sensor id enter field
+        getDataButton = new JButton("Get Sensor Data"); // set get sensor data button name
         analyseDataButton = new JButton("Analyse Sensor Data"); // set analyse sensor data button name
 
         // HVAC service
-        hvacControlButton = new JButton("HVAC Control"); // set HVAC status button name
         hvacSwitchField = new JTextField(15); // set up HVAC switch enter field
         hvacSwitchButton = new JButton("HVAC Switch"); // set HVAC switch button name
+        hvacControlButton = new JButton("HVAC Control"); // set HVAC status button name
 
         // Notification service
         sensorNotificationsButton = new JButton("Sensor Notifications"); // set sensor notification button name
         hvacNotificationButton = new JButton("HVAC Notifications"); // set HVAC notification button name
         quitButton = new JButton("Quit"); // set quit button name
 
-        outputArea = new JTextArea(25, 30); // set up output area
+        // output box
+        outputArea = new JTextArea(22, 30); // set up output area
         outputArea.setEditable(false);
+        outputArea.setFont(new Font("Calibri", Font.PLAIN, 14));
 
         outputArea.append("""
                     1. Sensor 1: Bedroom
@@ -79,10 +86,12 @@ public class AirPollutionClientGUI extends JFrame {
                         if_get_data = sensorData; // ensure sensor data query is successful
                     });
                 } else {
-                    outputArea.append("\nWarning: Sensor id should be between 1-3, please try again.");
+                    // prompt the invalid integer issues occur
+                    JOptionPane.showMessageDialog(this, "Sensor id should be between 1-3, please try again.", "Invalid Input", JOptionPane.WARNING_MESSAGE);
                 }
             } catch (NumberFormatException numberFormatException) {
-                outputArea.append("\nWarning: Invalid string, please try again.");
+                // prompt the invalid input issues occur
+                JOptionPane.showMessageDialog(this, "Invalid input. Please enter a valid integer.", "Invalid Input", JOptionPane.WARNING_MESSAGE);
             }
         });
 
@@ -136,11 +145,13 @@ public class AirPollutionClientGUI extends JFrame {
                             if_hvac_switch = "hvacSwitchMessage"; // ensure HVAC status changing is recorded
                         });
                     }else {
-                        outputArea.append("\nWarning: Invalid number. It should be 1 or 2.");
+                        // prompt the invalid input issues occur
+                        JOptionPane.showMessageDialog(this, "Invalid input. It should be 1 or 2.", "Invalid Input", JOptionPane.WARNING_MESSAGE);
                     }
                 }
             } catch (NumberFormatException ex){
-                outputArea.append("\nWarning: Invalid string. Please enter a valid integer.");
+                // prompt the invalid input issues occur
+                JOptionPane.showMessageDialog(this, "Invalid input. Please enter a valid integer.", "Invalid Input", JOptionPane.WARNING_MESSAGE);
             }
         });
 
@@ -170,13 +181,14 @@ public class AirPollutionClientGUI extends JFrame {
         });
     }
 
+    // Add initialized components to the GUI
     private void addComponents() {
 
         // Add components to panel
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
 
-        JPanel inputPanel = new JPanel();
+        JPanel inputPanel = new JPanel(new GridLayout(1, 1, 1, 10));
         JPanel actionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
         // Sensor section
@@ -210,6 +222,10 @@ public class AirPollutionClientGUI extends JFrame {
         notificationPanel.add(quitButton);
         notificationPanel.setBorder(new EmptyBorder(10, 15, 0, 0)); // Add left padding
 
+        sensorPanel.setBorder(BorderFactory.createTitledBorder("Sensor"));
+        hvacPanel.setBorder(BorderFactory.createTitledBorder("HVAC"));
+        notificationPanel.setBorder(BorderFactory.createTitledBorder("Notifications"));
+
         inputPanel.add(sensorPanel);
         inputPanel.add(hvacPanel);
         inputPanel.add(notificationPanel);
@@ -226,6 +242,7 @@ public class AirPollutionClientGUI extends JFrame {
         add(mainPanel);
     }
 
+    // Main method to launch the application
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new AirPollutionClientGUI("localhost", 9090, "AirPollutionService"));
     }
