@@ -9,29 +9,32 @@ option java_multiple_files = true;
 option java_package = "com.chuntao.service";
 option java_outer_classname = "HvacService";
 
-// HVAC Service: turn on HVAC based on analyse response
+// HVAC Service: setting HVAC
 service HVAC {
-  // Client-side streaming RPC for controlling HVAC
+  // Client-side streaming RPC for HVAC status based on analyse response
   rpc HvacControl(stream HvacRequest) returns (HvacCommand) {}
-  // Bidirectional streaming RPC for HVAC switching
+  // Bidirectional streaming RPC for HVAC switching based on user input
   rpc HvacSwitch(stream HvacCommand) returns (stream HvacResponse) {}
 }
 
+// Message structure for HVAC status request
 message HvacRequest {
-  int32 pollution_level = 1;
+  int32 pollution_level = 1; // pollution level for controlling HVAC
 }
 
+// Message structure for HVAC command
 message HvacCommand {
   enum Action {
-    START = 0;
-    STOP = 1;
+    START = 0;            // Action to start HVAC
+    STOP = 1;             // Action to start HVAC
   }
-  Action action = 1;
-  google.protobuf.Timestamp updated_time = 2;
+  Action action = 1;      // get action value
+  google.protobuf.Timestamp updated_time = 2; // timestamp of the command
 }
 
+// Message structure for HVAC response
 message HvacResponse {
-  string status = 1;
-  int32 pollution_level = 2;
-  google.protobuf.Timestamp updated_time = 3;
+  string status = 1;                      // status of the HVAC operation
+  int32 pollution_level = 2;              // pollution level from AnalyseResponse
+  google.protobuf.Timestamp updated_time = 3; // timestamp of the response
 }
