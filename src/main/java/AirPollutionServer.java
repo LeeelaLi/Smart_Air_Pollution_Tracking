@@ -15,14 +15,7 @@ import java.time.Instant;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class AirPollutionServer {
-    private static final Logger logger = LoggerFactory.getLogger(AirPollutionServer.class);
-    private static final Logger loggerSensor = LoggerFactory.getLogger(SensorImpl.class);
-    private static final Logger loggerHVAC = LoggerFactory.getLogger(HVACImpl.class);
-    private static final Logger loggerNotification = LoggerFactory.getLogger(NotifyImpl.class);
     // Sensor service implement
     private Server server;
     private static int pollution_level; // store pollution level to send through the whole system
@@ -36,10 +29,8 @@ public class AirPollutionServer {
     private static float sumHumidity;
     private static float sumCO;
 
-
     // Register to consul
     private void registerToConsul() {
-        logger.info("Registering server to Consul...");
         System.out.println("Registering server to Consul...");
 
         // Load Consul configuration from consul.properties file
@@ -83,7 +74,6 @@ public class AirPollutionServer {
     }
 
     public void start(int port) throws IOException {
-        logger.info("Starting Air-Pollution-Tracking server on port {}", port);
         server = ServerBuilder.forPort(port)
                 .addService(new SensorImpl()) // add sensor service
                 .addService(new HVACImpl()) // add HVAC service
@@ -127,9 +117,6 @@ public class AirPollutionServer {
             int sensor_id = request.getSensorId();
             SensorResponse.Builder response = SensorResponse.newBuilder();
             try {
-                // logging service invocation
-                loggerSensor.info("Received GetSensorData request with sensor ID {}", request.getSensorId());
-
                 if (request.getSensorId() <= 0 || request.getSensorId() >= 4) {
                     // invalid sensor ID, return an error to the client
                     throw new IllegalArgumentException("Invalid sensor ID");
@@ -157,13 +144,9 @@ public class AirPollutionServer {
                 responseObserver.onNext(sensorData);
                 responseObserver.onCompleted();
             } catch (IllegalArgumentException e) {
-                // logging error
-                loggerSensor.error("Error processing GetSensorData request: {}", e.getMessage(), e);
                 // handle invalid argument error
                 responseObserver.onError(Status.INVALID_ARGUMENT.withDescription("Invalid sensor ID").asException());
             } catch (Exception e) {
-                // logging error
-                loggerSensor.error("Error processing GetSensorData request: {}", e.getMessage(), e);
                 // handle other exceptions
                 responseObserver.onError(Status.INTERNAL.withDescription("Internal server error").asException());
             }
@@ -180,9 +163,7 @@ public class AirPollutionServer {
 
                 @Override
                 public void onError(Throwable throwable) {
-                    // logging error
-                    loggerSensor.error("Error in sensor analysis: {}", throwable.getMessage(), throwable);
-//                    System.err.println("Error in sensor analysis: " + throwable.getMessage());
+                    System.err.println("Error in sensor analysis: " + throwable.getMessage());
                 }
 
                 @Override
@@ -292,9 +273,7 @@ public class AirPollutionServer {
 
                 @Override
                 public void onError(Throwable throwable) {
-                    // logging error
-                    loggerHVAC.error("Error in HVAC control: {}", throwable.getMessage(), throwable);
-//                    System.err.println("Error in HVAC control: " + throwable.getMessage());
+                    System.err.println("Error in HVAC control: " + throwable.getMessage());
                 }
 
                 @Override
@@ -335,9 +314,7 @@ public class AirPollutionServer {
                 }
 
                 public void onError(Throwable throwable) {
-                    // logging error
-                    loggerHVAC.error("Error in HVAC switch: {}", throwable.getMessage(), throwable);
-//                    System.err.println("Error in HVAC switch: " + throwable.getMessage());
+                    System.err.println("Error in HVAC switch: " + throwable.getMessage());
                 }
 
                 public void onCompleted() {
@@ -367,7 +344,7 @@ public class AirPollutionServer {
                         } else {
                             air_quality = "Bad";
                             message = "The air is harmed, HVAC is now ON.";
-                            status = "ON";
+                            status = "ON"; // if pollution level is high, turn on the HVAC automatically
                             action = HvacCommand.Action.START;
                         }
 
@@ -384,8 +361,6 @@ public class AirPollutionServer {
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 } catch (Exception e) {
-                    // logging error
-                    loggerNotification.error("Error occurred while processing sensorNotifications", e);
                     // handle other exceptions
                     sensorObserver.onError(Status.INTERNAL.withDescription("Internal server error").asException());
                 } finally {
@@ -404,9 +379,9 @@ public class AirPollutionServer {
                     while (!Thread.currentThread().isInterrupted()) {
                         String message;
 
-                        // check the latest HVAC status
+                        // update HVAC notification message based on the latest HVAC status
                         if (action.equals(HvacCommand.Action.START)) {
-                            if (status.equals("ON")) {
+                            if (status.equals("ON")) { // if the latest HVAC status is ON
                                 message = "HVAC is on.";
                                 HvacMessage hvacMessage = HvacMessage.newBuilder()
                                         .setStatus(true)
@@ -417,7 +392,7 @@ public class AirPollutionServer {
                                 Thread.sleep(5000); // stream every 5 seconds
                             }
                         } else {
-                            message = "HVAC is off.";
+                            message = "HVAC is off."; // if the latest HVAC status is OFF
 
                             HvacMessage hvacMessage = HvacMessage.newBuilder()
                                     .setStatus(false)
@@ -432,8 +407,6 @@ public class AirPollutionServer {
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 } catch (Exception e) {
-                    // logging error
-                    loggerNotification.error("Error occurred while processing hvacNotifications", e);
                     // handle other exceptions
                     hvacObserver.onError(Status.INTERNAL.withDescription("Internal server error").asException());
                 } finally {
