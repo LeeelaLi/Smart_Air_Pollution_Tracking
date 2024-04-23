@@ -244,9 +244,9 @@ public class AirPollutionClient {
         StreamObserver<SensorMessage> sensorObserver = new StreamObserver<>() {
             @Override
             public void onNext(SensorMessage sensorMessage) {
+                Date updatedTime = new Date(sensorMessage.getTimestamp().getSeconds() * 1000);
                 if (pollution_level > 2) { // pollution level > 2 means HVAC is already on automatically
                     if (status == null) { // if HVAC status hasn't been changed by HVAC switch, HVAC should be on now
-                        Date updatedTime = new Date(sensorMessage.getTimestamp().getSeconds() * 1000);
                         String sensorNotify = "\nSensor notifications from " + location + ": " +
                                 "\n1. Air quality: " + sensorMessage.getAirQuality() +
                                 "\n2. Pollution level: " + pollution_level +
@@ -255,7 +255,6 @@ public class AirPollutionClient {
                                 "\n5. Time: " + updatedTime;
                         callback.accept(sensorNotify);
                     } else {  // if HVAC status has been changed by HVAC switch
-                        Date updatedTime = new Date(sensorMessage.getTimestamp().getSeconds() * 1000);
                         if (status.equalsIgnoreCase("OFF")){ // if HVAC status has been changed to 'OFF', alert user to turn on HVAC
                             SensorMessage.Builder sensorMessage1 = SensorMessage.newBuilder();
                             sensorMessage1.setAdvice("The air is harmed, and the HVAC is OFF now. Please turn on the HVAC.").build();
@@ -277,7 +276,6 @@ public class AirPollutionClient {
                         }
                     }
                 } else{ // pollution level <= 2 means pollution is not high, neither turn on/off is urgent
-                    Date updatedTime = new Date(sensorMessage.getTimestamp().getSeconds() * 1000);
                     String sensorNotify = "\nSensor notifications from " + location + ": " +
                             "\n1. Air quality: " + sensorMessage.getAirQuality() +
                             "\n2. Pollution level: " + pollution_level +
@@ -413,8 +411,6 @@ public class AirPollutionClient {
                             airPollutionClient.shutdown();
                             break;
                         }
-                    } else {
-                        continue;
                     }
                 }
             }

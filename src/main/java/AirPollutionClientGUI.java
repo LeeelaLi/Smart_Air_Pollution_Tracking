@@ -23,7 +23,6 @@ public class AirPollutionClientGUI extends JFrame {
     private static String if_hvac_control = null; // check if HVAC status is successfully obtained
     private static String if_hvac_switch = null; // check if HVAC status has been changed by HVAC switch
     private static int switchInput = 0; // store user input in HVAC switch method
-    Font boldFont = new Font("Arial", Font.ITALIC, 14);
 
     private final AirPollutionClient airPollutionClient;
 
