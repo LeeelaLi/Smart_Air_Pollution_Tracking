@@ -105,17 +105,23 @@ public class AirPollutionClientGUI extends JFrame {
                         if_analyse_data = analyseData;  // ensure analyse data query is successful
                     });
                 } else {
-                    outputArea.append("\nWarning: Sensor data is empty, please get data first.");
+                    // prompt the invalid input issues occur
+                    JOptionPane.showMessageDialog(this, "Sensor data is empty, please get data first.", "Warning", JOptionPane.WARNING_MESSAGE);
+//                    outputArea.append("\nWarning: Sensor data is empty, please get data first.");
                 }
             } else {
-                outputArea.append("\nWarning: Invalid input, please try again.");
+                // prompt the invalid input issues occur
+                JOptionPane.showMessageDialog(this, "Invalid input, please try again.", "Warning", JOptionPane.WARNING_MESSAGE);
+//                outputArea.append("\nWarning: Invalid input, please try again.");
             }
         });
 
         // Get HVAC status
         hvacControlButton.addActionListener(e -> {
             if (if_analyse_data == null) { // if there's no data analysis, unable to get pollution level to know the HVAC status
-                outputArea.append("\nWarning: Sensor data analysis is empty. Please analyse data first.");
+                // prompt the invalid input issues occur
+                JOptionPane.showMessageDialog(this, "Sensor data analysis is empty. Please analyse data first.", "Warning", JOptionPane.WARNING_MESSAGE);
+//                outputArea.append("\nWarning: Sensor data analysis is empty. Please analyse data first.");
             }
             else if (if_hvac_switch == null) { // if HVAC status hasn't been changed by HVACSwitch
                 airPollutionClient.HVACControl(0, hvacCommandMessage -> { // pass '0' to HVACControl method to get original hvacCommandMessage
@@ -143,7 +149,7 @@ public class AirPollutionClientGUI extends JFrame {
                             SwingUtilities.invokeLater(() -> outputArea.append("\n" + hvacSwitchMessage));
                             if_hvac_switch = "hvacSwitchMessage"; // ensure HVAC status changing is recorded
                         });
-                    }else {
+                    } else {
                         // prompt the invalid input issues occur
                         JOptionPane.showMessageDialog(this, "Invalid input. It should be 1 or 2.", "Invalid Input", JOptionPane.WARNING_MESSAGE);
                     }
@@ -157,7 +163,9 @@ public class AirPollutionClientGUI extends JFrame {
         // Get sensor notification
         sensorNotificationsButton.addActionListener(e -> {
             if (if_analyse_data == null) { // if didn't analyse data
-                outputArea.append("\nWarning: Empty sensor analyse data. Please get analyse data.");
+//                outputArea.append("\nWarning: Empty sensor analyse data. Please get analyse data.");
+                // prompt the invalid input issues occur
+                JOptionPane.showMessageDialog(this, "Empty sensor analyse data. Please get analyse data first.", "Warning", JOptionPane.WARNING_MESSAGE);
             } else {
                 airPollutionClient.sensorNotifications(1, sensorNotify -> SwingUtilities.invokeLater(() -> outputArea.append("\n" + sensorNotify)));
             }
@@ -166,7 +174,9 @@ public class AirPollutionClientGUI extends JFrame {
         // Get HVAC notification
         hvacNotificationButton.addActionListener(e -> {
             if (if_hvac_control == null) { // if HVAC status is null
-                outputArea.append("\nWarning: Empty HVAC data. Please get HVAC data.");
+                // prompt the invalid input issues occur
+                JOptionPane.showMessageDialog(this, "Empty HVAC data. Please get HVAC data first.", "Warning", JOptionPane.WARNING_MESSAGE);
+//                outputArea.append("\nWarning: Empty HVAC data. Please get HVAC data.");
             } else {
                 airPollutionClient.hvacNotifications(hvacNotify-> SwingUtilities.invokeLater(() -> outputArea.append("\n" + hvacNotify)));
             }

@@ -119,7 +119,7 @@ public class AirPollutionClient {
                         "\n1. Location: 「" + analyseResponse.getLocation() + "」" +
                         "\n2. Polluted item(s): " + analyseResponse.getAnalyse() +
                         "\n3. Pollution Level: " + analyseResponse.getPollutionLevel() +
-                        "\n4. Analyse: " + analyseResponse.getMessage() +
+                        "\n4. Analysis: " + analyseResponse.getMessage() +
                         "\n5. Updated time: " + updatedTime;
                 pollution_level = analyseResponse.getPollutionLevel(); // store pollution level
                 callback.accept(analyseData);
