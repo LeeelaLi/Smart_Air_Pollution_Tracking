@@ -107,12 +107,10 @@ public class AirPollutionClientGUI extends JFrame {
                 } else {
                     // prompt the invalid input issues occur
                     JOptionPane.showMessageDialog(this, "Sensor data is empty, please get data first.", "Warning", JOptionPane.WARNING_MESSAGE);
-//                    outputArea.append("\nWarning: Sensor data is empty, please get data first.");
                 }
             } else {
                 // prompt the invalid input issues occur
                 JOptionPane.showMessageDialog(this, "Invalid input, please try again.", "Warning", JOptionPane.WARNING_MESSAGE);
-//                outputArea.append("\nWarning: Invalid input, please try again.");
             }
         });
 
@@ -121,7 +119,6 @@ public class AirPollutionClientGUI extends JFrame {
             if (if_analyse_data == null) { // if there's no data analysis, unable to get pollution level to know the HVAC status
                 // prompt the invalid input issues occur
                 JOptionPane.showMessageDialog(this, "Sensor data analysis is empty. Please analyse data first.", "Warning", JOptionPane.WARNING_MESSAGE);
-//                outputArea.append("\nWarning: Sensor data analysis is empty. Please analyse data first.");
             }
             else if (if_hvac_switch == null) { // if HVAC status hasn't been changed by HVACSwitch
                 airPollutionClient.HVACControl(0, hvacCommandMessage -> { // pass '0' to HVACControl method to get original hvacCommandMessage
@@ -141,7 +138,8 @@ public class AirPollutionClientGUI extends JFrame {
             String sensorIdStr = hvacSwitchField.getText();
             try {
                 if (if_hvac_control == null) { // if HVAC status is null
-                    outputArea.append("\nWarning: HVAC control message is empty. Please get HVAC control message first.");
+                    // prompt the empty input issues occur
+                    JOptionPane.showMessageDialog(this, "HVAC control message is empty. Please get HVAC control message first.", "Warning", JOptionPane.WARNING_MESSAGE);
                 } else {
                     switchInput = Integer.parseInt(sensorIdStr);
                     if (switchInput == 1 || switchInput == 2) { // 1 for turn on HVAC, 2 for turn off HVAC
@@ -163,7 +161,6 @@ public class AirPollutionClientGUI extends JFrame {
         // Get sensor notification
         sensorNotificationsButton.addActionListener(e -> {
             if (if_analyse_data == null) { // if didn't analyse data
-//                outputArea.append("\nWarning: Empty sensor analyse data. Please get analyse data.");
                 // prompt the invalid input issues occur
                 JOptionPane.showMessageDialog(this, "Empty sensor analyse data. Please get analyse data first.", "Warning", JOptionPane.WARNING_MESSAGE);
             } else {
